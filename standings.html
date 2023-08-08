@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, intitial-scale=1.0">
+    <title>Rice Invitational</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" type='text/css'>
+    <script type="text/javascript" src="leaderboard.js"></script>
+</head>
+<body>
+    <!-- Front Page -->
+    <section class="standings">
+        <nav>
+            <div class="nav-links" id = "navLinks">         
+                <!--i class="fa fa-times" onclick="hideMobileMenu()"></i> -->
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="">About</a></li>
+                    <li><a href="">Players</a></li>
+                    <li><a href="">Schedule</a></li>
+                    <li><a href="">Random</a></li>
+                </ul>
+            </div>
+            <!-- <i class="fa fa-bars" onclick="showMobileMenu()"></i> -->
+        </nav>
+        <div class="leaderboard">
+            <div class="lb-animation">
+                <div class="lb-wrapper">
+                    <div class="lb-header">
+                        <h2>Rice Invitiational Leaderboard</h2>
+                    </div>
+                    <table>
+                        <thead id="leaderhead">
+                            <tr>
+                                <th>Player</th><th>Brawlhalla</th><th>League of Legends</th><th>Valorant</th><th>Among Us</th><th>Rocket League</th><th>Counter Strike</th><th>Random Silliness</th><th>Total</th>
+                            </tr>
+                        </thead>
+                        <tbody id="leaderbody">
+                        </tbody>
+                    </table>
+                    <div class="lb-footer"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div class="hidden-content" id="brawlhalla-layout">
+        <div class="sub-panel-small" style="left: 100px; top: 50px;">
+            <div>Brawlhalla 1v1</div>
+        </div>
+        <div class="sub-panel-small" style="left: 100px; top: 325px;">
+            <div>Brawlhalla 2v2</div>
+        </div>
+        <div class="sub-panel-med" style="left: 425px; top: 125px;">
+            <div>Most Played Character</div>
+        </div>
+    </div>
+
+    <script>
+
+        var hdr = document.getElementById("leaderhead");
+        var tbl = document.getElementById("leaderbody");
+        var expandedRow = null;
+
+        
+        tbl.addEventListener('click', (event) => { // Event based function that triggers on a click within the main body of the leaderboard table
+            
+            let cell = event.target;
+            if (cell.cellIndex > 0 && cell.cellIndex < 8) { // Validate clicked cell; does not include 'player' and 'total' columns
+
+                
+                if (!expandedRow) { // A player's row has not already been expanded, thus the row containing the clicked cell will be expanded
+                    expandedRow = cell.parentElement.nextSibling;
+                    expandedRow.classList.add("row-extension");
+
+                    var game = hdr.rows[0].cells[cell.cellIndex].innerHTML.trim().toLowerCase().replace(/\s/g, '');
+                    var layout = document.getElementById(game + "-layout");
+                    var gameData = getPlayerGameObject(expandedRow.previousSibling.cells[0].innerHTML, game);
+                    let vals = Object.values(gameData);
+                    setTimeout(function() { // After the row-extension animation completes, fills the newly expanded area with dynamic content
+
+                        expandedRow.cells[0].innerHTML = expandedRow.cells[0].innerHTML.slice(0, 24) + layout.innerHTML.trim() + '</div>'; 
+                        for (var i = 0; i < expandedRow.cells[0].firstElementChild.children.length; i++) { // Applies data from the selected game to each section in the expanded content
+
+
+                            for (const key in vals[i]) { //Instantiates each element contained within one of the gameData's objects
+                                let node = null;
+                                if (key == 'img') {
+                                    node = document.createElement('img');
+                                    node.src = vals[i][key];
+                                }
+                                else if (key == 'points') {
+                                    node = document.createElement("div");
+                                    node.appendChild(document.createTextNode(vals[i][key] + " points"));
+                                }
+                                else {
+                                    node = document.createElement("div");
+                                    node.appendChild(document.createTextNode(vals[i][key]));
+                                }
+                                expandedRow.cells[0].firstElementChild.children[i].appendChild(node);
+                            }
+
+                            expandedRow.cells[0].firstElementChild.children[i].classList.add("pop-and-wobble-animation");
+                        }
+                    }, 500);
+                }
+                else { // A player's row is already expanded, closes the row before allowing another one to be expanded
+                    expandedRow.cells[0].innerHTML = expandedRow.cells[0].innerHTML.slice(0, 24) + '</div>';
+                    expandedRow.classList.remove("row-extension");
+                    expandedRow = null;
+                }
+            }
+
+            function getPlayerGameObject(name, game) {
+                var ret = null;
+                for (let element of lbData) {
+                    if (element.player == name) {
+                        for (const key in element) {
+                            if (key == game) {
+                                return element[key];
+                            }
+                        }
+                    }
+                }
+                return null;
+            }
+        });
+
+
+        lbData.forEach(element => {
+            
+            let total = 0, tRow = "";
+            for (var game in element) {
+                let gameTotal = 0;
+                if (typeof element[game] == 'object') {
+
+                    let subTable = "<table>";
+                    for (const sect in element[game]) {
+
+                        if ('points' in element[game][sect]) {
+                            gameTotal += element[game][sect]['points'];
+                        }
+                    }
+                    tRow += "<td>" +  gameTotal + "</td>";
+                }
+                else {
+                    tRow += "<td>" +  element[game] + "</td>";
+                }
+                total += gameTotal;
+            }
+            tRow += "<td>" +  total + "</td>";
+
+            let len = tbl.children.length
+            for (var i = 0; i < len + 1; i++) {
+                if (i >= len) {
+                    tbl.innerHTML += '<tr>' + tRow + '</tr><tr class="info-row"><td><div class="info-panel"></div></td></tr>';
+                    break;
+                }
+                else if (total > tbl.children[i].lastElementChild.innerHTML && tbl.children[i].lastElementChild.innerHTML != "") {
+                    
+                    let idx = nthIndex(tbl.innerHTML, '<tr>', i / 2 + 1);
+                    tbl.innerHTML = tbl.innerHTML.slice(0, idx) + '<tr>' + tRow + '</tr><tr class="info-row"><td><div class="info-panel"></div></td></tr>' + tbl.innerHTML.slice(idx);
+                    break;
+                }
+            }
+
+            function nthIndex(str, sub, n) {
+                var l = tbl.innerHTML.length;
+                var i = -1;
+                while (n-- && i++ < l) {
+                    i = str.indexOf(sub, i);
+                    if (i < 0) {
+                        break;
+                    }
+                }
+                return i;
+            }
+        });
+
+
+    </script>
+</body>
+</html>
