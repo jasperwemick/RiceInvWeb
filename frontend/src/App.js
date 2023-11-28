@@ -4,19 +4,18 @@ import ReactDOM from 'react-dom/client'
 import { Route, Routes } from "react-router-dom";
  
 // We import all the components we need in our app
-import Navbar from "./components/navBar";
+//import Navbar from "./components/navBar";
 import Home from "./components/home";
  
 const App = () => {
   return (
     <div>
-      <Navbar />
       <Routes>
         <Route exact path="/" element={<Home />} />
       </Routes>
     </div>
   );
 };
-
+      /*<Navbar />*/
 /*<Route path="/edit/:id" element={<EditJob />} />*/
 export default App;

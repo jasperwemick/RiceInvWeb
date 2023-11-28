@@ -2,18 +2,18 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const accountSchema = new Schema({
+const profileSchema = new Schema({
     name: {
         type: String,
         required: true
     },
     description: {
         type: String,
-        require: true
+        require: false
     },
     image: {
         type: String,
-        required: true
+        required: false
     },
     rice_points: {
         type: Number,
@@ -21,4 +21,4 @@ const accountSchema = new Schema({
     }
 }, { timestamps: false })
 
-module.exports = mongoose.model('Account', accountSchema)
+module.exports = mongoose.model('Profile', profileSchema)

@@ -20,7 +20,6 @@ app.use((req, res, next) => {
 // route
 app.use('/api/profiles', profileRoutes)
 
-// connect to cluster0 (async)
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         // request listener

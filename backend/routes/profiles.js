@@ -7,6 +7,7 @@ const router = express.Router()
 router.get('/', async (req, res) => {
     try {
         const result = await Profile.find().exec();
+        console.log(result);
         res.json(result);
     } catch (err) {
         res.json({error: err.message}).status(400);
