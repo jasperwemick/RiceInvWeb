@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, intitial-scale=1.0">
+    <title>Rice Invitational</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="tetris.css">
+    <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" type='text/css'>
+    <script type="text/javascript" src="tetris.js"></script>
+</head>
+<body>
+    <!-- Front Page -->
+    <section class="tetris-body">
+        <nav>
+            <div class="nav-links" id = "navLinks">         
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="">About</a></li>
+                    <li><a href="">Players</a></li>
+                    <li><a href="">Schedule</a></li>
+                    <li><a href="standings.html">Standings</a></li>
+                </ul>
+            </div>
+        </nav>
+        <div class="game-region">
+            <div class="game-button" id="butt"></div>
+            <div class="game-window" id="g-window"></div>
+            <div class="game-queue"></div>
+        </div>
+    </section>
+
+    <script>
+
+        var button = document.getElementById("butt");
+        var gameWindow = document.getElementById("g-window");
+
+        var game = null;
+        let tick = 0;
+
+        class Tetromino {
+            constructor(type, prev) {
+                this.origin = [1, prev];
+                this.type = type;
+                this.coords = null;
+            }
+
+            instantiate() {
+
+            }
+
+            rotate() {
+
+            }
+            
+        }
+
+
+        class Grid {
+            constructor(length, height) {
+                this.length = length;
+                this.height = height;
+                this.matrix = [];
+            }
+
+            instantiate() {
+                for (let i = 0; i < this.height; i++) {
+                    var row = [];
+                    for (let j = 0; j < this.length; j++) {
+                        row.push(0);
+                    }
+                    this.matrix.push(row);
+                }
+            }
+        }
+
+        class Game {
+            constructor() {
+                this.minos = [];
+                this.grid = null;
+                this.playerTetromino = null;
+                this.tick = 0;
+            }
+
+            initialize() {
+
+                this.grid = new Grid(10, 40);
+                this.grid.instantiate();
+
+                while (this.minos.length < 3) {
+                    this.minos.push(tetromino_ID[Math.floor(Math.random() * 7).toString()]);
+                }
+
+                var tetrominoNode = this.buildTetromino(this.minos.pop());
+                gameWindow.appendChild(tetrominoNode);
+                setInterval(this.update.bind(this), 50);
+
+            }
+
+            update() {
+                if (this.tick % 20 == 0) {
+                    // shift block down, if blocks in the way freeze and release next
+                    this.playerTetromino.origin[0]++;
+                    gameWindow.firstChild.style.top = (this.playerTetromino.origin[0] * 50).toString() + 'px';
+                }
+
+                this.tick++;
+            }
+
+            buildTetromino(type) {
+
+                const tetro = document.createElement('div');
+                tetro.classList.add('tetromino-block');
+                tetro.style.left = '250px';
+                tetro.style.top = '50px';
+                this.playerTetromino = new Tetromino(type, 4);
+                return tetro;
+            }
+        }
+
+
+        button.addEventListener('click', (event) => {
+
+            button.classList.add('hidden-content');
+            game = new Game();
+            game.initialize();
+        });
+    </script>
+</body>
+</html>

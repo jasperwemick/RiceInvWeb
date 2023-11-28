@@ -1,0 +1,107 @@
+/* Animations - Classes added for effects*/
+.content-expand-animation {
+    animation: contentExpand 0.2s;
+}
+@keyframes contentExpand {
+    0% {width: 100px; height: 50px;}
+    100% {width: 800px; height: 400px;}
+}
+
+.content-shrink-animation {
+    animation: contentShrink 0.2s;
+    pointer-events: none;
+}
+@keyframes contentShrink {
+    0% {width: 800px; height: 400px;}
+    100% {width: 100px; height: 50px;}
+}
+
+.fade-in-bottom-animation {
+    animation: fadeInFromBottom 1s;
+}
+@keyframes fadeInFromBottom {
+    0% {opacity: 0; top: 100%;}
+    100% {opacity: 1; top: 50%}
+}
+
+.fade-out-bottom-animation {
+    animation: fadeOutToBottom 1s;
+    pointer-events: none;
+}
+@keyframes fadeOutToBottom {
+    0% {opacity: 1; top: 50%;}
+    100% {opacity: 0; top: 100%}
+}
+
+.fade-in-animation {
+    animation: fadeIn 0.5s;
+}
+@keyframes fadeIn {
+    0% {opacity: 0;}
+    100% {opacity: 1;}
+}
+
+.fade-out-animation {
+    animation: fadeOut 0.5s;
+    pointer-events: none;
+}
+@keyframes fadeOut {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+.fade-out-fast-animation {
+    animation: fadeOut 0.2s;
+    pointer-events: none;
+}
+@keyframes fadeOut {
+    0% {opacity: 1;}
+    100% {opacity: 0;}
+}
+
+.slide-papers-right-animation {
+    animation: slide-papers-right ease-out 1.0s;
+    pointer-events: none;
+}
+@keyframes slide-papers-right {
+    0% {left: 0%;}
+    100% {left: 50%;}
+}
+
+.pop-down-animation {
+    animation: pop-down 1.0s;
+    pointer-events: none;
+}
+@keyframes pop-down {
+    0% {top: 50%;}
+    35% {top: 30%;}
+    100% {top: 100%;}
+}
+
+.back-of-stack-animation {
+    animation: back-of-stack 0.5s;
+    pointer-events: none;
+}
+@keyframes back-of-stack {
+    0% {left: 50%; top: 50%}
+    50% {left: 15%; top: 52%}
+    100% {left: 54%; top: 54%;}
+}
+
+.pop-and-wobble-animation {
+    animation: pop-and-wobble 0.5s;
+}
+@keyframes pop-and-wobble {
+    0% {transform: scale(0.5, 0.5);}
+    25% {transform: scale(1.25, 1.25);}
+    50% {transform: scale(0.75, 0.75);}
+    100% {transform: scale(1, 1);}
+}
+
+.fade-in-mid-top-animation {
+    animation: fade-in-mid-top 1.0s;
+}
+@keyframes fade-in-mid-top {
+    0% {opacity: 0; top: 20%;}
+    100% {opacity: 1; top: 0%}
+}

@@ -90,6 +90,7 @@ nav .fa{
 
 .players {
     width: 100%;
+    height: 2840px;
     margin: auto;
     text-align: center;
     padding: 100px;
@@ -140,6 +141,14 @@ h3 {
     box-shadow: 0 0 30px 0px rgba(0, 0, 0, 0.7);
     
 }
+
+
+/* content canvas */
+.content-canvas {
+    width: 100%;
+    height: 1400px;
+}
+
 
 /* Hidden - Player Info*/
 .content-wrapper .pages {
@@ -204,16 +213,13 @@ h3 {
 
 /* Folder and File - Objects*/
 .folder-object {
-    top: 50%;
-    left: 50%;
     width: 500px;
     height: 500px;
-    transform: translate(-50%, -50%);
-    position: fixed;
+    position: absolute;
     transition: ease-in;
 }
 .folder-animation {
-    position: fixed;
+    position: absolute;
     width: 500px;
     height: 450px;
     transition: .5s;
@@ -225,7 +231,6 @@ h3 {
     background: rgb(240, 218, 123);
     box-shadow: 0 0 40px 0px rgba(0, 0, 0, 0.7);
     z-index: 3
-
 }
 .folder-back-bump {
     position: absolute;
@@ -234,7 +239,6 @@ h3 {
     bottom: 400px;
     background: rgb(240, 218, 123);
     z-index: inherit;
-
 }
 .file {
     position: absolute;
@@ -247,6 +251,10 @@ h3 {
     z-index: 4;
     transition: 0.5s;
 }
+.file img {
+    position: relative;
+    right: 50px;
+}
 .file-text {
     position: relative;
     background-image: repeating-linear-gradient(
@@ -256,8 +264,9 @@ h3 {
         rgb(100, 100, 100) 30px);
     width: 200px;
     height: 150px;
-    left: 220px;
-    bottom: 180px;
+    right: 50px;
+    top: 20px;
+    float: right;
     z-index: inherit;
 }
 .folder-front {
@@ -286,6 +295,147 @@ h3 {
     height: 500px;
     top: -150px;
 }
+
+/* Television - on and off */
+.tv-object {
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    transition: ease-in;
+}
+.tv-animation {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    transition: .5s;
+}
+.tv-body {
+    position: absolute;
+    width: 500px;
+    height: 325px;
+    top: 50px;
+    background: hsl(0, 0%, 10%);
+    border-radius: 5px;
+    box-shadow: 0 0 40px 0px rgba(0, 0, 0, 0.7);
+    z-index: 3;
+}
+.rounded-side {
+    position: absolute;
+    border-radius: 50%;
+    z-index: inherit;
+}
+.tv-stand {
+    position: absolute;
+    width: 450px;
+    height: 25px;
+    left: 25px;
+    top: 325px;
+    background: hsl(0, 0%, 10%);
+    z-index: 2;
+}
+.screen-base {
+    position: absolute;
+    width: 350px;
+    height: 275px;
+    top: 75px;
+    left: 25px;
+    border-radius: 10px;
+    background: rgb(210, 255, 255);
+    z-index: 4;
+}
+.antenna-base {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 200px;
+    border-radius: 75px;
+    background: hsl(0, 0%, 10%);
+    z-index: 3;
+}
+.antenna {
+    position: absolute;
+    background: hsl(0, 0%, 10%);
+    border-radius: 10px;
+    z-index: inherit;
+}
+.knob {
+    position: absolute;
+    width: 100px;
+    height: 100px;
+    left: 400px;
+    top: 225px;
+    border-radius: 50%;
+    border: 10px solid hsl(0, 0%, 90%);
+    background: transparent;
+    z-index: 4;
+}
+.inner-knob {
+    position: absolute;
+    width: 60px;
+    height: 60px;
+    left: 10px;
+    top: 10px;
+    border-radius: 50%;
+    background: hsl(0, 0%, 90%);
+    z-index: 4;
+}
+.vent {
+    
+}
+
+/* Charts */
+.chart-object {
+    width: 500px;
+    height: 500px;
+    position: absolute;
+    transition: ease-in;
+}
+.chart-animation {
+    position: absolute;
+    width: 500px;
+    height: 500px;
+    transition: .5s;
+}
+.chart-body {
+    position: absolute;
+    width: 500px;
+    height: 400px;
+    box-shadow: 0 0 40px 0px rgba(0, 0, 0, 0.7);
+    z-index: 3;
+}
+.bottom-bar {
+    position: absolute;
+    background-color: black;
+    width: 480px;
+    height: 30px;
+    top: 350px;
+    left: 10px;
+}
+.red-col {
+    position: absolute;
+    background-color: red;
+    width: 140px;
+    height: 250px;
+    top: 100px;
+    left: 20px;
+}
+.yellow-col {
+    position: absolute;
+    background-color: yellow;
+    width: 140px;
+    height: 250px;
+    top: 100px;
+    left: 170px;
+}
+.green-col {
+    position: absolute;
+    background-color: green;
+    width: 140px;
+    height: 250px;
+    top: 100px;
+    left: 320px;
+}
+   
 
 /* Standings - Leaderboard and stuff*/
 .standings {
@@ -417,96 +567,14 @@ tbody tr td:hover {
     height: 600px;
 }
 
-
-/* Animations - Classes added for effects*/
-.content-expand-animation {
-    animation: contentExpand 0.2s;
+.exit-button {
+    background-color: white;
+    border: none;
+    padding: 40px;
+    text-decoration: none;
 }
-@keyframes contentExpand {
-    0% {width: 100px; height: 50px;}
-    100% {width: 800px; height: 400px;}
-}
-
-.content-shrink-animation {
-    animation: contentShrink 0.2s;
-    pointer-events: none;
-}
-@keyframes contentShrink {
-    0% {width: 800px; height: 400px;}
-    100% {width: 100px; height: 50px;}
-}
-
-.fade-in-bottom-animation {
-    animation: fadeInFromBottom 1s;
-}
-@keyframes fadeInFromBottom {
-    0% {opacity: 0; top: 100%;}
-    100% {opacity: 1; top: 50%}
-}
-
-.fade-out-bottom-animation {
-    animation: fadeOutToBottom 1s;
-    pointer-events: none;
-}
-@keyframes fadeOutToBottom {
-    0% {opacity: 1; top: 50%;}
-    100% {opacity: 0; top: 100%}
-}
-
-.fade-in-animation {
-    animation: fadeIn 0.5s;
-}
-@keyframes fadeIn {
-    0% {opacity: 0;}
-    100% {opacity: 1;}
-}
-
-.fade-out-animation {
-    animation: fadeOut 0.5s;
-    pointer-events: none;
-}
-@keyframes fadeOut {
-    0% {opacity: 1;}
-    100% {opacity: 0;}
-}
-
-.slide-papers-right-animation {
-    animation: slide-papers-right ease-out 1.0s;
-    pointer-events: none;
-}
-@keyframes slide-papers-right {
-    0% {left: 0%;}
-    100% {left: 50%;}
-}
-
-.pop-down-animation {
-    animation: pop-down 1.0s;
-    pointer-events: none;
-}
-@keyframes pop-down {
-    0% {top: 50%;}
-    35% {top: 30%;}
-    100% {top: 100%;}
-}
-
-.back-of-stack-animation {
-    animation: back-of-stack 0.5s;
-    pointer-events: none;
-}
-@keyframes back-of-stack {
-    0% {left: 50%; top: 50%}
-    50% {left: 15%; top: 52%}
-    100% {left: 54%; top: 54%;}
-}
-
-.pop-and-wobble-animation {
-    animation: pop-and-wobble 0.5s;
-}
-@keyframes pop-and-wobble {
-    0% {transform: scale(0.5, 0.5);}
-    25% {transform: scale(1.25, 1.25);}
-    50% {transform: scale(0.75, 0.75);}
-    100% {transform: scale(1, 1);}
+.exit-button:hover {
+    background-color: #1e1f2e;
 }
 
 /* Mobile View */

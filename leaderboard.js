@@ -1,5 +1,3 @@
-var test = 0;
-
 var lbData = [
 	{
 		player: "obbyota",

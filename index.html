@@ -4,7 +4,9 @@
     <meta name="viewport" content="width=device-width, intitial-scale=1.0">
     <title>Rice Invitational</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="animations.css">
     <link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css" type='text/css'>
+    <script type="text/javascript" src="profile.js"></script>
 </head>
 <body>
     <!-- Front Page -->
@@ -18,7 +20,7 @@
                     <li><a href="">Players</a></li>
                     <li><a href="">Schedule</a></li>
                     <li><a href="standings.html">Standings</a></li>
-                    <li><a href="">Random</a></li>
+                    <li><a href="tetris.html">Random</a></li>
                 </ul>
             </div>
             <i class="fa fa-bars" onclick="showMobileMenu()"></i>
@@ -37,204 +39,163 @@
         <div class="visible-player-content" id="temp_id">
             <h1>Players</h1>
             <p>Our players come from a multitude of backgrounds that truly makes each and every one of them a very special boy!</p>
+            <div class="player_block" id="p_block">
+                <div class="row_index">
+                    <div class="player_index">
+                        <img src="assets/ryan_player.png">
+                        <h3>obbyota</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/luc_player.png">
+                        <h3>cola</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/lizarazu_player.png">
+                        <h3>sp1cybo1</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/neil_player.png">
+                        <h3>cows</h3>
+                    </div>
+                </div>
+                <div class="row_index">
+                    <div class="player_index">
+                        <img src="assets/john_player.png">
+                        <h3>BestPurpleMaster</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/long_player.png">
+                        <h3>VietPapi</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/paolo_player.png">
+                        <h3>SioPaoPao</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/woods_player.png">
+                        <h3>Striking Panic</h3>
+                    </div>
+                </div>
+                <div class="row_index">
+                    <div class="player_index">
+                        <img src="assets/noahS_player.png">
+                        <h3>Cody Travis</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/lee_player.png">
+                        <h3>FewRaccoon69443</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/ron_player.png">
+                        <h3>Melodii</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/player_thai.png">
+                        <h3>Mcgurdstream</h3>
+                    </div>
+                </div>
+                <div class="row_index">
+                    <div class="player_index">
+                        <img src="assets/dong_player.png">
+                        <h3>YouKooKoo</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/keaton_player.png">
+                        <h3>Rattle KILL</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/caleb_player.png">
+                        <h3>Pimplord</h3>
+                    </div>
+                    <div class="player_index">
+                        <img src="assets/kien_player.png">
+                        <h3>Rantstand</h3>
+                    </div>
+                </div>
+            </div>
+        </div>
 
-            <div class="row_index">
-                <div class="player_index ryan-content">
-                    <img src="assets/ryan_player.png">
-                    <h3>obbyota</h3>
-                </div>
-                <div class="player_index luc-content">
-                    <img src="assets/luc_player.png">
-                    <h3>cola</h3>
-                </div>
-                <div class="player_index lizarazu-content">
-                    <img src="assets/lizarazu_player.png">
-                    <h3>sp1cybo1</h3>
-                </div>
-                <div class="player_index neil-content">
-                    <img src="assets/neil_player.png">
-                    <h3>NEIL PATEL</h3>
+        <div class="content-canvas hidden-content" id="canvas">
+            <div style="position: absolute; width: 500px; height: 500px; box-shadow: 0 0 40px 0px rgba(0, 0, 0, 0.7);">
+                <img src="", style="position: relative;", id="canvas-img">
+            </div>
+            <div style="position: absolute; left: 700px; width: 800px; height: 1000px; box-shadow: 0 0 40px 0px rgba(0, 0, 0, 0.7);">
+                <p></p>
+            </div>
+
+            <button class="exit-button" style="position: absolute; right:100px;" id="canvas-exit"></button>
+
+            <div class="folder-object" id="fold" style="top: 50%; scale: 70%;">
+                <div class="folder-animation">
+                    <div class="folder-back">
+                        <div class="folder-back-bump"></div>
+                    </div>
+                    <div class="file">
+                        <img src="", id="file-img">
+                        <div class="file-text"></div>
+                    </div>
+                    <div class="folder-front">
+                        <div class="folder-front-divit"></div>
+                    </div>
                 </div>
             </div>
-            <div class="row_index">
-                <div class="player_index john-content">
-                    <img src="assets/john_player.png">
-                    <h3>BestPurpleMaster</h3>
-                </div>
-                <div class="player_index long-content">
-                    <img src="assets/long_player.png">
-                    <h3>VietPapi</h3>
-                </div>
-                <div class="player_index paolo-content">
-                    <img src="assets/paolo_player.png">
-                    <h3>SioPaoPao</h3>
-                </div>
-                <div class="player_index woods-content">
-                    <img src="assets/woods_player.png">
-                    <h3>Striking Panic</h3>
+
+            <div class="tv-object" id="tv" style="top: 50%; left: 35%; scale: 70%;">
+                <div class="tv-animation">
+                    <div class="tv-body">
+                        <div class="rounded-side" style="left: -12px; width: 30px; height: 325px; background: hsl(0, 0%, 10%);"></div>
+                        <div class="rounded-side" style="right: -12px; width: 30px; height: 325px; background: hsl(0, 0%, 10%);"></div>
+                        <div class="rounded-side" style="top: -8px; width: 500px; height: 20px; background: hsl(0, 0%, 10%);"></div>
+                        <div class="rounded-side" style="bottom: -8px; width: 500px; height: 20px; background: hsl(0, 0%, 10%);"></div>
+                        <div class="tv-stand"></div>
+                    </div>
+                    <div class="screen-base">
+                        <div class="rounded-side" style="left: -12px; width: 30px; height: 275px; background: rgb(210, 255, 255);"></div>
+                        <div class="rounded-side" style="right: -12px; width: 30px; height: 275px; background: rgb(210, 255, 255);"></div>
+                        <div class="rounded-side" style="top: -8px; width: 350px; height: 20px; background: rgb(210, 255, 255);"></div>
+                        <div class="rounded-side" style="bottom: -8px; width: 350px; height: 20px; background: rgb(210, 255, 255);"></div>
+                        <div class="screen"></div>
+                    </div>
+                    <div class="antenna-base">
+                        <div class="antenna" style="width: 20px; height: 125px; left: 75px; bottom: 75px; rotate: 15deg;"></div>
+                        <div class="antenna" style="width: 100px; height: 20px; left: 88px; bottom: 168px; rotate: 15deg;"></div>
+                        <div class="antenna" style="width: 20px; height: 150px; left: 124px; bottom: 40px; rotate: 40deg;"></div>
+        
+                        <div class="antenna" style="width: 20px; height: 75px; left: 10px; bottom: 75px; rotate: -20deg;"></div>
+                        <div class="antenna" style="width: 75px; height: 20px; left: -58px; bottom: 128px; rotate: 0deg;"></div>
+                        <div class="antenna" style="width: 20px; height: 125px; left: -24px; bottom: 34px; rotate: -40deg;"></div>
+                    </div>
+                    <div class="appendages-background">
+                        <div class="knob">
+                            <div class="inner-knob"></div>
+                        </div>
+                        <div class="knob">
+                            <div class="inner-knob"></div>
+                        </div>
+                        <div class="vent"></div>
+                    </div>
                 </div>
             </div>
-            <div class="row_index">
-                <div class="player_index seaman-content">
-                    <img src="assets/noahS_player.png">
-                    <h3>Cody Travis</h3>
-                </div>
-                <div class="player_index lee-content">
-                    <img src="assets/lee_player.png">
-                    <h3>FewRaccoon69443</h3>
-                </div>
-                <div class="player_index ron-content">
-                    <img src="assets/ron_player.png">
-                    <h3>Melodii</h3>
-                </div>
-                <div class="player_index thai-content">
-                    <img src="assets/player_thai.png">
-                    <h3>Mcgurdstream</h3>
-                </div>
+            
+            <div>
+                <div class="page hidden-content"></div>
+                <div class="page hidden-content"></div>
+                <div class="page hidden-content"></div>
             </div>
-            <div class="row_index">
-                <div class="player_index dong-content">
-                    <img src="assets/dong_player.png">
-                    <h3>YouKooKoo</h3>
-                </div>
-                <div class="player_index keaton-content">
-                    <img src="assets/keaton_player.png">
-                    <h3>Rattle KILL</h3>
-                </div>
-                <div class="player_index caleb-content">
-                    <img src="assets/caleb_player.png">
-                    <h3>DummyTheGay</h3>
-                </div>
-                <div class="player_index kien-content">
-                    <img src="assets/kien_player.png">
-                    <h3>Rantstand</h3>
+
+            <div class="chart-object" style="top: 50%; left: 70%; scale: 70%;">
+                <div class="chart-animation">
+                    <div class="chart-body">
+                        <div class="bottom-bar"></div>
+                        <div class="red-col"></div>
+                        <div class="yellow-col"></div>
+                        <div class="green-col"></div>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <div class="folder-object hidden-content" id="fold">
-        <div class="folder-animation">
-            <div class="folder-back">
-                <div class="folder-back-bump"></div>
-            </div>
-            <div class="file">
-                <img src="", id="file-img">
-                <div class="file-text"></div>
-            </div>
-            <div class="folder-front">
-                <div class="folder-front-divit"></div>
-            </div>
-        </div>
-    </div>
-
-    <div class="content-canvas hidden-content" id="content-canvas"></div>
-
-    <div class="content-wrapper" id="ryan-content">
-        <div class="pages">
-            <div class="page hidden-content">
-                <div class="player-header-wrapper">
-                    <h3>Ryan "ryan" Bellinghoven</h3>
-                </div>
-                <div class="player-body-wrapper">
-                    <img src="assets/ryan_document_1.png" width="200" height="200">
-                    <p> Ryan's objective in the.
-                    </p>
-                </div>
-            </div>
-            <div class="page hidden-content"></div>
-            <div class="page hidden-content"></div>
-        </div>
-        <div class="embedded-assets hidden-content" >
-            <img src="assets/ryan_head_bald.png">
-        </div>
-    </div>
-    <div class="content-wrapper hidden-content" id="luc-content">
-        <div class="pages">
-            <div class="page">
-                <div class="player-header-wrapper">
-                    <h3>Luc "Cola" Phan</h3>
-                </div>
-                <div class="player-body-wrapper">
-                    <p> Ryan's objective in the Rice Invitational isn't just to prove himself like everyone else, rather he brings alterior motives with himself as well.
-                    </p>
-                </div>
-            </div>
-            <div class="page"></div>
-            <div class="page"></div>
-        </div>
-    </div>
-    <div class=" content-wrapper hidden-content" id="lizarazu-content">
-        <div class="player-header-wrapper">
-            <h3>Kevin "Sp1cybo1" Lizarazu-Ampuero</h3>
-        </div>
-        <div class="player-body-wrapper">
-            <p>Ryan soemtmsetjasfjlskdfjalsdfjaslkdfjl safjklsdaj fklsj flksajflasj flsjadlfj sdjfkls dj
-                fadskljflsajfklsajflsdjfklsjfklsdajfklsdjfklsjflas
-                afjkdsjflksadfjslakfjasdlfjaslkfjsd
-                dskalfjslakfjklsdafjlsadf
-                jfklsdafjalsjfsd
-            </p>
-        </div>
-    </div>
-    <div class=" content-wrapper hidden-content" id="neil-content">
-        <div class="player-header-wrapper">
-            <h3>Neil "SRUITS" Patel</h3>
-        </div>
-        <div class="player-body-wrapper">
-            <p>Ryan soemtmsetjasfjlskdfjalsdfjaslkdfjl safjklsdaj fklsj flksajflasj flsjadlfj sdjfkls dj
-                fadskljflsajfklsajflsdjfklsjfklsdajfklsdjfklsjflas
-                afjkdsjflksadfjslakfjasdlfjaslkfjsd
-                dskalfjslakfjklsdafjlsadf
-                jfklsdafjalsjfsd
-            </p>
-        </div>
-    </div>
-    <div class=" content-wrapper hidden-content" id="john-content">
-        <div class="player-header-wrapper">
-            <h3>John "BestPurpleMaster" Mason</h3>
-        </div>
-        <div class="player-body-wrapper">
-            <p>Ryan soemtmsetjasfjlskdfjalsdfjaslkdfjl safjklsdaj fklsj flksajflasj flsjadlfj sdjfkls dj
-                fadskljflsajfklsajflsdjfklsjfklsdajfklsdjfklsjflas
-                afjkdsjflksadfjslakfjasdlfjaslkfjsd
-                dskalfjslakfjklsdafjlsadf
-                jfklsdafjalsjfsd
-            </p>
-        </div>
-    </div>
-    <div class=" content-wrapper hidden-content" id="long-content">
-        <div class="player-header-wrapper">
-            <h3>Long "VietPapi" Phan</h3>
-        </div>
-        <div class="player-body-wrapper">
-            <p>Ryan soemtmsetjasfjlskdfjalsdfjaslkdfjl safjklsdaj fklsj flksajflasj flsjadlfj sdjfkls dj
-                fadskljflsajfklsajflsdjfklsjfklsdajfklsdjfklsjflas
-                afjkdsjflksadfjslakfjasdlfjaslkfjsd
-                dskalfjslakfjklsdafjlsadf
-                jfklsdafjalsjfsd
-            </p>
-        </div>
-        <div class="embedded-assets hidden-content" >
-            <img src="assets/long_head.png">
-        </div>
-    </div>
-    <div class=" content-wrapper hidden-content" id="keaton-content">
-        <div class="player-header-wrapper">
-            <h3>Keaton "Rattle" Boodlal</h3>
-        </div>
-        <div class="player-body-wrapper">
-            <p>Ryan soemtmsetjasfjlskdfjalsdfjaslkdfjl safjklsdaj fklsj flksajflasj flsjadlfj sdjfkls dj
-                fadskljflsajfklsajflsdjfklsjfklsdajfklsdjfklsjflas
-                afjkdsjflksadfjslakfjasdlfjaslkfjsd
-                dskalfjslakfjklsdafjlsadf
-                jfklsdafjalsjfsd
-            </p>
-        </div>
-        <div class="embedded-assets hidden-content" >
-            <img src="assets/keaton_head.png">
-        </div>
-    </div>
 
 
 
@@ -251,9 +212,8 @@
         }
     </script>
 
-    <!-- Player Content Load/Unload -->>
+    <!-- Player Content Load/Unload -->
     <script>        
-        var playerContent = null;
         var htmlPages = null;
         var pageList = [];
         var ONE_SEC_TIMEOUT = 1000;
@@ -261,81 +221,105 @@
         var QUARTER_SEC_TIMEOUT = 250;
 
         var folder = document.getElementById("fold");
-        var file = folder.firstElementChild.firstElementChild.nextElementSibling;
-        let section = document.getElementById("temp_id");
+        var television = document.getElementById("tv");
+        var profiles = document.getElementById("temp_id");
+        var canvas = document.getElementById("canvas");
+        var exit = document.getElementById("canvas-exit");
 
         document.addEventListener('click', (event) => {
             if (event.target.classList.contains("player_index")) { // Detection for a click within the area of a player's profile picture
-                playerContent = document.getElementById(event.target.classList.item(1));
-                document.getElementById("file-img").src=playerContent.lastElementChild.firstElementChild.src;
+                
+                let name = event.target.lastElementChild.innerHTML;
+                var content = findName(name);
+                canvas.firstElementChild.firstElementChild.src = content.firstBlockImage;
+                canvas.firstElementChild.nextElementSibling.firstElementChild.innerHTML = content.firstBlockText;
 
-                folder.classList.remove("hidden-content");
-                folder.classList.add("fade-in-bottom-animation");
+                const players = document.querySelectorAll('.player_index');
+                profiles.classList.add("fade-out-animation");
                 setTimeout(function() {
-                        folder.classList.remove("fade-in-bottom-animation");
-                    }, ONE_SEC_TIMEOUT);
-                section.classList.add("blur-bg");
+                    profiles.classList.add("hidden-content");
+                    profiles.classList.remove("fade-out-animation");
+                }, HALF_SEC_TIMEOUT - 10);
+
+
+                setTimeout(function() {
+                    canvas.firstElementChild.firstElementChild.classList.add("fade-in-mid-top-animation");
+                    canvas.classList.remove("hidden-content");
+                }, HALF_SEC_TIMEOUT);
+                
+                document.getElementById("file-img").src=content.headImg;
+
             }
-            else if (!folder.classList.contains("hidden-content")) { // The player specific UI is currently revealed
+            else if (!canvas.classList.contains("hidden-content")) { // The player specific UI is currently revealed
 
-                const withinBounds = event.composedPath().includes(folder);
-                if (!withinBounds) { // In this case, the user has clicked outside of the folder, causing it to disappear
-                    folder.classList.add("fade-out-bottom-animation");
-                    setTimeout(function() { // Fade out player profile UI and unblur the background
-                        folder.classList.remove("fade-out-bottom-animation");
-                        folder.classList.add("hidden-content");
-                        section.classList.remove("blur-bg");
-                    }, ONE_SEC_TIMEOUT - 50);
+                const bounds = event.composedPath();
+                if (!htmlPages) { // TEMPORARY - cards are visible after folder click
+                    if (bounds.includes(exit)) { // Clicked exit button to return to profile view
 
-                    playerContent = null;
-                }
-                else { // In this case, the user has clicked on the folder, revealing a set of pages/cards --> idk where exactly this is going yet
-                    folder.classList.add("fade-out-animation");
-                    htmlPages = playerContent.firstElementChild.children;
-                    for (let i = 0; i < htmlPages.length; i++) {
-                        pageList.push({
-                            left: 50 + 2 * i, 
-                            top: 50 + 2 * i, 
-                            zIndex: 1 + htmlPages.length - i
-                        });
+                        // Fade out specific player profile and return profiles
+                        canvas.classList.add("hidden-content");
+                        setTimeout(function() { 
+                            profiles.classList.remove("hidden-content");
+                        }, HALF_SEC_TIMEOUT);
                     }
-                    setTimeout(folderToDocs, HALF_SEC_TIMEOUT - 25);
-                    setTimeout(function() {
-                        htmlPages.style.pointerEvents = "all";
-                    }, 3 * ONE_SEC_TIMEOUT);
-                }
-            }
-            else if (htmlPages != null) { // In this case, the folder has been selected and thus the documents/cards are now visible
-                var page_found = false;
-                for (let i = 0; i < htmlPages.length; i++) {
-                    if (event.composedPath().includes(htmlPages.item(i))) {
-                        page_found = true;
-
-                        htmlPages.item(i).classList.add("back-of-stack-animation");
-                        setTimeout(shiftDocs, QUARTER_SEC_TIMEOUT, i);
+                    else if (bounds.includes(folder)) { // In this case, the user has clicked on the folder, revealing a set of pages/cards --> idk where exactly this is going yet
+                        folder.classList.add("fade-out-animation");
+                        television.classList.add("fade-out-animation")
+                        htmlPages = canvas.lastElementChild.children;
+                        for (let i = 0; i < htmlPages.length; i++) { // Instantiate Page objects to local JS list
+                            pageList.push({
+                                left: 50 + 2 * i, 
+                                top: 50 + 2 * i, 
+                                zIndex: 1 + htmlPages.length - i
+                            });
+                        }
+                        setTimeout(folderToDocs, HALF_SEC_TIMEOUT - 25);
                         setTimeout(function() {
-                            htmlPages.item(i).classList.remove("back-of-stack-animation");
+                            htmlPages.style.pointerEvents = "all";
+                        }, 3 * ONE_SEC_TIMEOUT);
+                    }
+                    else if (bounds.includes(television)) {
+                        
+                    }
+                }
+                else { // Handles cards when visible
+                    /* ----------------------------- This Portion can be optimized --------------------------- */
+                    var page_found = false;
+                    var front = 0
+                    var max = 0
+                    for (let i = 0; i < htmlPages.length; i++) {
+                        if (event.composedPath().includes(htmlPages.item(i))) {
+                            page_found = true;
+                        }
+                        if (htmlPages.item(i).style.zIndex > max) {
+                            max = htmlPages.item(i).style.zIndex;
+                            front = i;
+                        }
+                    }
+                    /* --------------------------------------------------------------------------------------- */
+
+                    if (!page_found) { // The user has clicked outside of the area of the pages/cards, resulting in them being removed from the screen
+                        for (let i = 0; i < htmlPages.length; i++) {
+
+                            htmlPages.item(i).classList.add("pop-down-animation");
+                            setTimeout(function() {
+                                htmlPages.item(i).classList.remove("pop-down-animation");
+                                htmlPages.item(i).classList.add("hidden-content");
+                                if (i == htmlPages.length - 1) {
+                                    htmlPages = null;
+                                }
+                            }, ONE_SEC_TIMEOUT - 25);
+                        }
+                        pageList = [];
+                        htmlPages.style.pointerEvents = "none";
+                    }
+                    else {
+                        htmlPages.item(front).classList.add("back-of-stack-animation");
+                        setTimeout(shiftDocs, QUARTER_SEC_TIMEOUT, front);
+                        setTimeout(function() {
+                            htmlPages.item(front).classList.remove("back-of-stack-animation");
                         }, HALF_SEC_TIMEOUT - 10);
-                        break;
                     }
-                }
-                if (!page_found) { // The user has clicked outside of the area of the pages/cards, resulting in them being removed from the screen
-                    for (let i = 0; i < htmlPages.length; i++) {
-
-                        htmlPages.item(i).classList.add("pop-down-animation");
-                        setTimeout(function() {
-                            htmlPages.item(i).classList.remove("pop-down-animation");
-                            htmlPages.item(i).classList.add("hidden-content");
-                        }, ONE_SEC_TIMEOUT - 25);
-                    }
-                    setTimeout(function() {
-                        section.classList.remove("blur-bg");
-                    }, ONE_SEC_TIMEOUT);
-                    
-                    pageList = [];
-                    playerContent = null;
-                    htmlPages.style.pointerEvents = "none";
-                    htmlPages = null;
                 }
             }
         });
@@ -344,6 +328,8 @@
 
             folder.classList.remove("fade-out-animation");
             folder.classList.add("hidden-content");
+            television.classList.remove("fade-out-animation");
+            television.classList.add("hidden-content");
 
             for (let i = 0; i < htmlPages.length; i++) {
                 setTimeout(function() {
@@ -376,6 +362,14 @@
                 htmlPages.item(j).style.left = pageList[j].left + "%";
                 htmlPages.item(j).style.top = pageList[j].top + "%";
                 htmlPages.item(j).style.zIndex = pageList[j].zIndex;
+            }
+        }
+
+        function findName(name) {
+            for (var obj of pfData) {
+                if (obj.name == name) {
+                    return obj;
+                }
             }
         }
 
