@@ -5,17 +5,17 @@ const profileRoutes = require('./routes/profiles')
 const cors = require("cors");
 
 // express app 
-const app = express()
+const app = express();
 
-app.use(cors())
+app.use(cors());
 
-app.use(express.json())
+app.use(express.json());
 
 // log requests
 app.use((req, res, next) => {
     console.log(req.method, req.path)
     next()
-})
+});
 
 // route
 app.use('/api/profiles', profileRoutes)

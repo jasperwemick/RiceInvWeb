@@ -9,13 +9,17 @@ const profileSchema = new Schema({
     },
     description: {
         type: String,
-        require: false
+        required: true
     },
-    image: {
+    imageName: {
+        type: String,
+        required: true
+    },
+    imageUrl: {
         type: String,
         required: false
     },
-    rice_points: {
+    ricePoints: {
         type: Number,
         required: true
     }

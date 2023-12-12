@@ -1,10 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import "./style/home.css"
  
 const Profile = (props) => (
     <li>
-        <div>{props.profile.name}</div>
-        <div>{props.profile.image}</div>
+        <div className="profile-image">
+            <Link to={`/edit/${props.profile._id}`}>
+                <img src={props.profile.imageUrl} alt="Player Profile"></img>
+            </Link>
+        </div>
+        <div className="profile-name">{props.profile.name}</div>
     </li>
 );
  
@@ -30,16 +35,6 @@ export default function Home() {
         return;
     }, [profiles.length]);
  
-    // This method will delete a job
-    async function deleteProfile(id) {
-        await fetch(`http://127.0.0.1:4000/api/profiles/${id}`, {
-            method: "DELETE"
-        });
-    
-        const newProfiles = profiles.filter((el) => el._id !== id);
-        setProfiles(newProfiles);
-    }
- 
     // This method will map out the jobs on the table
     function profileList() {
         return profiles.map((profile) => {
@@ -55,8 +50,17 @@ export default function Home() {
     // This following section will display the table with the jobs of individuals.
     return (
         <div>
-            <h3>Profile List</h3>
-            <ul>{profileList()}</ul>
+            <section className="head">
+                <h1>Rice Invitational</h1>
+                
+            </section>
+            <section className="profiles">
+                <h3>Profile List</h3>
+                <ul className="profile-list">{profileList()}</ul>
+            </section>
+            <section>
+                
+            </section>
         </div>
     );
 }

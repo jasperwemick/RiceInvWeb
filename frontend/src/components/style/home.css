@@ -1,0 +1,42 @@
+
+.profile-list {
+    background-color: lightgray;
+    padding: 20px 10px 20px 10px;
+
+    display: flex;
+    position: relative;
+    overflow: hidden;
+    overflow-x: scroll;
+    flex-wrap: nowrap;
+    list-style-type: none;
+
+    scrollbar-width: none;  /* Firefox */
+    -ms-overflow-style: none;  /* IE and Edge */
+}
+
+.profile-list::-webkit-scrollbar {
+    display: none;
+}
+
+
+.profile-list li {
+    flex: 0 0 auto;
+    margin-right: 10px;
+    background-color: gray;
+    display: inline-block;
+    width: 500px;
+    height: 540px;
+    border-radius: 20px;
+}
+
+.profile-image {
+    position: relative;
+    width: 400px;
+    height: 500px;
+    left: 50px;
+}
+
+.profile-list li:hover {
+    opacity: .5;
+}
+
