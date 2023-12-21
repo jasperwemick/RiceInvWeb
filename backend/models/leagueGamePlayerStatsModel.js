@@ -2,62 +2,55 @@ const mongoose = require('mongoose')
 
 const Schema = mongoose.Schema
 
-const profileSchema = new Schema({
-    name: {
+const leagueGamePlayerStatsSchema = new Schema({
+    gameID: {
         type: String,
         required: true
     },
-    nicknames: [{
-        type: String
-    }],
-    description: {
+    profileID: {
         type: String,
         required: true
     },
-    imageName: {
+    winner: {
+        type: Boolean,
+        reqiured: true
+    },
+    role: {
         type: String,
         required: true
     },
-    imageUrl: {
+    champion: {
         type: String,
         required: false
     },
-    ricePoints: {
+    kills: {
         type: Number,
         required: true
     },
-    brawlPoints: {
+    deaths: {
         type: Number,
         required: true
     },
-    leaguePoints: {
+    assists: {
         type: Number,
         required: true
     },
-    valPoints: {
-        type: Number, 
-        required: true
-    },
-    bullPoints: {
+    damage: {
         type: Number,
         required: true
     },
-    rocketPoints: {
+    gold: {
         type: Number,
         required: true
     },
-    mysteryPoints: {
+    rating: {
         type: Number,
         required: true
     },
-    counterPoints: {
-        type: Number,
-        required: true
-    },
-    bonusPoints: {
-        type: Number,
-        required: true
+    subbed: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: false })
 
-module.exports = mongoose.model('Profile', profileSchema)
+module.exports = mongoose.model('LeagueGamePlayerStat', leagueGamePlayerStatsSchema)

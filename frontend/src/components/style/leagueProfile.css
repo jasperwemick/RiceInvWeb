@@ -1,0 +1,11 @@
+.list-game {
+    width: 400px;
+    height: 100px;
+    background-color: gray;
+}
+.list-game-expand {
+    height: 500px;
+}
+.hidden {
+    display: none;
+}

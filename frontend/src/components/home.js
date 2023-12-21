@@ -5,7 +5,7 @@ import "./style/home.css"
 const Profile = (props) => (
     <li>
         <div className="profile-image">
-            <Link to={`/edit/${props.profile._id}`}>
+            <Link to={`/${props.profile._id}`}>
                 <img src={props.profile.imageUrl} alt="Player Profile"></img>
             </Link>
         </div>
@@ -16,7 +16,6 @@ const Profile = (props) => (
 export default function Home() {
     const [profiles, setProfiles] = useState([]);
  
-    // This method fetches the jobs from the database.
     useEffect(() => {
         async function getProfiles() {
             try {
@@ -35,7 +34,6 @@ export default function Home() {
         return;
     }, [profiles.length]);
  
-    // This method will map out the jobs on the table
     function profileList() {
         return profiles.map((profile) => {
             return (
@@ -47,7 +45,6 @@ export default function Home() {
         });
     }
  
-    // This following section will display the table with the jobs of individuals.
     return (
         <div>
             <section className="head">
@@ -59,7 +56,7 @@ export default function Home() {
                 <ul className="profile-list">{profileList()}</ul>
             </section>
             <section>
-                
+
             </section>
         </div>
     );

@@ -1,7 +1,10 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+
 const profileRoutes = require('./routes/profiles')
+const gameRoutes = require('./routes/games')
+
 const cors = require("cors");
 
 // express app 
@@ -19,6 +22,7 @@ app.use((req, res, next) => {
 
 // route
 app.use('/api/profiles', profileRoutes)
+app.use('/api/games', gameRoutes)
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
