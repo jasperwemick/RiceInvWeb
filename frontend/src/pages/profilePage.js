@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
+import "../style/profile.css"
 
 export default function Description() {
  
@@ -26,14 +27,20 @@ export default function Description() {
 
         getProfile();
         return;
-    }, [params.id]);
+    }, []);
 
     return (
         <div>
-            {profile.name}
-            <Link to={`/edit/${profile._id}`}>Edit</Link>
-            {profile.description}
-            <Link to={`/league/${profile._id}`}>League</Link>
+            <h2>
+                {profile.name}
+            </h2>
+            <img src={profile.imageUrl} alt="Player Profile"></img>
+            <h4>
+                {profile.description}
+            </h4>
+            <div><Link to={`/league/${profile._id}`}>League</Link></div>
+            <div><Link to={`/edit/${profile._id}`}>Edit</Link></div>
+            <div><Link to={`/brawl/${profile._id}`}>Brawlhalla</Link></div>
         </div>
     )
 }

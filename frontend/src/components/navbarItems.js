@@ -19,5 +19,10 @@ export const NavItems = [
         class: 'nav-button',
         path: '/league',
         text: 'League of Legends'
+    },
+    {
+        class: 'nav-button',
+        path: '/brawl',
+        text: 'Brawlhalla'
     }
 ]

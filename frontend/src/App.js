@@ -5,14 +5,18 @@ import { Route, Routes } from "react-router-dom";
  
 // We import all the components we need in our app
 import Navbar from "./components/navbar";
-import Home from "./components/home";
-import Add from "./components/addProfile";
-import Edit from "./components/editProfile";
+import Home from "./pages/homePage";
+import Add from "./pages/addProfilePage";
+import Edit from "./pages/editProfilePage";
 import Leaderboard from "./components/leaderboard";
-import Description from "./components/profilePage";
-import LeagueProfilePage from "./components/leagueProfilePage";
-import LeaguePage from "./components/leaguePage";
-import LeagueGamePage from "./components/leagueGamePage";
+import Description from "./pages/profilePage";
+import LeagueProfilePage from "./pages/leagueProfilePage";
+import LeaguePage from "./pages/leagueHomePage";
+import LeagueGamePage from "./pages/leagueGamePage";
+import BrawlProfilePage from "./pages/brawlProfilePage";
+import BrawlPage from "./pages/brawlHomePage";
+import BrawlOnesPage from "./pages/brawlOnesPage";
+import BrawlTwosPage from "./pages/brawlTwosPage";
  
 const App = () => {
   return (
@@ -42,6 +46,18 @@ const App = () => {
         
         {/* Game stats with listed individual player stats for a League of Legends game */}
         <Route path="/league/games/:id" element={<LeagueGamePage />} />
+
+        {/* Brawlhalla focused profile page for player */}
+        <Route path="/brawl/:id" element={<BrawlProfilePage/>}/>
+
+        {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
+        <Route path="/brawl" element={<BrawlPage />}/>
+
+        {/* Brawlhalla ones games and stats */}
+        <Route path="/brawl/ones" element={<BrawlOnesPage />}/> 
+
+        {/* Brawlhalla twos games and stats */}
+        <Route path="/brawl/twos" element={<BrawlTwosPage />}/> 
       </Routes>
     </div>
   );

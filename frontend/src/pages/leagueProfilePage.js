@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
-import "./style/leagueProfile.css"
+import "../style/leagueProfile.css"
 import moment from "moment"
 
 const Game = (props) => {
@@ -59,13 +59,12 @@ export default function LeagueProfilePage() {
                 const responseLeague = await fetch(`http://127.0.0.1:4000/api/profiles/league/${id}/games`);
                 const profileGames = await responseLeague.json();
 
-                
                 // Get list of stas for games
                 const responseStats = await fetch(`http://127.0.0.1:4000/api/profiles/league/${id}/games/stats`)
                 const stats = await responseStats.json();
 
                 let playerPackage = []
-                profileGames.forEach(async (game) => {
+                profileGames.forEach((game) => {
                     const gameStats = stats.find(({ gameID }) => gameID === game._id)
                     playerPackage.push({
                         ...gameStats,

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import "./style/home.css"
+import "../style/home.css"
  
 const Profile = (props) => (
     <li>
@@ -49,7 +49,7 @@ export default function Home() {
         <div>
             <section className="head">
                 <h1>Rice Invitational</h1>
-                
+                <h3>Welcome the Rice Invitational Web Page, the styling is currently garbage!</h3>
             </section>
             <section className="profiles">
                 <h3>Profile List</h3>

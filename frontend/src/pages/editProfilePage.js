@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 export default function Edit() {
 
     const [name, setName] = useState("")
-    const [nicknames, setNicknames] = useState([])
     const [description, setDescription] = useState("")
     const [brawlPoints, setBrawlPoints] = useState(0)
     const [leaguePoints, setLeaguePoints] = useState(0)
@@ -29,7 +28,6 @@ export default function Edit() {
                 const profile = await profiles.json();
 
                 setName(profile.name);
-                setNicknames(profile.nicknames);
                 setDescription(profile.description);
                 setUrl(profile.imageUrl)
                 setBrawlPoints(profile.brawlPoints);
@@ -146,12 +144,7 @@ export default function Edit() {
         <form onSubmit={onSubmit}>
             <input
             value={name}
-            onChange={e => setName(e)}
-            type="text"
-            />
-            <input
-            value={nicknames}
-            onChange={e => setNicknames(e)}
+            onChange={e => setName(e.target.value)}
             type="text"
             />
             <input

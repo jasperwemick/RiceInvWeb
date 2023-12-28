@@ -1,8 +1,15 @@
 const express = require('express')
 const Profile = require('../models/profilesModel')
+
 const LeagueProfile = require('../models/leagueProfilesModel')
 const LeagueGame = require('../models/leagueGamesModel')
 const LeagueGamePlayerStat = require('../models/leagueGamePlayerStatsModel')
+
+const BrawlProfile = require('../models/brawlProfilesModel')
+const BrawlSet = require('../models/brawlSetModel')
+const BrawlSetOnesStat = require('../models/brawlSetOnesStatsModel')
+const BrawlSetTwosStat = require('../models/brawlSetTwosStatsModel')
+
 const multer = require('multer')
 const sharp = require('sharp')
 
@@ -304,6 +311,75 @@ router.get('/league/:pid/games/:gid/stats', async (req, res) => {
     }
     catch(e) {
         console.log("Error at GET /league/:pid/games/:gid/stats: ", e)
+    }
+
+})
+
+// ########################################################################3
+
+router.get('/brawl', async (req, res) => {
+    try {
+        const brawlProfiles = await BrawlProfile.find();
+        res.json(brawlProfiles);
+    }
+    catch(e) {
+        console.log("Error at GET /brawl: ", e)
+    }
+
+})
+
+router.get('/brawl/:id', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const brawlProfile = await BrawlProfile.findOne({playerID: id});
+        res.json(brawlProfile);
+    }
+    catch(e) {
+        console.log("Error at GET /league/:id: ", e)
+    }
+
+})
+
+router.get('/brawl/:id/sets', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const brawlProfile = await BrawlProfile.findOne({playerID: id});
+        const sets = await BrawlSet.find({setNumber: brawlProfile.sets});
+        res.json(sets);
+    }
+    catch(e) {
+        console.log("Error at GET /brawl/:id/sets: ", e)
+    }
+})
+
+router.get('/brawl/:id/sets/ones/stats', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const personalStats = await BrawlSetOnesStat.find({profileID: id});
+        let setList = personalStats.map(x => x.setID);
+        const allStats = await BrawlSetOnesStat.find({setID: setList});
+        res.json(allStats);
+    }
+    catch(e) {
+        console.log("Error at GET /brawl/:id/sets/ones/stats: ", e)
+    }
+
+})
+
+router.get('/brawl/:id/sets/twos/stats', async (req, res) => {
+    const id = req.params.id;
+
+    try {
+        const personalStats = await BrawlSetTwosStat.find({profileID: id});
+        let setList = personalStats.map(x => x.setID);
+        const allStats = await BrawlSetTwosStat.find({setID: setList});
+        res.json(allStats);
+    }
+    catch(e) {
+        console.log("Error at GET /brawl/:id/sets/twos/stats: ", e)
     }
 
 })
