@@ -7,8 +7,13 @@ import { Link } from "react-router-dom";
 export default function brawlHomePage() {
     return (
         <div>
-            <Link to='/brawl/ones'>Ones</Link>
-            <Link to='/brawl/twos'>TWos</Link>
+            <div><span>Brawlhalla</span></div>
+            <div className="ones-block">
+                <div className="brawl-button"><Link to='/brawl/ones'>Singles</Link></div>
+            </div>
+            <div className="twos-block">
+                <div className="brawl-button"><Link to='/brawl/twos'>Doubles</Link></div>
+            </div>
         </div>
     )
 }

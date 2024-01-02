@@ -10,6 +10,8 @@ const BrawlSet = require('../models/brawlSetModel')
 const BrawlSetOnesStat = require('../models/brawlSetOnesStatsModel')
 const BrawlSetTwosStat = require('../models/brawlSetTwosStatsModel')
 
+const { Verify, VerifyRole } = require('../middleware/verify')
+
 const multer = require('multer')
 const sharp = require('sharp')
 
@@ -81,7 +83,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // Post a new profile
-router.post('/', upload.single('image'), async (req, res) => {
+router.post('/', Verify, VerifyRole, upload.single('image'), async (req, res) => {
 
     try {
         const buffer = await sharp(req.file.buffer).resize({height: 500, width: 400, fit: "contain"}).toBuffer();
@@ -120,7 +122,7 @@ router.post('/', upload.single('image'), async (req, res) => {
 })
 
 // Delete profile
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', Verify, VerifyRole, async (req, res) => {
     const id = req.params.id;
 
     try {
@@ -143,7 +145,7 @@ router.delete('/:id', async (req, res) => {
 
 })
 
-router.patch('/:id', upload.none(), async (req, res) => {
+router.patch('/:id', Verify, VerifyRole, upload.none(), async (req, res) => {
     const id = req.params.id;
 
     try {
@@ -189,7 +191,7 @@ router.get('/:id/images', async (req, res) => {
 })
 
 // Post a new image for a profile
-router.post('/images', upload.single('image'), async (req, res) => {
+router.post('/images', Verify, VerifyRole, upload.single('image'), async (req, res) => {
     
     try {
         const buffer = await sharp(req.file.buffer).resize({height: 500, width: 400, fit: "contain"}).toBuffer();
@@ -211,7 +213,7 @@ router.post('/images', upload.single('image'), async (req, res) => {
 
 })
 
-router.delete('/:id/images', async (req, res) => {
+router.delete('/:id/images', Verify, VerifyRole, async (req, res) => {
     const id = req.params.id;
 
     try {
@@ -233,7 +235,7 @@ router.delete('/:id/images', async (req, res) => {
 
 })
 
-router.patch('/:id/images', upload.single('image'), async (req, res) => {
+router.patch('/:id/images', Verify, VerifyRole, upload.single('image'), async (req, res) => {
     const id = req.params.id;
 
     try {

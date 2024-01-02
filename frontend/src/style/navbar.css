@@ -1,0 +1,54 @@
+.nav-items {
+    position: sticky;
+    display: flex;
+    background-color: grey;
+    width: 100%;
+}
+
+.nav-button {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    list-style: none;
+    height: 60px;
+}
+
+.sign-in-button {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    list-style: none;
+    height: 60px;
+}
+
+.sign-in-button a {
+    text-decoration: none;
+    color: #151414;
+    font-size: 16px;
+    width: 90%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+}
+
+.sign-in-button a:hover {
+    background-color: #000000;
+    color: #fff;
+}
+
+.nav-button a {
+    text-decoration: none;
+    color: #151414;
+    font-size: 16px;
+    width: 90%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+}
+
+.nav-button a:hover {
+    background-color: #000000;
+    color: #fff;
+}

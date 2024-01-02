@@ -41,6 +41,7 @@ export default function Add() {
 
             await fetch("http://127.0.0.1:4000/api/profiles", {
                 method: "POST",
+                credentials: "include",
                 body: profileData
             })
         }

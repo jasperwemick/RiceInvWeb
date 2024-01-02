@@ -75,6 +75,7 @@ export default function Edit() {
         try {
             await fetch(`http://127.0.0.1:4000/api/profiles/${id}`, {
                 method: "PATCH",
+                credentials: "include",
                 body: profileData
             })
         }
@@ -95,7 +96,8 @@ export default function Edit() {
         try {
             // Remove old image from database
             await fetch(`http://127.0.0.1:4000/api/profiles/${id}/images`, {
-                method: "DELETE"
+                method: "DELETE",
+                credentials: "include"
             });
 
             // Add new image to database
@@ -103,12 +105,14 @@ export default function Edit() {
             fileData.append("image", e.target.files[0]);
             await fetch(`http://127.0.0.1:4000/api/profiles/images`, {
                 method: "POST",
+                credentials: "include",
                 body: fileData
             });
 
             // Update imageName field
             await fetch(`http://127.0.0.1:4000/api/profiles/${id}/images`, {
                 method: "PATCH",
+                credentials: "include",
                 body: fileData
             })
 

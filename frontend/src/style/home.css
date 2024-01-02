@@ -1,7 +1,14 @@
+body {
+    margin: 0;
+    padding: 0;
+}
 
 .profile-list {
+    left: 50%;
+    transform: translateX(-50%);
     background-color: lightgray;
     padding: 20px 10px 20px 10px;
+    width: 1260px;
 
     display: flex;
     position: relative;
@@ -21,18 +28,18 @@
 
 .profile-list li {
     flex: 0 0 auto;
-    margin-right: 10px;
+    margin: 0 10px 0 10px;
     background-color: gray;
     display: inline-block;
-    width: 500px;
-    height: 540px;
+    width: 400px;
+    height: 420px;
     border-radius: 20px;
 }
 
 .profile-image {
     position: relative;
-    width: 400px;
-    height: 500px;
+    width: 300px;
+    height: 375px;
     left: 50px;
 }
 

@@ -17,47 +17,44 @@ import BrawlProfilePage from "./pages/brawlProfilePage";
 import BrawlPage from "./pages/brawlHomePage";
 import BrawlOnesPage from "./pages/brawlOnesPage";
 import BrawlTwosPage from "./pages/brawlTwosPage";
+import SchedulePage from "./pages/schedulePage";
+import AddEvent from "./pages/addEventPage";
+import Layout from "./components/Layout";
+import Login from "./pages/loginPage";
+import RequireAuth from "./components/RequireAuth";
+import Logout from "./components/Logout";
+
  
 const App = () => {
   return (
     <div>
-      <Navbar />
+      <Navbar/>
       <Routes>
-        {/* Home page with player list */}
-        <Route exact path="/" element={<Home />} />
+        <Route path="" element={<Layout />}>
+          {/* PUBLIC */}
+          <Route exact path="/" element={<Home />} /> {/* Home page with player list */}
+          <Route path="/score" element={<Leaderboard />} /> {/* Overall leaderboard for the RI */}
+          <Route path="/:id" element={<Description />} /> {/* Main profile page for player */}
+          <Route path="/schedule" element={<SchedulePage />}/> {/* Schedule Page */}
+          <Route path="/login" element={<Login />}/> {/* Login Page (Admin only for now) */}
+          <Route path="/logout" element={<Logout />}/> {/* Logout Function */}
 
-        {/* Allows for for new default profile additions */}
-        <Route path="/add" element={<Add />} />
+          <Route path="/league/:id" element={<LeagueProfilePage />} /> {/* League of Legends focused profile page for player */}
+          <Route path="/league" element={<LeaguePage />} /> {/* Details regarding RI League of Legends rules, scoring, and highlights */}
+          <Route path="/league/games/:id" element={<LeagueGamePage />} /> {/* Game stats with listed individual player stats for a League of Legends game */}
 
-        {/* Allows for updates to a player's default profile */}
-        <Route path="/edit/:id" element={<Edit />} />
+          <Route path="/brawl/:id" element={<BrawlProfilePage/>}/> {/* Brawlhalla focused profile page for player */}
+          <Route path="/brawl" element={<BrawlPage />}/> {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
+          <Route path="/brawl/ones" element={<BrawlOnesPage />}/> {/* Brawlhalla ones games and stats */}
+          <Route path="/brawl/twos" element={<BrawlTwosPage />}/> {/* Brawlhalla twos games and stats */}
 
-        {/* Overall leaderboard for the RI */}
-        <Route path="/score" element={<Leaderboard />} />
-
-        {/* Main profile page for player */}
-        <Route path="/:id" element={<Description />} />
-
-        {/* League of Legends focused profile page for player */}
-        <Route path="/league/:id" element={<LeagueProfilePage />} />
-
-        {/* Details regarding RI League of Legends rules, scoring, and highlights */}
-        <Route path="/league" element={<LeaguePage />} /> 
-        
-        {/* Game stats with listed individual player stats for a League of Legends game */}
-        <Route path="/league/games/:id" element={<LeagueGamePage />} />
-
-        {/* Brawlhalla focused profile page for player */}
-        <Route path="/brawl/:id" element={<BrawlProfilePage/>}/>
-
-        {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
-        <Route path="/brawl" element={<BrawlPage />}/>
-
-        {/* Brawlhalla ones games and stats */}
-        <Route path="/brawl/ones" element={<BrawlOnesPage />}/> 
-
-        {/* Brawlhalla twos games and stats */}
-        <Route path="/brawl/twos" element={<BrawlTwosPage />}/> 
+          {/* PROTECTED */}
+          <Route element={<RequireAuth allowedRoles={['Admin']}/>}>
+            <Route path="/add" element={<Add />} /> {/* Allows for for new default profile additions */}
+            <Route path="/edit/:id" element={<Edit />} /> {/* Allows for updates to a player's default profile */}
+            <Route path="/schedule/add" element={<AddEvent />}/> {/* Add Event Page */}
+          </Route>
+        </Route>
       </Routes>
     </div>
   );

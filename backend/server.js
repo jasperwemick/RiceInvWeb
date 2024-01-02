@@ -2,17 +2,27 @@ require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
 
+const authRoutes = require('./routes/auth')
 const profileRoutes = require('./routes/profiles')
 const gameRoutes = require('./routes/games')
+const eventRoutes = require('./routes/events')
 
 const cors = require("cors");
+const cookieParser = require('cookie-parser')
 
 // express app 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: 'http://localhost:3000',
+    credentials: true,
+    preflightContinue: true
+}));
+
+app.use(cookieParser());
 
 app.use(express.json());
+
 
 // log requests
 app.use((req, res, next) => {
@@ -21,8 +31,10 @@ app.use((req, res, next) => {
 });
 
 // route
+app.use('/auth', authRoutes)
 app.use('/api/profiles', profileRoutes)
 app.use('/api/games', gameRoutes)
+app.use('/api/events', eventRoutes)
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {

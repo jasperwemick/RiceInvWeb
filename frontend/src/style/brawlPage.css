@@ -106,3 +106,30 @@ path {
     width: 160px;
     text-align: center;
 }
+
+.brawl-button {
+    position: relative;
+    background-color: #2a3e60;
+    border-radius: 20px;
+    width: 400px;
+    height: 60px;
+}
+.brawl-button a {
+    text-decoration: none;
+    color: #c8c8c8;
+    font-size: 16px;
+    width: 90%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0 12px 0 12px;
+}
+
+.ones-block {
+    display: inline-flex;
+}
+
+.twos-block {
+    display: inline-flex; 
+}
