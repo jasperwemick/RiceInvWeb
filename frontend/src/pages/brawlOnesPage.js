@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import "../style/brawlPage.css"
-import { GroupSet, GroupTable, GauntletSet, GauntletBracket, PlayoffSet, PlayoffColumn } from "../components/bracket.js"
-import { BracketBrawlOnes, UpperBrawlOnes, LowerBrawlOnes } from "../components/bracketStructure.js"
+import { GroupSet, GroupTable} from "../components/bracket.js"
+import { GauntletBrawl, UpperBrawlOnes, LowerBrawlOnes } from "../components/bracketStructure.js"
 
 export default function BrawlOnesPage() {
     const [groupSets, setGroupSets] = useState([]);
@@ -31,21 +31,36 @@ export default function BrawlOnesPage() {
                 const responseStats = await fetch(`http://127.0.0.1:4000/api/games/brawl/ones/stats`)
                 const stats = await responseStats.json();
 
-                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles`)
+                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles/default`)
                 const profiles = await responseProfiles.json();
+
+                const responseBrawl = await fetch(`http://127.0.0.1:4000/api/profiles/brawl`)
+                const brawlProfiles = await responseBrawl.json();
 
                 gamePackage.forEach((item, i) => {
                     let set = stats.filter(x => x.setID === item._id);
+
                     let winnerStats = set.find(x => x.winner === true);
-                    let loserStats = set.find(x => x.winner === false);
-
-                    let winner = profiles.find(x => x._id === winnerStats.profileID);
-                    let loser = profiles.find(x => x._id === loserStats.profileID);
-
-                    gamePackage[i].winnerName = winner.name;
-                    gamePackage[i].loserName = loser.name;
+                    let winnerProfile = profiles.find(x => x._id === winnerStats.profileID);
                     gamePackage[i].winnerStats = winnerStats;
+                    gamePackage[i].winnerStats.names = [winnerProfile.name];
+
+                    let loserStats = set.find(x => x.winner === false);
+                    let loserProfile = profiles.find(x => x._id === loserStats.profileID);
                     gamePackage[i].loserStats = loserStats;
+                    gamePackage[i].loserStats.names = [loserProfile.name];
+
+                    let winnerBrawl = brawlProfiles.find(x => x.playerID === winnerStats.profileID);
+                    item.parents.forEach((parent) => {
+                        const parentSet = gamePackage.find(x => x.setNumber === parent);
+                        if (winnerBrawl.sets.includes(parentSet.setNumber)) {
+                            gamePackage[i].winnerStats.prevSet = {setNumber: parentSet.setNumber, formatType: parentSet.formatType, details: parentSet.details}
+                        }
+                        else {
+                            gamePackage[i].loserStats.prevSet = {setNumber: parentSet.setNumber, formatType: parentSet.formatType, details: parentSet.details}
+                        }
+                    })
+                    console.log(item)
                 });
 
                 const groups = gamePackage.filter(x => x.formatType === 'Group')
@@ -92,7 +107,7 @@ export default function BrawlOnesPage() {
             <section>
                 <h3>GAUNTLET</h3>
                 <div className="gauntlet">
-                    <BracketBrawlOnes sets={gauntletSets}/>
+                    <GauntletBrawl sets={gauntletSets}/>
                 </div>
             </section>
             <section>

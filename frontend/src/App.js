@@ -41,7 +41,7 @@ const App = () => {
 
           <Route path="/league/:id" element={<LeagueProfilePage />} /> {/* League of Legends focused profile page for player */}
           <Route path="/league" element={<LeaguePage />} /> {/* Details regarding RI League of Legends rules, scoring, and highlights */}
-          <Route path="/league/games/:id" element={<LeagueGamePage />} /> {/* Game stats with listed individual player stats for a League of Legends game */}
+          <Route path="/league/games/:num" element={<LeagueGamePage />} /> {/* Game stats with listed individual player stats for a League of Legends game */}
 
           <Route path="/brawl/:id" element={<BrawlProfilePage/>}/> {/* Brawlhalla focused profile page for player */}
           <Route path="/brawl" element={<BrawlPage />}/> {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}

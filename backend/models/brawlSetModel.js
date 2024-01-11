@@ -15,6 +15,13 @@ const brawlSetSchema = new Schema({
         type: String,
         required: true
     },
+    details: {
+        type: String,
+        required: true
+    },
+    parents: [{
+        type: Number
+    }]
 
     
 }, { timestamps: false })

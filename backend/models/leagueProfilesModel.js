@@ -15,7 +15,7 @@ const leagueProfileSchema = new Schema({
         type: Number
     }],
     placing: {
-        type: String,
+        type: Number,
         required: true
     },
     riftWins: {

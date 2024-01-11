@@ -9,9 +9,9 @@ export const GroupSet = (props) => {
 
     return (
         <tr className="group-row">
-            <td>{props.set.winnerName}</td>
+            <td>{props.set.winnerStats.names.join('/')}</td>
             <td>{props.set.winnerStats.matchesWon} - {props.set.loserStats.matchesWon}</td>
-            <td>{props.set.loserName}</td>
+            <td>{props.set.loserStats.names.join('/')}</td>
         </tr>
     )
 };
@@ -27,50 +27,34 @@ export const GroupTable = (props) => {
     )
 }
 
-export const GauntletSet = (props) => {
+export const BracketSet = (props) => {
+
+    // clean this later
+    const organize = (wStats, lStats) => {
+
+        const valueW = wStats.prevSet ? wStats.prevSet.setNumber : -1;
+        const valueL = lStats.prevSet ? lStats.prevSet.setNumber : -1;
+
+        let stats = []
+        if (valueL < valueW) {
+            stats = [lStats, wStats]
+        }
+        else {
+            stats = [wStats, lStats]
+        }
+
+        return stats.map((stat) => {
+            return (
+                <div key={stat._id} className={`${stat.winner ? '' : 'matchup-loser'}`}>
+                    <div className="matchup-player-block"><span>{stat.names.join('/')}</span></div>
+                    <div className="matchup-score-block"><span>{stat.matchesWon}</span></div>
+                </div>
+            )
+        })
+    }
     return (
         <div className="matchup-block">
-            <div>
-                <div className="matchup-player-block"><span>{props.set.winnerName}</span></div>
-                <div className="matchup-score-block"><span>{props.set.winnerStats.matchesWon}</span></div>
-            </div>
-            <div className="matchup-loser">
-                <div className="matchup-player-block"><span>{props.set.loserName}</span></div>
-                <div className="matchup-score-block"><span>{props.set.loserStats.matchesWon}</span></div>
-            </div>
-        </div>
-    )
-}
-
-export const GauntletBracket = (props) => {
-    return (
-        <li>
-            <div className="gauntlet-bracket">{props.listFunc}</div>
-        </li>
-    )
-}
-
-export const PlayoffSet = (props) => {
-
-    return (
-        <div className="matchup-block">
-            <div>
-                <div className="matchup-player-block"><span>{props.set.winnerName}</span></div>
-                <div className="matchup-score-block"><span>{props.set.winnerStats.matchesWon}</span></div>
-            </div>
-            <div className="matchup-loser">
-                <div className="matchup-player-block"><span>{props.set.loserName}</span></div>
-                <div className="matchup-score-block"><span>{props.set.loserStats.matchesWon}</span></div>
-            </div>
-        </div>
-    )
-}
-
-export const PlayoffColumn = (props) => {
-    return (
-        <div>
-            <div className="playoff-headers" style={{left: props.left}}>{props.header}</div>
-            <div className={props.column} style={{left: props.left}}>{props.listFunc}</div>
+            {organize(props.set.winnerStats, props.set.loserStats)}
         </div>
     )
 }

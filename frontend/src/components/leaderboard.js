@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import "../style/scoreboard.css"
 
 const Row = ({profile}) => (
-    <tr>
-        <td>{profile.name}</td>
-        <td>{profile.ricePoints}</td>
-        <td>{profile.brawlPoints}</td>
-        <td>{profile.leaguePoints}</td>
-        <td>{profile.valPoints}</td>
-        <td>{profile.bullPoints}</td>
-        <td>{profile.rocketPoints}</td>
-        <td>{profile.mysteryPoints}</td>
-        <td>{profile.counterPoints}</td>
-        <td>{profile.bonusPoints}</td>
+    <tr className="leaderboard-row">
+        <td><Link to={`/${profile._id}`}>{profile.name}</Link></td>
+        <td><span>{profile.ricePoints}</span></td>
+        <td><Link to={`/brawl/${profile._id}`}>{profile.brawlPoints}</Link></td>
+        <td><Link to={`/league/${profile._id}`}>{profile.leaguePoints}</Link></td>
+        <td><span>{profile.valPoints}</span></td>
+        <td><span>{profile.bullPoints}</span></td>
+        <td><span>{profile.rocketPoints}</span></td>
+        <td><span>{profile.mysteryPoints}</span></td>
+        <td><span>{profile.counterPoints}</span></td>
+        <td><span>{profile.bonusPoints}</span></td>
     </tr>
 );
 
@@ -35,7 +36,7 @@ export default function Leaderboard() {
             } 
 
             try {
-                const profileList = await fetch(`http://127.0.0.1:4000/api/profiles`)
+                const profileList = await fetch(`http://127.0.0.1:4000/api/profiles/default`)
                 const p = await profileList.json();
                 p.sort(descendingOrder);
                 setProfiles(p);
@@ -64,24 +65,24 @@ export default function Leaderboard() {
     }
 
     return (
-        <div className="leaderboard">
+        <section className="leaderboard">
             <table>
                 <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Total</th>
-                        <th>Brawlhalla</th>
-                        <th>League of Legends</th>
-                        <th>Valorant</th>
-                        <th>Bull**** Blast</th>
-                        <th>Rocket League</th>
-                        <th>???</th>
-                        <th>Counter Strike</th>
-                        <th>Bonus/Punishment</th>
+                    <tr className="leaderboard-header">
+                        <th><span>Player</span></th>
+                        <th><span>Total</span></th>
+                        <th><Link to={`/brawl`}>Brawlhalla</Link></th>
+                        <th><Link to={`/league`}>League of Legends</Link></th>
+                        <th><span>Valorant</span></th>
+                        <th><span>Bull**** Blast</span></th>
+                        <th><span>Rocket League</span></th>
+                        <th><span>???</span></th>
+                        <th><span>Counter Strike</span></th>
+                        <th><span>Bonus/Punishment</span></th>
                     </tr>
                 </thead>
                 <tbody>{scoresList()}</tbody>
             </table>
-        </div>
+        </section>
     )
 }

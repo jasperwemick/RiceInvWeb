@@ -28,7 +28,7 @@ const EventItem = (props) => {
     const profileList = () => {
         return props.event.profiles.map((profile) => {
             return(
-                <div className="event-person">
+                <div className="event-person" key={profile._id}>
                     <img src={profile.imageUrl} width={'100px'} height={'125px'}></img>
                     <div><span>{profile.name}</span></div>
                 </div>
@@ -108,13 +108,13 @@ export default function SchedulePage() {
     useEffect(() => {
 
         const monthObj = calendarMonths.find(x => x.month === selectedMonth && x.year === selectedYear)
-
+        
         async function getEvents(m, y) {
             try {
                 const response = await fetch(`http://127.0.0.1:4000/api/events/current?month=${m}&year=${y}`);
                 const events = await response.json();
 
-                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles`);
+                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles/default`);
                 const profiles = await responseProfiles.json();
                 events.forEach((item, index) => {
                     const eventProfiles = profiles.filter(x => item.people.includes(x._id));
@@ -160,7 +160,7 @@ export default function SchedulePage() {
             setSelectedYear(selectedYear + 1);
         }
         else {
-            selectedMonth(selectedMonth + 1);
+            setSelectedMonth(selectedMonth + 1);
         }
     }
 
@@ -170,7 +170,7 @@ export default function SchedulePage() {
             setSelectedYear(selectedYear - 1);
         }
         else {
-            selectedMonth(selectedMonth - 1);
+            setSelectedMonth(selectedMonth - 1);
         }
     }
 

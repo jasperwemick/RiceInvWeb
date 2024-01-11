@@ -73,7 +73,7 @@ export default function Edit() {
         profileData.append("counterPoints", counterPoints)
         profileData.append("bonusPoints", bonusPoints)
         try {
-            await fetch(`http://127.0.0.1:4000/api/profiles/${id}`, {
+            await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}`, {
                 method: "PATCH",
                 credentials: "include",
                 body: profileData
@@ -95,7 +95,7 @@ export default function Edit() {
 
         try {
             // Remove old image from database
-            await fetch(`http://127.0.0.1:4000/api/profiles/${id}/images`, {
+            await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}/images`, {
                 method: "DELETE",
                 credentials: "include"
             });
@@ -103,21 +103,21 @@ export default function Edit() {
             // Add new image to database
             const fileData = new FormData();
             fileData.append("image", e.target.files[0]);
-            await fetch(`http://127.0.0.1:4000/api/profiles/images`, {
+            await fetch(`http://127.0.0.1:4000/api/profiles/default/images`, {
                 method: "POST",
                 credentials: "include",
                 body: fileData
             });
 
             // Update imageName field
-            await fetch(`http://127.0.0.1:4000/api/profiles/${id}/images`, {
+            await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}/images`, {
                 method: "PATCH",
                 credentials: "include",
                 body: fileData
             })
 
             // Show new image in editor
-            const response = await fetch(`http://127.0.0.1:4000/api/profiles/${id}/images`);
+            const response = await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}/images`);
             const profile = await response.json();
             setUrl(profile.imageUrl);
         }

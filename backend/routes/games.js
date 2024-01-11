@@ -22,41 +22,43 @@ router.get('/league', async (req, res) => {
 
 })
 
-router.get('/league/:gid', async (req, res) => {
-    const gid = req.params.gid;
+router.get('/league/:num', async (req, res) => {
+    const num = req.params.num;
 
     try {
-        const game = await LeagueGame.findById(gid);
+        const game = await LeagueGame.findOne({gameNumber: num});
         res.json(game);
     }
     catch(e) {
-        console.log("Error at /league/:gid: ", e);
+        console.log("Error at /league/:num: ", e);
     }
 
 })
 
-router.get('/league/:gid/stats', async (req, res) => {
-    const gid = req.params.gid;
+router.get('/league/:num/stats', async (req, res) => {
+    const num = req.params.num;
 
     try {
-        const statDatas = await LeagueGamePlayerStat.find({gameID: gid});
+        const game = await LeagueGame.find({gameNumber: num});
+        const statDatas = await LeagueGamePlayerStat.find({gameID: game.map(item => item._id)});
         res.json(statDatas);
     }
     catch(e) {
-        console.log("Error at /league/:gid/stats: ", e);
+        console.log("Error at /league/:num/stats: ", e);
     }
 })
 
-router.get('/league/:gid/profiles/names', async (req, res) => {
-    const gid = req.params.gid;
+router.get('/league/:num/profiles/names', async (req, res) => {
+    const num = req.params.num;
 
     try {
-        const stat = await LeagueGamePlayerStat.find({gameID: gid}, 'profileID -_id');
+        const game = await LeagueGame.find({gameNumber: num});
+        const stat = await LeagueGamePlayerStat.find({gameID: game.map(item => item._id)}, 'profileID -_id');
         const names = await Profile.find({_id: stat.map(item => item.profileID)}, 'name');
         res.json(names);
     }
     catch(e) {
-        console.log("Error at /league/:gid/profiles/names: ", e);
+        console.log("Error at /league/:num/profiles/names: ", e);
     }
 
 })

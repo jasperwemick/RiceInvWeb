@@ -11,19 +11,28 @@ const cookieParser = require('cookie-parser')
 const Verify = async (req, res, next) => {
     try {
         const accessToken = req.cookies.accessToken;
+        if (!accessToken) {
+            throw {
+                status: 401,
+                message: 'Invalid Session'
+            }
+        }
 
-        if (!accessToken) return res.sendStatus(401);
         const checkBlacklist = await Blacklist.findOne({token: accessToken})
 
         if (checkBlacklist) {
-            return res.status(401).json({
+            throw {
+                status: 401,
                 message: 'Session Expired'
-            })
+            }
         }
     
         jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN, async (err, decoded) => {
             if (err) {
-                return res.status(401).json({message: 'Session expired'})
+                throw {
+                    status: 401,
+                    message: 'Session Expired'
+                }
             }
     
             const { id } = decoded;
@@ -34,12 +43,18 @@ const Verify = async (req, res, next) => {
         })
     }
     catch(e) {
-        res.status(500).json({
-            status: 'error',
-            code: 500,
-            data: [],
-            message: 'Server Explosion'
-        });
+        if (e?.status != null) {
+            res.status(e.status).json({
+                data: [],
+                message: e.message
+            });
+        }
+        else {
+            res.status(500).json({
+                data: [],
+                message: 'Server Explosion'
+            });
+        }
     }
 
 }
@@ -50,20 +65,26 @@ const VerifyRole = async (req, res, next) => {
         const { roles } = user;
 
         if (!roles.includes('Admin')) {
-            return res.status(401).json({
-                status: 'failed',
+            throw {
+                status: 401,
                 message: 'Authorization Failed'
-            });
+            };
         }
         next();
     }
     catch(e) {
-        res.status(500).json({
-            status: 'error',
-            code: 500,
-            data: [],
-            message: 'Sever Explosion'
-        });
+        if (e?.status != null) {
+            res.status(e.status).json({
+                data: [],
+                message: e.message
+            });
+        }
+        else {
+            res.status(500).json({
+                data: [],
+                message: 'Server Explosion'
+            });
+        }
     }
 }
 

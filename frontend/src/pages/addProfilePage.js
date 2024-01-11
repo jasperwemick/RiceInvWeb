@@ -39,7 +39,7 @@ export default function Add() {
             profileData.append("counterPoints", counterPoints)
             profileData.append("bonusPoints", bonusPoints)
 
-            await fetch("http://127.0.0.1:4000/api/profiles", {
+            await fetch("http://127.0.0.1:4000/api/profiles/default", {
                 method: "POST",
                 credentials: "include",
                 body: profileData

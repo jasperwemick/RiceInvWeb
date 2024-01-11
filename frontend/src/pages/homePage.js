@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import "../style/home.css"
-import useAuth from "../hooks/userAuth";
  
 const Profile = (props) => (
     <li>
@@ -16,13 +15,12 @@ const Profile = (props) => (
  
 export default function Home() {
     const [profiles, setProfiles] = useState([]);
+    const scrollRef = useRef(null);
 
-    const { setAuth } = useAuth();
- 
     useEffect(() => {
         async function getProfiles() {
             try {
-                const response = await fetch(`http://127.0.0.1:4000/api/profiles`)
+                const response = await fetch(`http://127.0.0.1:4000/api/profiles/default`)
                 const profiles = await response.json();
                 setProfiles(profiles);
             }
@@ -37,29 +35,6 @@ export default function Home() {
         return;
     }, [profiles.length]);
 
-    useEffect(() => {
-        async function validateCookie() {
-            try {
-                const responeAgain = await fetch(`http://127.0.0.1:4000/auth/user`, {
-                    credentials: 'include'
-                })
-                const actualData = await responeAgain.json();
-                console.log(actualData.message)
-                const roles = actualData?.roles;
-                const user = actualData?.user;
-                setAuth({ user, roles });
-            }
-            catch(e) {
-                const message = `Failed to Validate Cookie ${e}`;
-                console.log(message)
-                return;
-            }
-        }
-
-        validateCookie();
-        return;
-    }, [])
- 
     function profileList() {
         return profiles.map((profile) => {
             return (
@@ -70,16 +45,24 @@ export default function Home() {
             );
         });
     }
+
+    const shift = (offset) => {
+        scrollRef.current.scrollLeft += offset;
+    }
  
     return (
         <div>
             <section className="head">
-                <h1>Rice Invitational</h1>
-                <h3>Welcome the Rice Invitational Web Page, the styling is currently garbage!</h3>
+                <span>Rice Invitational</span>
+                <span>Welcome the Rice Invitational Web Page, the styling is currently garbage!</span>
             </section>
             <section className="profiles">
-                <h3>Profile List</h3>
-                <ul className="profile-list">{profileList()}</ul>
+                <span>Profile List</span>
+                <div className="profile-list-container">
+                    <button onClick={() => shift(-1260)}>Left</button>
+                    <ul ref={scrollRef} className="profile-list">{profileList()}</ul>
+                    <button onClick={() => shift(1260)}>Right</button>
+                </div>
             </section>
             <section>
 

@@ -34,7 +34,7 @@ const s3 = new S3Client({
 });
 
 // Get all profiles
-router.get('/', async (req, res) => {
+router.get('/default', async (req, res) => {
 
     try {
         const profiles = await Profile.find()
@@ -59,7 +59,7 @@ router.get('/', async (req, res) => {
 })
 
 // Get a profile
-router.get('/:id', async (req, res) => {
+router.get('/default/:id', async (req, res) => {
     const id = req.params.id;
 
     try {
@@ -83,7 +83,7 @@ router.get('/:id', async (req, res) => {
 })
 
 // Post a new profile
-router.post('/', Verify, VerifyRole, upload.single('image'), async (req, res) => {
+router.post('/default', Verify, VerifyRole, upload.single('image'), async (req, res) => {
 
     try {
         const buffer = await sharp(req.file.buffer).resize({height: 500, width: 400, fit: "contain"}).toBuffer();
@@ -122,7 +122,7 @@ router.post('/', Verify, VerifyRole, upload.single('image'), async (req, res) =>
 })
 
 // Delete profile
-router.delete('/:id', Verify, VerifyRole, async (req, res) => {
+router.delete('/default/:id', Verify, VerifyRole, async (req, res) => {
     const id = req.params.id;
 
     try {
@@ -145,7 +145,7 @@ router.delete('/:id', Verify, VerifyRole, async (req, res) => {
 
 })
 
-router.patch('/:id', Verify, VerifyRole, upload.none(), async (req, res) => {
+router.patch('/default/:id', Verify, VerifyRole, upload.none(), async (req, res) => {
     const id = req.params.id;
 
     try {
@@ -167,7 +167,7 @@ router.patch('/:id', Verify, VerifyRole, upload.none(), async (req, res) => {
 
 //##############################################################################################
 
-router.get('/:id/images', async (req, res) => {
+router.get('/default/:id/images', async (req, res) => {
     const id = req.params.id;
 
     try {
@@ -191,7 +191,7 @@ router.get('/:id/images', async (req, res) => {
 })
 
 // Post a new image for a profile
-router.post('/images', Verify, VerifyRole, upload.single('image'), async (req, res) => {
+router.post('/default/images', Verify, VerifyRole, upload.single('image'), async (req, res) => {
     
     try {
         const buffer = await sharp(req.file.buffer).resize({height: 500, width: 400, fit: "contain"}).toBuffer();
@@ -213,7 +213,7 @@ router.post('/images', Verify, VerifyRole, upload.single('image'), async (req, r
 
 })
 
-router.delete('/:id/images', Verify, VerifyRole, async (req, res) => {
+router.delete('/default/:id/images', Verify, VerifyRole, async (req, res) => {
     const id = req.params.id;
 
     try {
@@ -235,7 +235,7 @@ router.delete('/:id/images', Verify, VerifyRole, async (req, res) => {
 
 })
 
-router.patch('/:id/images', Verify, VerifyRole, upload.single('image'), async (req, res) => {
+router.patch('/default/:id/images', Verify, VerifyRole, upload.single('image'), async (req, res) => {
     const id = req.params.id;
 
     try {

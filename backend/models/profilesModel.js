@@ -7,9 +7,6 @@ const profileSchema = new Schema({
         type: String,
         required: true
     },
-    nicknames: [{
-        type: String
-    }],
     description: {
         type: String,
         required: true

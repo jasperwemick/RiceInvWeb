@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "../style/leagueProfile.css"
-import moment from "moment"
 
 const Game = (props) => {
     const [gameDropdown, setGameDropdown] = useState(false)
@@ -12,19 +11,25 @@ const Game = (props) => {
     }
 
     return (
-        <li className={`list-game ${gameDropdown ? 'list-game-expand': null}`} onClick={() => {toggle(); props.clickEvent();}}>
-            <div>
-                <Link to={`/league/games/${props.game._id}`}>gameLink</Link>
-            </div>
-            <div>{props.game.gameNumber}</div>
-            <div>{moment(props.game.date).format('MMM Do YYYY')}</div>
-            <div className={`${gameDropdown ? null: 'hidden'}`}>
-                <h2>Kills: {props.game.kills}</h2>
-                <h2>Deaths: {props.game.deaths}</h2>
-                <h2>Assists: {props.game.assists}</h2>
-                <h3>Champion: {props.game.champion}</h3>
-            </div>
-        </li>
+        <React.Fragment>
+            <li className={`list-game ${props.game.winner ? 'winner-game': 'loser-game'}`} onClick={() => {toggle();}}>
+                <div>
+                    <Link to={`/league/games/${props.game.gameNumber}`}>gameLink</Link>
+                </div>
+                <div>{props.game.gameNumber}</div>
+                <div>{props.game.date.split('T')[0]}</div>
+            </li>
+            <li>
+                <div className={`${gameDropdown ? 'list-details-expand-league': 'list-details-shrink-league'}`}>
+                    <div className={`stats-content ${gameDropdown ? '': 'hidden'}`}>
+                        <span>Kills: {props.game.kills}</span>
+                        <span>Deaths: {props.game.deaths}</span>
+                        <span>Assists: {props.game.assists}</span>
+                        <span>Champion: {props.game.champion}</span>
+                    </div>
+                </div>
+            </li>
+        </React.Fragment>
     )
 };
 
@@ -32,7 +37,6 @@ export default function LeagueProfilePage() {
  
     const [leagueProfile, setLeagueProfile] = useState({})
     const [games, setGames] = useState([])
-
 
     const params = useParams();
 
@@ -104,7 +108,7 @@ export default function LeagueProfilePage() {
     return (
         <div>
             <div>Placing: {leagueProfile.placing}</div>
-            <ul>{gameList()}</ul>
+            <ul className="game-list">{gameList()}</ul>
         </div>
     )
 }

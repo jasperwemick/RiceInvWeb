@@ -14,7 +14,7 @@ export default function Description() {
             const id = params.id.toString();
 
             try {
-                const response = await fetch(`http://127.0.0.1:4000/api/profiles/${id}`);
+                const response = await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}`);
                 const profile = await response.json();
                 setProfile(profile);
             }

@@ -1,41 +1,15 @@
-.list-win {
-    background-color: rgb(99, 157, 99);
-    border: 1px solid rgb(76, 119, 77);
-}
-
-.list-lose {
-    background-color: rgb(170, 170, 170);
-    border: 1px solid rgb(103, 103, 103);
-}
-
-.set-list {
+.game-list {
     list-style: none;
-    padding-left: 0;
-    margin: 0 0 0 0;
 }
 
 .list-row {
     height: 30px;
 }
 
-.list-element {
-    display: inline-block;
-    width: 80px;
-    padding: 0 20px 0 0;
-}
-
-.list-header {
-    position: relative;
-    background-color: rgb(144, 144, 144);
-    border: 1px solid rgb(29, 29, 29);
-    height: 30px;
-    margin: 20px 0 0 0;
-}
-
 .stat-group {
     position: relative;
     width: 30%;
-    height: 450px;
+    min-height: 450px;
     display: inline-block;
     vertical-align: top;
     margin: 0 40px 40px 0;
@@ -48,4 +22,44 @@
 .winrate {
     position: absolute;
     bottom: 0;
+}
+
+.list-details-expand-brawl {
+    position: relative;
+    background-color: gray;
+    animation-name: slideRevealBrawl;
+    animation-duration: 0.5s;
+    width: inherit;
+    height: 60px;
+}
+
+.list-details-shrink-brawl {
+    position: relative;
+    transition: 0.5s;
+    width: inherit;
+    height: 0px;
+}
+
+.hidden {
+    display: none;
+}
+
+.list-win {
+    background-color: rgb(99, 157, 99);
+    border: 1px solid rgb(76, 119, 77);
+}
+
+.list-lose {
+    background-color: rgb(170, 170, 170);
+    border: 1px solid rgb(103, 103, 103);
+}
+
+
+@keyframes slideRevealBrawl {
+    from {
+        height: 0px;
+    }
+    to {
+        height: 60px;
+    }
 }

@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
 import "../style/brawlPage.css"
-import { GroupSet, GroupTable, GauntletSet, GauntletBracket, PlayoffSet, PlayoffColumn } from "../components/bracket.js"
-import { UpperBrawlTwos, LowerBrawlTwos, BracketBrawlTwos } from "../components/bracketStructure.js";
+import { GroupSet, GroupTable } from "../components/bracket.js"
+import { UpperBrawlTwos, LowerBrawlTwos, GauntletBrawl } from "../components/bracketStructure.js";
 
 
 export default function BrawlTwosPage() {
@@ -32,25 +32,39 @@ export default function BrawlTwosPage() {
                 const responseStats = await fetch(`http://127.0.0.1:4000/api/games/brawl/twos/stats`)
                 const stats = await responseStats.json();
 
-                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles`)
+                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles/default`)
                 const profiles = await responseProfiles.json();
+
+                const responseBrawl = await fetch(`http://127.0.0.1:4000/api/profiles/brawl`)
+                const brawlProfiles = await responseBrawl.json();
 
                 gamePackage.forEach((item, i) => {
                     let set = stats.filter(x => x.setID === item._id);
 
                     const winnersStats = set.filter(x => x.winner === true);
-                    const losersStats = set.filter(x => x.winner === false);
-                    
-
-                    let winner = profiles.find(x => x._id === winnersStats[0].profileID).name;
-                    winner += '/' + profiles.find(x => x._id === winnersStats[1].profileID).name;
-                    let loser = profiles.find(x => x._id === losersStats[0].profileID).name;
-                    loser += '/' + profiles.find(x => x._id === losersStats[1].profileID).name;
-
-                    gamePackage[i].winnerName = winner;
-                    gamePackage[i].loserName = loser;
+                    let winnerProfile = profiles.find(x => x._id === winnersStats[0].profileID);
+                    let winnerProfileTwo = profiles.find(x => x._id === winnersStats[1].profileID);
                     gamePackage[i].winnerStats = winnersStats[0];
+                    gamePackage[i].winnerStats.names = [winnerProfile.name, winnerProfileTwo.name];
+
+                    const losersStats = set.filter(x => x.winner === false);
+                    let loserProfile = profiles.find(x => x._id === losersStats[0].profileID);
+                    let loserProfileTwo = profiles.find(x => x._id === losersStats[1].profileID);
                     gamePackage[i].loserStats = losersStats[0];
+                    gamePackage[i].loserStats.names = [loserProfile.name, loserProfileTwo.name];
+
+                    let winnerBrawl = brawlProfiles.find(x => x.playerID === winnerProfile._id);
+                    let loserBrawl = brawlProfiles.find(x => x.playerID === loserProfile._id);
+                    item.parents.forEach((parent) => {
+                        const parentSet = gamePackage.find(x => x.setNumber === parent);
+                        if (winnerBrawl.sets.includes(parentSet.setNumber)) {
+                            gamePackage[i].winnerStats.prevSet = {setNumber: parentSet.setNumber, formatType: parentSet.formatType, details: parentSet.details}
+                        }
+                        if (loserBrawl.sets.includes(parentSet.setNumber)){
+                            gamePackage[i].loserStats.prevSet = {setNumber: parentSet.setNumber, formatType: parentSet.formatType, details: parentSet.details}
+                        }
+                    })
+                    console.log(item)
                 });
 
                 const groups = gamePackage.filter(x => x.formatType === 'Group')
@@ -95,7 +109,7 @@ export default function BrawlTwosPage() {
             <section>
                 <h3>GAUNTLET</h3>
                 <div className="gauntlet">
-                    <BracketBrawlTwos sets={gauntletSets}/>
+                    <GauntletBrawl sets={gauntletSets}/>
                 </div>
             </section>
             <section>

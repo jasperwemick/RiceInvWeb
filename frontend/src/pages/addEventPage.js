@@ -32,7 +32,7 @@ export default function AddEvent() {
 
         async function getProfiles() {
             try {
-                const response = await fetch(`http://127.0.0.1:4000/api/profiles`);
+                const response = await fetch(`http://127.0.0.1:4000/api/profiles/default`);
                 const profiles = await response.json();
                 setProfiles(profiles);
             }
