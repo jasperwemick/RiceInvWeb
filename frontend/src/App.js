@@ -1,14 +1,13 @@
 import React from "react";
-import ReactDOM from 'react-dom/client'
 // We use Route in order to define the different routes of our application
 import { Route, Routes } from "react-router-dom";
  
 // We import all the components we need in our app
-import Navbar from "./components/navbar";
+import Navbar from "./components/Navbar";
 import Home from "./pages/homePage";
 import Add from "./pages/addProfilePage";
 import Edit from "./pages/editProfilePage";
-import Leaderboard from "./components/leaderboard";
+import Leaderboard from "./components/Leaderboard";
 import Description from "./pages/profilePage";
 import LeagueProfilePage from "./pages/leagueProfilePage";
 import LeaguePage from "./pages/leagueHomePage";
@@ -23,6 +22,9 @@ import Layout from "./components/Layout";
 import Login from "./pages/loginPage";
 import RequireAuth from "./components/RequireAuth";
 import Logout from "./components/Logout";
+import BlastHomePage from "./pages/blastHomePage";
+import BlastJeopardyPage from "./pages/blastJeopardyPage";
+import BlastAmongusPage from "./pages/blastAmongusPage";
 
  
 const App = () => {
@@ -47,6 +49,10 @@ const App = () => {
           <Route path="/brawl" element={<BrawlPage />}/> {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
           <Route path="/brawl/ones" element={<BrawlOnesPage />}/> {/* Brawlhalla ones games and stats */}
           <Route path="/brawl/twos" element={<BrawlTwosPage />}/> {/* Brawlhalla twos games and stats */}
+
+          <Route path="/blast" element={<BlastHomePage />}/> {/* Bullshit Blast Page */}
+          <Route path="/blast/jeopardy" element={<BlastJeopardyPage />}/> {/* Bullshit Blast Jeopardy Page */}
+          <Route path="/blast/amongus" element={<BlastAmongusPage />}/> {/* Bullshit Blast Among Us Page */}
 
           {/* PROTECTED */}
           <Route element={<RequireAuth allowedRoles={['Admin']}/>}>

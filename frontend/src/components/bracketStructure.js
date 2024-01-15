@@ -19,16 +19,12 @@ export const GauntletBrawl = (props) => {
         return sets.map((set, index) => {
             const leftShift = ((index % 3) * 200);
             const topShift = (Math.floor((index / 3)) * 120);
-            let parent = {};
-            if (index != 0) {
-                parent = set[index - 1];
-            }
             return (
                 <BracketPiece 
                     key={set._id}
                     slotStyle={{left: 0 + leftShift, top: 50 + topShift}} 
-                    svgStyle={index % 3 != 2 ? {left: 160 + leftShift, top: 70 + topShift} : {}}
-                    path={index % 3 != 2 ? " M 0, 10 L 40, 10 " : ""}
+                    svgStyle={index % 3 !== 2 ? {left: 160 + leftShift, top: 70 + topShift} : {}}
+                    path={index % 3 !== 2 ? " M 0, 10 L 40, 10 " : ""}
                     playoffSet={<BracketSet set={set} parents={[set.winnerStats.prevSet, set.loserStats.prevSet]}/>} 
                 />
             )

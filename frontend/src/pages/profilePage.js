@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "../style/profile.css"
 
@@ -27,7 +27,7 @@ export default function Description() {
 
         getProfile();
         return;
-    }, []);
+    }, [params.id]);
 
     return (
         <div>

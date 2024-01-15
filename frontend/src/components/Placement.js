@@ -1,11 +1,3 @@
-const onesScores = {
-
-}
-
-const twosScores = {
-
-}
-
 const scores = {
     1: {
         1: 120,

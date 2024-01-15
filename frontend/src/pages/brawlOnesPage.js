@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
 import "../style/brawlPage.css"
 import { GroupSet, GroupTable} from "../components/bracket.js"
 import { GauntletBrawl, UpperBrawlOnes, LowerBrawlOnes } from "../components/bracketStructure.js"

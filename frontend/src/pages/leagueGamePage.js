@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "../style/leagueGame.css"
 
@@ -40,8 +40,8 @@ export default function LeagueGamePage() {
                 const nameList = await responseProfiles.json();
                 
                 playerList.forEach((item, i) => {
-                    let obj = nameList.find(x => x._id == item.profileID)
-                    playerList[i].name = obj.name
+                    let obj = nameList.find(x => x._id === item.profileID);
+                    playerList[i].name = obj.name;
                 });
 
                 const win = playerList.filter(x => x.winner === true)

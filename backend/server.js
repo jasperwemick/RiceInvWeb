@@ -13,11 +13,23 @@ const cookieParser = require('cookie-parser')
 // express app 
 const app = express();
 
-app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true,
-    preflightContinue: true
-}));
+if (process.env.NODE_ENV === "development"){
+    app.use(
+        cors({
+            origin: "http://localhost:3000",
+            credentials: true,
+        })
+    );
+}
+
+if (process.env.NODE_ENV === "production"){
+    app.use(
+        cors({
+            origin: "https://www.riceinvitational.org",
+            credentials: true,
+        })
+    );
+}
 
 app.use(cookieParser());
 

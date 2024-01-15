@@ -1,11 +1,11 @@
-import React, { useState } from "react";
+import React from "react";
 
 
 export const GroupSet = (props) => {
-    const [group, setGroup] = useState(false)
+    // const [group, setGroup] = useState(false)
 
-    const toggle = () => {
-    }
+    // const toggle = () => {
+    // }
 
     return (
         <tr className="group-row">

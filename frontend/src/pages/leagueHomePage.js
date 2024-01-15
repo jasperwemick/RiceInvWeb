@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "../style/leaguePage.css"
 import Placement from "../components/Placement";
@@ -17,8 +16,6 @@ export default function LeaguePage() {
 
     const [games, setGames] = useState([]);
     const [places, setPlaces] = useState([]);
-
-    const params = useParams();
 
     useEffect(() => {
         async function getGames() {
@@ -50,7 +47,7 @@ export default function LeaguePage() {
                     return 0;
                 } )
                 setGames(gameList);
-                setPlaces(placements)
+                setPlaces(placements);
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;

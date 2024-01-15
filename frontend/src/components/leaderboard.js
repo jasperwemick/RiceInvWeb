@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../style/scoreboard.css"
 
-const Row = ({profile}) => (
+const LeaderboardRow = ({profile}) => (
     <tr className="leaderboard-row">
         <td><Link to={`/${profile._id}`}>{profile.name}</Link></td>
         <td><span>{profile.ricePoints}</span></td>
@@ -47,7 +47,7 @@ export default function Leaderboard() {
                 return;
             }
         }
-
+        
         getProfiles();
         return;
     }, [profiles.length]);
@@ -56,7 +56,7 @@ export default function Leaderboard() {
     function scoresList() {
         return profiles.map((profile) => {
             return (
-                <Row
+                <LeaderboardRow
                     profile={profile}
                     key={profile._id}
                 />

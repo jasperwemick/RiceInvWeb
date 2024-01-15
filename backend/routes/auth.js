@@ -15,7 +15,6 @@ const upload = multer({ storage: storage})
 const { Verify, VerifyRole } = require('../middleware/verify')
 
 router.use(function(req, res, next) {
-    console.log('help')
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Headers', ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'].join(', '));
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -27,7 +26,6 @@ router.post("/login", upload.none(), async (req, res) => {
     const { username } = req.body;
     try {
         const user = await User.findOne({ username }).select('+password');
-        console.log(user)
         if (!user) {
             res.status(401).json({
                 status: 'failed',

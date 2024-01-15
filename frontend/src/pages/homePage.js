@@ -20,7 +20,7 @@ export default function Home() {
     useEffect(() => {
         async function getProfiles() {
             try {
-                const response = await fetch(`http://127.0.0.1:4000/api/profiles/default`)
+                const response = await fetch(`http://127.0.0.1:4000/api/profiles/default`);
                 const profiles = await response.json();
                 setProfiles(profiles);
             }
@@ -53,15 +53,17 @@ export default function Home() {
     return (
         <div>
             <section className="head">
-                <span>Rice Invitational</span>
-                <span>Welcome the Rice Invitational Web Page, the styling is currently garbage!</span>
+                <span>The Rice Invitational<br/><br/></span>
+                <span>Welcome the Rice Invitational web page, a page I made for a tournament that my friends (and sometimes I) play in<br/><br/></span>
+                <span>I'm sure you'll notice the styling is greatly lacking! A Heavy WIP with much more to come, I'm developing this on a MERN stack for educational purposes<br/><br/></span>
+                <span>Thanks for visiting - Jasper<br/><br/></span>
             </section>
             <section className="profiles">
                 <span>Profile List</span>
                 <div className="profile-list-container">
-                    <button onClick={() => shift(-1260)}>Left</button>
+                    <button onClick={() => shift(-1260)}>{'<'}</button>
                     <ul ref={scrollRef} className="profile-list">{profileList()}</ul>
-                    <button onClick={() => shift(1260)}>Right</button>
+                    <button onClick={() => shift(1260)}>{'>'}</button>
                 </div>
             </section>
             <section>

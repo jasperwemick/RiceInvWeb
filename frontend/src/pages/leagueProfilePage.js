@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "../style/leagueProfile.css"
 
@@ -69,7 +69,7 @@ export default function LeagueProfilePage() {
 
                 let playerPackage = []
                 profileGames.forEach((game) => {
-                    const gameStats = stats.find(({ gameID }) => gameID === game._id)
+                    const gameStats = stats.find(({ gameID }) => gameID === game._id);
                     playerPackage.push({
                         ...gameStats,
                         ...game
@@ -93,22 +93,19 @@ export default function LeagueProfilePage() {
         return;
     }, [params.id]);
 
-    function revealStats() {
-        
-    }
-
     function gameList() {
         return games.map((game) => {
             return (
-                <Game game={game} clickEvent={revealStats} key={game._id}/>
+                <Game game={game} key={game._id}/>
             );
         });
     }
 
     return (
         <div>
-            <div>Placing: {leagueProfile.placing}</div>
+            <div><span>Placing: {leagueProfile.placing}</span></div>
             <ul className="game-list">{gameList()}</ul>
+            <div><span>Rating 1.0: {leagueProfile.rating}</span></div>
         </div>
     )
 }

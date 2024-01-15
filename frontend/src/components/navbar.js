@@ -4,6 +4,28 @@ import { Link } from "react-router-dom";
 import "../style/navbar.css"
 import useAuth from "../hooks/userAuth";
 
+
+const NavItem = (props) => {
+
+    const [dropdown, setDropdown] = useState(false);
+
+    return (
+        <li key={props.item.text} className={`${props.item.class}`} onMouseLeave={() => {setDropdown(false)}}>
+            <Link to={props.item.path} className={`nav-button-link`} onMouseOver={() => {setDropdown(true)}}>{props.item.text}</Link>
+            <ul className={`nav-dropdown ${(dropdown && props.item.dropdown) ? '' : 'hidden'}`}>
+                {props.item.dropItems.map((drop, index) => {
+                    return (
+                        <li key={index} className={drop.class}>
+                            <Link to={drop.path}>{drop.text}</Link>
+                        </li>
+                    )
+                })}
+            </ul>
+        </li>
+    )
+}
+
+
 export default function Navbar() {
 
     const { auth, setAuth } = useAuth();
@@ -30,14 +52,15 @@ export default function Navbar() {
 
         validateCookie();
         return;
-    }, []);
+    }, [setAuth]);
 
     const listItems = (obj) => {
         return obj.map((item, index) => {
             return (
-                <li key={index} className={item.class}>
-                    <Link to={item.path}>{item.text}</Link>
-                </li>
+                <NavItem
+                    item={item}
+                    key={index}
+                />
             );
         })
     }
@@ -51,11 +74,11 @@ export default function Navbar() {
     }
 
     return (
-        <nav>
+        <nav className="navbar">
             <ul className="nav-items">
                 {listItems(NavItems)}
                 {auth?.user ? item(LogItems[1]): item(LogItems[0]) }
             </ul>
-      </nav>
+        </nav>
     )
 }

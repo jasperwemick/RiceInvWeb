@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
-import { Link } from "react-router-dom";
  
 export default function Edit() {
 
@@ -24,7 +23,7 @@ export default function Edit() {
         async function fetchData() {
             const id = params.id.toString();
             try {
-                const profiles = await fetch(`http://127.0.0.1:4000/api/profiles/${id}`);
+                const profiles = await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}`);
                 const profile = await profiles.json();
 
                 setName(profile.name);
@@ -130,7 +129,7 @@ export default function Edit() {
 
     function validateNumber(e, setter) {
         if (e.target.value.includes('-')) {
-            if (e.target.value[0] != '-') {
+            if (e.target.value[0] !== '-') {
                 e.preventDefault();
                 return;
             }
@@ -161,7 +160,7 @@ export default function Edit() {
             type="file"
             accept="image/*"
             />
-            <img src={url}></img>
+            <img src={url} alt=""></img>
             <input
             value={brawlPoints}
             onChange={e => validateNumber(e, setBrawlPoints)}

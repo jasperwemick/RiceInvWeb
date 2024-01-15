@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router";
-import { Link } from "react-router-dom";
 import { calendarMonths } from "../components/calendarMonths";
 import dayjs from "dayjs"
 import "../style/schedule.css"
@@ -29,7 +27,7 @@ const EventItem = (props) => {
         return props.event.profiles.map((profile) => {
             return(
                 <div className="event-person" key={profile._id}>
-                    <img src={profile.imageUrl} width={'100px'} height={'125px'}></img>
+                    <img src={profile.imageUrl} width={'100px'} height={'125px'} alt=""></img>
                     <div><span>{profile.name}</span></div>
                 </div>
             )
@@ -72,6 +70,11 @@ const Week = (props) => {
                                                 event={event}
                                                 listKey={index}
                                             />
+                                        )
+                                    }
+                                    else {
+                                        return (
+                                            <div></div>
                                         )
                                     }
                                 })}
@@ -137,7 +140,7 @@ export default function SchedulePage() {
         setToday(day)
         return;
 
-    }, [events.length, selectedMonth])
+    }, [events.length, selectedMonth, selectedYear, day, month, year])
 
     const mapDays = () => {
         return weekObjs.map((w) => {

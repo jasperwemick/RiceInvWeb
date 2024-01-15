@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams } from "react-router";
 import "../style/brawlProfile.css"
 
 
 const SetItem = (props) => {
 
     const [gameDropdown, setGameDropdown] = useState(false)
-    const [opponent, setOpponent] = useState({})
+    // const [opponent, setOpponent] = useState({})
 
     const toggle = () => {
         setGameDropdown(!gameDropdown)
@@ -15,7 +15,7 @@ const SetItem = (props) => {
     return (
         <React.Fragment>
             <li className={`list-row ${props.set.personalStats.winner ? 'list-win': 'list-lose'}`} onClick={() => {toggle();}}>   
-                <span>{`${(props.set.formatType == 'Uppers' || props.set.formatType == 'Lowers') ? 'Playoffs': props.set.formatType}`}</span>
+                <span>{`${(props.set.formatType === 'Uppers' || props.set.formatType === 'Lowers') ? 'Playoffs': props.set.formatType}`}</span>
                 <span>{`${props.set.personalStats.winner ? 'Win': 'Loss'}`}</span>
                 <span>{props.set.personalStats.matchesWon} - {props.set.opponentStats.matchesWon}</span>
             </li>
@@ -79,7 +79,7 @@ export default function BrawlProfilePage() {
                     let setStats = onesStats.filter(x => x.setID === item._id);
                     let personalStats = setStats.find(x => x.profileID === id);
                     ones[i].personalStats = personalStats
-                    const opponentStats = setStats.find(x => x.winner != personalStats.winner);
+                    const opponentStats = setStats.find(x => x.winner !== personalStats.winner);
                     ones[i].opponentStats = opponentStats;
                     ones[i].opponentName = [ profiles.find(x => x._id === opponentStats.profileID).name ];
                     console.log(ones[i].opponentName)
@@ -89,7 +89,7 @@ export default function BrawlProfilePage() {
                     let setStats = twosStats.filter(x => x.setID === item._id)
                     let personalStats = setStats.find(x => x.profileID === id);
                     twos[i].personalStats = personalStats
-                    const opponentDoublesStats = setStats.filter(x => x.winner != personalStats.winner);
+                    const opponentDoublesStats = setStats.filter(x => x.winner !== personalStats.winner);
                     twos[i].opponentStats = opponentDoublesStats[0];
                     twos[i].opponentName = []
                     opponentDoublesStats.forEach((opponent) => {
@@ -112,7 +112,7 @@ export default function BrawlProfilePage() {
 
         getProfiles();
         return;
-        }, []);
+        }, [params.id]);
 
     function setList(state) {
         return state.map((set) => {

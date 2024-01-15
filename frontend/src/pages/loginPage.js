@@ -39,7 +39,7 @@ const Login = () => {
                 body: loginData
             });
             const data = await response.json();  
-            console.log(data.message)
+            console.log(data.message);
             const responeAgain = await fetch(`http://127.0.0.1:4000/auth/user`, {
                 credentials: 'include'
             })

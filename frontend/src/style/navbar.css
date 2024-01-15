@@ -1,7 +1,20 @@
-.nav-items {
+.navbar {
     position: sticky;
+    z-index: 10;
+    top: 0;
+}
+
+.nav-items {
     display: flex;
     background-color: grey;
+    width: auto;
+}
+
+.nav-dropdown {
+    position: absolute;
+    background-color: lightgray;
+    list-style: none;
+    top: 60px;
     width: auto;
 }
 
@@ -11,6 +24,22 @@
     align-items: center;
     list-style: none;
     height: 60px;
+}
+
+.nav-button-link {
+    text-decoration: none;
+    color: #151414;
+    font-size: 16px;
+    width: 90%;
+    height: 70%;
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+}
+
+.nav-button-link:hover {
+    background-color: #000000;
+    color: #fff;
 }
 
 .sign-in-button {
@@ -37,18 +66,26 @@
     color: #fff;
 }
 
-.nav-button a {
-    text-decoration: none;
-    color: #151414;
-    font-size: 16px;
-    width: 90%;
-    height: 70%;
+.nav-drop-button {
     display: flex;
+    list-style: none;
+    height: 40px;
+    width: 130px;
     align-items: center;
-    padding: 0 16px;
+    text-align: center;
 }
 
-.nav-button a:hover {
-    background-color: #000000;
-    color: #fff;
+.nav-drop-button a {
+    display: flex;
+    text-decoration: none;
+    color: #151414;
+    align-items: center;
+    width: 90%;
+    height: 100%;
+    padding: 0 10px;
+}
+
+.nav-drop-button a:hover {
+    background-color: gray;
+    color: white;
 }

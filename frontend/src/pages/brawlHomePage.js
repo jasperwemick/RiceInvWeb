@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
 import "../style/brawlPage.css"
 import { Link } from "react-router-dom";
 import Placement from "../components/Placement";
 
 export default function BrawlHomePage() {
 
-    const [brawlProfiles, setBrawlProfiles] = useState([])
+    // const [brawlProfiles, setBrawlProfiles] = useState([])
     const [ones, setOnes] = useState([])
     const [twos, setTwos] = useState([])
 
@@ -62,7 +61,7 @@ export default function BrawlHomePage() {
             merged.sort(ascendingOrder);
 
             // Merge player names or make new component
-            setBrawlProfiles(brawl);
+            // setBrawlProfiles(brawl);
             setOnes(onevone);
             setTwos(merged);
         }

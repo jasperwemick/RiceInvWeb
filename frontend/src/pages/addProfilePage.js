@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
  
 export default function Add() {
 
@@ -55,12 +54,17 @@ export default function Add() {
     }
 
     function validateNumber(e, setter) {
-
-        if (! /^[0-9\-]+$/.test(e.target.value) && e.target.value.length > 0) {
-            e.preventDefault();
-            return
+        if (e.target.value.includes('-')) {
+            if (e.target.value[0] !== '-') {
+                e.preventDefault();
+                return;
+            }
         }
-        setter(e.target.value)
+        else if (! /^[0-9]+$/.test(e.target.value) && e.target.value.length > 0) {
+            e.preventDefault();
+            return;
+        }
+        setter(Number(e.target.value));
     }
     
     return (
