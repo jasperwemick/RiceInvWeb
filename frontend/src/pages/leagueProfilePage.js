@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "../style/leagueProfile.css"
+import GetUrl from "../GetUrl";
 
 const Game = (props) => {
     const [gameDropdown, setGameDropdown] = useState(false)
@@ -56,15 +57,15 @@ export default function LeagueProfilePage() {
 
             try {
                 // Get League related profile data
-                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles/league/${id}`);
+                const responseProfiles = await fetch(`${GetUrl}/api/profiles/league/${id}`);
                 const profile = await responseProfiles.json();
 
                 // Get list of games player participated in
-                const responseLeague = await fetch(`http://127.0.0.1:4000/api/profiles/league/${id}/games`);
+                const responseLeague = await fetch(`${GetUrl}/api/profiles/league/${id}/games`);
                 const profileGames = await responseLeague.json();
 
                 // Get list of stas for games
-                const responseStats = await fetch(`http://127.0.0.1:4000/api/profiles/league/${id}/games/stats`)
+                const responseStats = await fetch(`${GetUrl}/api/profiles/league/${id}/games/stats`)
                 const stats = await responseStats.json();
 
                 let playerPackage = []
@@ -84,7 +85,7 @@ export default function LeagueProfilePage() {
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;
-                window.alert(message);
+                console.log(message);
                 return;
             }
         }

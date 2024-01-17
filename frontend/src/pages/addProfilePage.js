@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router";
+import GetUrl from "../GetUrl";
  
 export default function Add() {
 
@@ -38,7 +39,7 @@ export default function Add() {
             profileData.append("counterPoints", counterPoints)
             profileData.append("bonusPoints", bonusPoints)
 
-            await fetch("http://127.0.0.1:4000/api/profiles/default", {
+            await fetch(`${GetUrl}/api/profiles/default`, {
                 method: "POST",
                 credentials: "include",
                 body: profileData
@@ -46,7 +47,7 @@ export default function Add() {
         }
         catch(err){
             const message = `An error occurred: ${err}`;
-            window.alert(message);
+            console.log(message)
             return;
         }
         

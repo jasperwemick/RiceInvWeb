@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "../style/profile.css"
+import GetUrl from "../GetUrl";
 
 export default function Description() {
  
@@ -14,13 +15,13 @@ export default function Description() {
             const id = params.id.toString();
 
             try {
-                const response = await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}`);
+                const response = await fetch(`${GetUrl}/api/profiles/default/${id}`);
                 const profile = await response.json();
                 setProfile(profile);
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;
-                window.alert(message);
+                console.log(message);
                 return;
             }
         }

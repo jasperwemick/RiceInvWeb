@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import { Link } from "react-router-dom";
 import "../style/leagueGame.css"
+import GetUrl from "../GetUrl";
 
 const Player = (props) => (
     <li className={`game-list-item ${props.player.subbed ? 'league-subbed': ''}`} >
@@ -30,13 +31,13 @@ export default function LeagueGamePage() {
             const num = params.num;
 
             try {
-                const responseGame = await fetch(`http://127.0.0.1:4000/api/games/league/${num}`);
+                const responseGame = await fetch(`${GetUrl}/api/games/league/${num}`);
                 const game = await responseGame.json();
 
-                const responseStats = await fetch(`http://127.0.0.1:4000/api/games/league/${num}/stats`);
+                const responseStats = await fetch(`${GetUrl}/api/games/league/${num}/stats`);
                 const playerList = await responseStats.json();
 
-                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/games/league/${num}/profiles/names`);
+                const responseProfiles = await fetch(`${GetUrl}/api/games/league/${num}/profiles/names`);
                 const nameList = await responseProfiles.json();
                 
                 playerList.forEach((item, i) => {
@@ -56,7 +57,7 @@ export default function LeagueGamePage() {
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;
-                window.alert(message);
+                console.log(message);
                 return;
             }
         }

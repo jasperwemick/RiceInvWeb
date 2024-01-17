@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../style/brawlPage.css"
 import { GroupSet, GroupTable} from "../components/bracket.js"
 import { GauntletBrawl, UpperBrawlOnes, LowerBrawlOnes } from "../components/bracketStructure.js"
+import GetUrl from "../GetUrl.js";
 
 export default function BrawlOnesPage() {
     const [groupSets, setGroupSets] = useState([]);
@@ -23,17 +24,17 @@ export default function BrawlOnesPage() {
             } 
 
             try {
-                const responseSets = await fetch(`http://127.0.0.1:4000/api/games/brawl/ones`)
+                const responseSets = await fetch(`${GetUrl}/api/games/brawl/ones`)
                 const gamePackage = await responseSets.json();
                 gamePackage.sort(ascendingOrder)
 
-                const responseStats = await fetch(`http://127.0.0.1:4000/api/games/brawl/ones/stats`)
+                const responseStats = await fetch(`${GetUrl}/api/games/brawl/ones/stats`)
                 const stats = await responseStats.json();
 
-                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles/default`)
+                const responseProfiles = await fetch(`${GetUrl}/api/profiles/default`)
                 const profiles = await responseProfiles.json();
 
-                const responseBrawl = await fetch(`http://127.0.0.1:4000/api/profiles/brawl`)
+                const responseBrawl = await fetch(`${GetUrl}/api/profiles/brawl`)
                 const brawlProfiles = await responseBrawl.json();
 
                 gamePackage.forEach((item, i) => {
@@ -74,7 +75,7 @@ export default function BrawlOnesPage() {
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;
-                window.alert(message);
+                console.log(message);
                 return;
             }
         }

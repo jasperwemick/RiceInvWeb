@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router";
+import GetUrl from "../GetUrl";
  
 export default function Edit() {
 
@@ -23,7 +24,7 @@ export default function Edit() {
         async function fetchData() {
             const id = params.id.toString();
             try {
-                const profiles = await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}`);
+                const profiles = await fetch(`${GetUrl}/api/profiles/default/${id}`);
                 const profile = await profiles.json();
 
                 setName(profile.name);
@@ -72,7 +73,7 @@ export default function Edit() {
         profileData.append("counterPoints", counterPoints)
         profileData.append("bonusPoints", bonusPoints)
         try {
-            await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}`, {
+            await fetch(`${GetUrl}/api/profiles/default/${id}`, {
                 method: "PATCH",
                 credentials: "include",
                 body: profileData
@@ -94,7 +95,7 @@ export default function Edit() {
 
         try {
             // Remove old image from database
-            await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}/images`, {
+            await fetch(`${GetUrl}/api/profiles/default/${id}/images`, {
                 method: "DELETE",
                 credentials: "include"
             });
@@ -102,27 +103,27 @@ export default function Edit() {
             // Add new image to database
             const fileData = new FormData();
             fileData.append("image", e.target.files[0]);
-            await fetch(`http://127.0.0.1:4000/api/profiles/default/images`, {
+            await fetch(`${GetUrl}/api/profiles/default/images`, {
                 method: "POST",
                 credentials: "include",
                 body: fileData
             });
 
             // Update imageName field
-            await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}/images`, {
+            await fetch(`${GetUrl}/api/profiles/default/${id}/images`, {
                 method: "PATCH",
                 credentials: "include",
                 body: fileData
             })
 
             // Show new image in editor
-            const response = await fetch(`http://127.0.0.1:4000/api/profiles/default/${id}/images`);
+            const response = await fetch(`${GetUrl}/api/profiles/default/${id}/images`);
             const profile = await response.json();
             setUrl(profile.imageUrl);
         }
         catch(err) {
             const message = `An error occurred: ${err}`;
-            window.alert(message);
+            console.log(message);
             return;
         }
     }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import { Link } from "react-router-dom";
 import "../style/home.css"
+import GetUrl from "../GetUrl";
  
 const Profile = (props) => (
     <li>
@@ -20,13 +21,13 @@ export default function Home() {
     useEffect(() => {
         async function getProfiles() {
             try {
-                const response = await fetch(`http://127.0.0.1:4000/api/profiles/default`);
+                const response = await fetch(`${GetUrl}/api/profiles/default`);
                 const profiles = await response.json();
                 setProfiles(profiles);
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;
-                window.alert(message);
+                console.log(message);
                 return;
             }
         }

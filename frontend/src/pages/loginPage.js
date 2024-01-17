@@ -1,6 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../hooks/userAuth";
 import { useRef, useState, useEffect } from 'react';
+import GetUrl from "../GetUrl";
 
 const Login = () => {
 
@@ -33,14 +34,14 @@ const Login = () => {
         loginData.append("password", pass)
 
         try {
-            const response = await fetch(`http://127.0.0.1:4000/auth/login`, {
+            const response = await fetch(`${GetUrl}/auth/login`, {
                 method: 'POST',
                 credentials: 'include',
                 body: loginData
             });
             const data = await response.json();  
             console.log(data.message);
-            const responeAgain = await fetch(`http://127.0.0.1:4000/auth/user`, {
+            const responeAgain = await fetch(`${GetUrl}/auth/user`, {
                 credentials: 'include'
             })
             const actualData = await responeAgain.json();

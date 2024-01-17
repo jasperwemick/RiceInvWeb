@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router";
 import "../style/brawlProfile.css"
+import GetUrl from "../GetUrl";
 
 
 const SetItem = (props) => {
@@ -55,13 +56,13 @@ export default function BrawlProfilePage() {
             } 
 
             try {
-                const responseProfile = await fetch(`http://127.0.0.1:4000/api/profiles/default`)
+                const responseProfile = await fetch(`${GetUrl}/api/profiles/default`)
                 const profiles = await responseProfile.json();
 
-                const responseBrawlProfile = await fetch(`http://127.0.0.1:4000/api/profiles/brawl/${id}`)
+                const responseBrawlProfile = await fetch(`${GetUrl}/api/profiles/brawl/${id}`)
                 const brawlProfile = await responseBrawlProfile.json();
 
-                const responseSets = await fetch(`http://127.0.0.1:4000/api/profiles/brawl/${id}/sets`)
+                const responseSets = await fetch(`${GetUrl}/api/profiles/brawl/${id}/sets`)
                 const sets = await responseSets.json();
 
                 sets.sort(descendingOrder)
@@ -69,10 +70,10 @@ export default function BrawlProfilePage() {
                 const ones = sets.filter(x => x.gameType === 1)
                 const twos = sets.filter(x => x.gameType === 2)
 
-                const responseOnes = await fetch(`http://127.0.0.1:4000/api/profiles/brawl/${id}/sets/ones/stats`)
+                const responseOnes = await fetch(`${GetUrl}/api/profiles/brawl/${id}/sets/ones/stats`)
                 const onesStats = await responseOnes.json();
 
-                const responseTwos = await fetch(`http://127.0.0.1:4000/api/profiles/brawl/${id}/sets/twos/stats`)
+                const responseTwos = await fetch(`${GetUrl}/api/profiles/brawl/${id}/sets/twos/stats`)
                 const twosStats = await responseTwos.json();
 
                 ones.forEach((item, i) => {
@@ -105,7 +106,7 @@ export default function BrawlProfilePage() {
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;
-                window.alert(message);
+                console.log(message);
                 return;
             }
         }

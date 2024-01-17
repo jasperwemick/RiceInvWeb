@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { calendarMonths } from "../components/calendarMonths";
 import dayjs from "dayjs"
 import "../style/schedule.css"
+import GetUrl from "../GetUrl";
 
 const getMonth = [
     'January',
@@ -114,10 +115,10 @@ export default function SchedulePage() {
         
         async function getEvents(m, y) {
             try {
-                const response = await fetch(`http://127.0.0.1:4000/api/events/current?month=${m}&year=${y}`);
+                const response = await fetch(`${GetUrl}/api/events/current?month=${m}&year=${y}`);
                 const events = await response.json();
 
-                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles/default`);
+                const responseProfiles = await fetch(`${GetUrl}/api/profiles/default`);
                 const profiles = await responseProfiles.json();
                 events.forEach((item, index) => {
                     const eventProfiles = profiles.filter(x => item.people.includes(x._id));
@@ -128,7 +129,7 @@ export default function SchedulePage() {
             }
             catch(e) {
                 const message = `An error occurred: ${e}`;
-                window.alert(message);
+                console.log(message);
                 return;
             }
         }

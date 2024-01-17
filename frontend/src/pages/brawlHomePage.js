@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import "../style/brawlPage.css"
 import { Link } from "react-router-dom";
 import Placement from "../components/Placement";
+import GetUrl from "../GetUrl";
+
 
 export default function BrawlHomePage() {
 
@@ -13,59 +15,66 @@ export default function BrawlHomePage() {
 
         const getPlacings = async () => {
 
-            function ascendingOrder(a, b) {
-                if (a.placing < b.placing) {
-                    return -1;
-                }
-                if (a.placing > b.placing) {
-                    return 1;
-                }
-                return 0;
-            } 
+            try {
+                function ascendingOrder(a, b) {
+                    if (a.placing < b.placing) {
+                        return -1;
+                    }
+                    if (a.placing > b.placing) {
+                        return 1;
+                    }
+                    return 0;
+                } 
+                
+                const responseBrawl = await fetch(`${GetUrl}/api/profiles/brawl`);
+                const brawl = await responseBrawl.json();
+    
+                const responseProfiles = await fetch(`${GetUrl}/api/profiles/default`);
+                const def = await responseProfiles.json();
+    
+                
+                const onevone = brawl.map((item) => {
+                    const { playerID, onesPlacing } = item;
+                    const mappedName = [ def.find(x => x._id === playerID).name ]
+                    const placing = onesPlacing;
+                    return { mappedName, placing, scores: 1 }
+                });
+    
+                onevone.sort(ascendingOrder);
+    
+                const twovtwo = brawl.map((item) => {
+                    const { playerID, twosPlacing, partner } = item;
+                    const mappedName = [ def.find(x => x._id === playerID).name ];
+                    let partnerName = def.find(x => x._id === partner)?.name;
+                    if (!partnerName) {
+                        partnerName = "";
+                    }
+                    const teamKey = (mappedName[0] + partnerName).split('').sort().join('').trim()
+                    const placing = twosPlacing;
+                    return { mappedName, placing, scores: 2, teamKey }
+                });
+    
+                const merged = Object.values(twovtwo.reduce((acc, item) => {
+    
+                    acc[item.teamKey] = acc[item.teamKey] || {mappedName: [], placing: item.placing, scores: item.scores, teamKey: item.teamKey}
+                    acc[item.teamKey].mappedName = [ ...acc[item.teamKey].mappedName, ...item.mappedName]
+                    return acc;          
+                }, {}))
+    
+                merged.sort(ascendingOrder);
+    
+                // Merge player names or make new component
+                // setBrawlProfiles(brawl);
+                setOnes(onevone);
+                setTwos(merged);
+            }
+            catch(err) {
+                const message = `An error occurred: ${err}`;
+                console.log(message)
+                return;
+            }
 
-            const responseBrawl = await fetch(`http://127.0.0.1:4000/api/profiles/brawl`);
-            const brawl = await responseBrawl.json();
-
-            const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles/default`);
-            const def = await responseProfiles.json();
-
-            
-            const onevone = brawl.map((item) => {
-                const { playerID, onesPlacing } = item;
-                const mappedName = [ def.find(x => x._id === playerID).name ]
-                const placing = onesPlacing;
-                return { mappedName, placing, scores: 1 }
-            });
-
-            onevone.sort(ascendingOrder);
-
-            const twovtwo = brawl.map((item) => {
-                const { playerID, twosPlacing, partner } = item;
-                const mappedName = [ def.find(x => x._id === playerID).name ];
-                let partnerName = def.find(x => x._id === partner)?.name;
-                if (!partnerName) {
-                    partnerName = "";
-                }
-                const teamKey = (mappedName[0] + partnerName).split('').sort().join('').trim()
-                const placing = twosPlacing;
-                return { mappedName, placing, scores: 2, teamKey }
-            });
-
-            const merged = Object.values(twovtwo.reduce((acc, item) => {
-
-                acc[item.teamKey] = acc[item.teamKey] || {mappedName: [], placing: item.placing, scores: item.scores, teamKey: item.teamKey}
-                acc[item.teamKey].mappedName = [ ...acc[item.teamKey].mappedName, ...item.mappedName]
-                return acc;          
-            }, {}))
-
-            merged.sort(ascendingOrder);
-
-            // Merge player names or make new component
-            // setBrawlProfiles(brawl);
-            setOnes(onevone);
-            setTwos(merged);
         }
-
         getPlacings();
         return;
     }, []);

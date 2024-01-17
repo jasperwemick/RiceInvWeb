@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../style/scoreboard.css"
+import GetUrl from "../GetUrl";
 
 const LeaderboardRow = ({profile}) => (
     <tr className="leaderboard-row">
@@ -36,14 +37,14 @@ export default function Leaderboard() {
             } 
 
             try {
-                const profileList = await fetch(`http://127.0.0.1:4000/api/profiles/default`)
+                const profileList = await fetch(`${GetUrl}/api/profiles/default`)
                 const p = await profileList.json();
                 p.sort(descendingOrder);
                 setProfiles(p);
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;
-                window.alert(message);
+                console.log(message)
                 return;
             }
         }

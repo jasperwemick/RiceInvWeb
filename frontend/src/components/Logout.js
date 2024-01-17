@@ -1,6 +1,7 @@
 import { useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../hooks/userAuth";
+import GetUrl from "../GetUrl";
 
 export default function Logout() {
 
@@ -12,7 +13,7 @@ export default function Logout() {
 
     useEffect(() => {
         async function log() {
-            const response = await fetch("http://127.0.0.1:4000/auth/logout", {
+            const response = await fetch(`${GetUrl}/auth/logout`, {
                 credentials: "include",
             })
             const taskResult = await response.json();

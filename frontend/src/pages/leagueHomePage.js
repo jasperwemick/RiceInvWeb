@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "../style/leaguePage.css"
 import Placement from "../components/Placement";
+import GetUrl from "../GetUrl";
 
 const Game = (props) => (
     <li className="game-item">
@@ -21,13 +22,13 @@ export default function LeaguePage() {
         async function getGames() {
 
             try {
-                const responseGames = await fetch(`http://127.0.0.1:4000/api/games/league`);
+                const responseGames = await fetch(`${GetUrl}/api/games/league`);
                 const gameList = await responseGames.json();
 
-                const responseLeague = await fetch(`http://127.0.0.1:4000/api/profiles/league`);
+                const responseLeague = await fetch(`${GetUrl}/api/profiles/league`);
                 const profileList = await responseLeague.json();
 
-                const responseProfiles = await fetch(`http://127.0.0.1:4000/api/profiles/default`);
+                const responseProfiles = await fetch(`${GetUrl}/api/profiles/default`);
                 const def = await responseProfiles.json();
 
                 const placements = profileList.map((item) => {
@@ -51,7 +52,7 @@ export default function LeaguePage() {
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;
-                window.alert(message);
+                console.log(message);
                 return;
             }
         }
