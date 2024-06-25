@@ -36,7 +36,7 @@ const Verify = async (req, res, next) => {
             }
     
             const { id } = decoded;
-            const user = await User.findById(id);
+            const user = await User.findById(id).populate('profile');
             const {password, ...data } = user._doc;
             req.user = data;
             next();

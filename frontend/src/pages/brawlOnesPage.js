@@ -3,12 +3,15 @@ import "../style/brawlPage.css"
 import { GroupSet, GroupTable} from "../components/bracket.js"
 import { GauntletBrawl, UpperBrawlOnes, LowerBrawlOnes } from "../components/bracketStructure.js"
 import GetUrl from "../GetUrl.js";
+import { GenerateBracket } from "../components/GenerateBracket.js";
 
 export default function BrawlOnesPage() {
     const [groupSets, setGroupSets] = useState([]);
     const [gauntletSets, setGauntletSets] = useState([]);
     const [upperPlayoffSets, setUpperPlayoffSets] = useState([]);
     const [lowerPlayoffSets, setLowerPlayoffSets] = useState([]);
+
+    const [numPlayers, setNumPlayers] = useState(8);
 
     useEffect(() => {
         async function getData() {
@@ -111,29 +114,7 @@ export default function BrawlOnesPage() {
                 </div>
             </section>
             <section>
-                <h3>PLAYOFFS</h3>
-                <div className="playoffs">
-                    <span>Winners Bracket</span>
-                    <div>
-                        <span className="winners-headers" style={{left: '20px'}}>Winners Quarters</span>
-                        <span className="winners-headers" style={{left: '420px'}}>Winners Semis</span>
-                        <span className="winners-headers" style={{left: '820px'}}>Winners Finals</span>
-                        <span className="winners-headers" style={{left: '1200px'}}>Grand Finals</span>
-                        <span className="winners-headers" style={{left: '1220px'}}>Grand Finals Reset</span>
-                    </div>
-                    <div style={{position: "relative", left: '20px'}}>
-                        <UpperBrawlOnes sets={upperPlayoffSets}/>
-                    </div>
-                    
-                </div>
-            </section>
-            <section>
-                <div className="playoffs">
-                    <span>Loser Bracket</span>
-                    <div style={{position: "relative", left: '20px'}}>
-                        <LowerBrawlOnes sets={lowerPlayoffSets}/>
-                    </div>
-                </div>
+                <GenerateBracket type={'Double'} numPlayers={numPlayers} format={'full'}/>
             </section>
         </div>
     )

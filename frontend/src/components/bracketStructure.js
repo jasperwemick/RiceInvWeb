@@ -13,6 +13,7 @@ const BracketPiece = (props) => {
     )
 }
 
+
 export const GauntletBrawl = (props) => {
 
     const bracketMap = (sets) => {
@@ -223,3 +224,4 @@ export const LowerBrawlTwos = (props) => {
         <div>{bracketMap(props.sets)}</div>
     )
 }
+

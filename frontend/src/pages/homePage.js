@@ -1,40 +1,33 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Link } from "react-router-dom";
 import "../style/home.css"
 import GetUrl from "../GetUrl";
- 
-const Profile = (props) => (
-    <li>
-        <div className="profile-image">
-            <Link to={`/${props.profile._id}`}>
-                <img src={props.profile.imageUrl} width="300" height="375" alt="Player Profile"></img>
-            </Link>
-        </div>
-        <div className="profile-name">{props.profile.name}</div>
-    </li>
-);
+import { GenerateBracket } from "../components/GenerateBracket";
+import { Profile } from "../components/Profile";
+import { AddTimeEntry } from "../components/TimeEditor";
  
 export default function Home() {
     const [profiles, setProfiles] = useState([]);
     const scrollRef = useRef(null);
 
-    useEffect(() => {
-        async function getProfiles() {
-            try {
-                const response = await fetch(`${GetUrl}/api/profiles/default`);
-                const profiles = await response.json();
-                setProfiles(profiles);
-            }
-            catch(err) {
-                const message = `An error occurred: ${err}`;
-                console.log(message);
-                return;
-            }
-        }
+    const [numPlayers, setNumPlayers] = useState(8);
 
-        getProfiles();
-        return;
-    }, [profiles.length]);
+    // useEffect(() => {
+    //     async function getProfiles() {
+    //         try {
+    //             const response = await fetch(`${GetUrl}/api/profiles/default`);
+    //             const profiles = await response.json();
+    //             setProfiles(profiles);
+    //         }
+    //         catch(err) {
+    //             const message = `An error occurred: ${err}`;
+    //             console.log(message);
+    //             return;
+    //         }
+    //     }
+
+    //     getProfiles();
+    //     return;
+    // }, [profiles.length]);
 
     function profileList() {
         return profiles.map((profile) => {
@@ -59,16 +52,29 @@ export default function Home() {
                 <span>I'm sure you'll notice the styling is greatly lacking! A Heavy WIP with much more to come, I'm developing this on a MERN stack for educational purposes<br/><br/></span>
                 <span>Thanks for visiting - Jasper<br/><br/></span>
             </section>
-            <section className="profiles">
+            {/* <section className="profiles">
                 <span>Profile List</span>
                 <div className="profile-list-container">
                     <button onClick={() => shift(-1260)}>{'<'}</button>
                     <ul ref={scrollRef} className="profile-list">{profileList()}</ul>
                     <button onClick={() => shift(1260)}>{'>'}</button>
                 </div>
-            </section>
+            </section> */}
             <section>
-
+                {/* Full Format: All players start in upper */}
+                {/* Split Format: Half players start in upper, and half start in lower */}
+                <GenerateBracket 
+                    type={'Double'} 
+                    numPlayers={numPlayers} 
+                    format={'full'}
+                    gameTag={'brawl'}/>
+                <input 
+                    type="range"
+                    min={4}
+                    max={24}
+                    defaultValue={numPlayers}
+                    onChange={(e) => setNumPlayers(e.target.value)}/>
+                <span>{`Players: ${numPlayers}`}</span>
             </section>
         </div>
     );

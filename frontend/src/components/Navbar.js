@@ -42,7 +42,8 @@ export default function Navbar() {
                 console.log(actualData.message)
                 const roles = actualData?.roles;
                 const user = actualData?.user;
-                setAuth({ user, roles });
+                const profile = actualData?.profile;
+                setAuth({ user, roles, profile });
             }
             catch(e) {
                 const message = `Failed to Validate: ${e}`;

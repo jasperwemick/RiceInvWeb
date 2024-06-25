@@ -5,9 +5,20 @@ const LeagueGamePlayerStat = require('../models/leagueGamePlayerStatsModel')
 const BrawlSet = require('../models/brawlSetModel')
 const brawlSetOnesStat = require('../models/brawlSetOnesStatsModel')
 const brawlSetTwosStat = require('../models/brawlSetTwosStatsModel')
+const Set = require('../models/setModel')
+const { getBracketSets, getOneBracketSet, createOneBracketSet, upsertOneBracketSet, deleteOneBracketSet } = require('../controllers/setController')
 
 const router = express.Router()
 
+router.get('/set/:tag', getBracketSets)
+
+router.get('/set/:tag/:num', getOneBracketSet)
+
+router.post('/set', createOneBracketSet)
+
+router.put('/set/:tag/:num', upsertOneBracketSet)
+
+router.delete('/set/:tag/:num', deleteOneBracketSet)
 
 // #################################################### LEAGUE OF LEGENDS ####################################################################
 router.get('/league', async (req, res) => {
@@ -85,6 +96,34 @@ router.get('/brawl/ones', async (req, res) => {
     }
 })
 
+router.get('/brawl/ones/:value', async (req, res) => {
+
+    const num = req.params.value
+    console.log(num)
+
+    try {
+        const games = await BrawlSet.findOne({setNumber: num});
+        res.json(games);
+    }
+    catch(e) {
+        console.log("Error at /brawl/ones/:value: ", e);
+    }
+})
+
+router.put('/brawl/ones/:value', async (req, res) => {
+    const num = req.params.value
+
+    try {
+    
+        const result = await BrawlSet.updateOne({setNumber: num}, {
+            formatType: req.body.formatType
+        });
+        res.json(result);
+    }
+    catch(e) {
+        console.log("Error at PATCH /brawl/ones/:value: ", e)
+    }
+})
 
 router.get('/brawl/ones/groups', async (req, res) => {
     try {

@@ -15,6 +15,7 @@ const upload = multer({ storage: storage})
 const { Verify, VerifyRole } = require('../middleware/verify')
 
 router.use(function(req, res, next) {
+    console.log('what')
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Headers', ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'].join(', '));
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
@@ -77,7 +78,8 @@ router.get('/user', Verify, (req, res) => {
         status: 'success',
         message: 'Session Verified',
         roles: req.user.roles,
-        user: req.user.username
+        user: req.user.username,
+        profile: req.user.profile
     })
 })
 
@@ -123,6 +125,77 @@ router.get('/logout', async (req, res) => {
             message: 'Server Explosion'
         });
     }
+})
+
+router.post("/admin/create", upload.none(), Verify, VerifyRole, async (req, res) => {
+    const { username, password } = req.body;
+    try {
+        const user = await User.findOne({ username });
+        if (user) {
+            res.status(401).json({
+                status: 'failed',
+                data: [],
+                message: 'Username already exists'
+            })
+            return;
+        }
+
+        const isValid = () => {
+
+            const validSpecials = /[@#$%^&*()_+\-?]/
+            const invalidSpecials = /[ `!*\[\]={};':"\\|,.<>\/~]/
+
+            const capitals = /[A-Z]/
+            const lowercase = /[a-z]/
+            const numbers = /[0-9]/
+            
+
+            if (!validSpecials.test(password) || 
+                invalidSpecials.test(password) || 
+                !capitals.test(password) || 
+                !lowercase.test(password) || 
+                !numbers.test(password)) {
+                return false
+            }
+
+            if (password.length < 8) {
+                return false
+            }
+
+            return true
+        }
+        if (!isValid) {
+            res.status(401).json({
+                status: 'failed',
+                data: [],
+                message: 'Password needs to be 8 characters, \
+                include a capital and lowercase character, \
+                include a number, \
+                and have 1 of the following special characters: @#$%^&*()_+\-?'
+            })
+            return;
+        }
+
+        const post = await User.create({
+            ...req.body
+        })
+        const result = await post.save()
+        
+        res.status(200).json({
+            status: 'success',
+            data: result,
+            message: 'Signup Successful'
+        });
+    }
+    catch(e) {
+        return res.status(500).json({
+            status: 'error',
+            code: 500,
+            data: [],
+            message: 'Server Explosion'
+        })
+    }
+    res.end();
 })
 
 

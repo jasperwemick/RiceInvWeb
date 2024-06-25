@@ -17,7 +17,6 @@ import BrawlPage from "./pages/brawlHomePage";
 import BrawlOnesPage from "./pages/brawlOnesPage";
 import BrawlTwosPage from "./pages/brawlTwosPage";
 import SchedulePage from "./pages/schedulePage";
-import AddEvent from "./pages/addEventPage";
 import Layout from "./components/Layout";
 import Login from "./pages/loginPage";
 import RequireAuth from "./components/RequireAuth";
@@ -58,7 +57,6 @@ const App = () => {
           <Route element={<RequireAuth allowedRoles={['Admin']}/>}>
             <Route path="/add" element={<Add />} /> {/* Allows for for new default profile additions */}
             <Route path="/edit/:id" element={<Edit />} /> {/* Allows for updates to a player's default profile */}
-            <Route path="/schedule/add" element={<AddEvent />}/> {/* Add Event Page */}
           </Route>
         </Route>
       </Routes>

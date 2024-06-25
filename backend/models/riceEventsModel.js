@@ -3,30 +3,11 @@ const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 
 const riceEventSchema = new Schema({
-    time: {
+    tag: {
         type: String,
         required: true
     },
-    year: {
-        type: Number,
-        required: true
-    },
-    day: {
-        type: Number,
-        required: true
-    },
-    month: {
-        type: Number,
-        required: true
-    },
-    eventType: {
-        type: String,
-        required: true 
-    },
-    game: {
-        type: String
-    },
-    title: {
+    name: {
         type: String,
         required: true
     },
@@ -34,8 +15,32 @@ const riceEventSchema = new Schema({
         type: String,
         required: true
     },
-    people: [{
-        type: String
+    year: {
+        type: Number,
+        required: true
+    },
+    month: {
+        type: Number,
+        required: true
+    },
+    day: {
+        type: Number,
+        required: true
+    },
+    group: {
+        type: String,
+        required: true 
+    },
+    timeRange: [{
+        type: Boolean,
+        required: true
+    }],
+    participants: [{
+        person: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'Profile',
+            required: true
+        }
     }],
     finished: {
         type: Boolean,

@@ -58,6 +58,18 @@ router.get('/default', async (req, res) => {
 
 })
 
+router.get('/default/noimg', async (req, res) => {
+
+    try {
+        const profiles = await Profile.find()
+        res.json(profiles)
+    }
+    catch(e) {
+        console.log("Error at GET /default/noimg: ", e)
+    }
+
+})
+
 // Get a profile
 router.get('/default/:id', async (req, res) => {
     const id = req.params.id;
