@@ -1,21 +1,8 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router";
 import { InferProps } from 'prop-types'
-import GetUrl from "../GetUrl"
-import '../style/home.css'
-import { TimeEntry } from "./TimeEntry";
-
-const CheckBox = (props) => {
-    return (
-        <div>
-            <input
-            value={props.profile._id}
-            type="checkbox"
-            onChange={e => props.func(e)}/>
-            <label for={props.profile._id}>{props.profile.name}</label>
-        </div>
-    )
-}
+import GetUrl from "../../GetUrl"
+import '../../style/home.css'
 
 
 // TODO: Use proptypes to add defintion to params, https://stackoverflow.com/questions/71223891/react-and-jsdoc-how-to-document-a-react-component-properly
@@ -27,11 +14,11 @@ const PlayerProfile = ({profile, setEventData, eventData}) => {
         const newStatus = !selected
 
         if (newStatus) {
-            setEventData({...eventData, participants: [...eventData.participants, profile._id]})
+            setEventData({...eventData, participants: [...eventData.participants, {person: profile._id, available: false}]})
         }
         else {
 
-            const newArr = eventData.participants.filter((pid) => pid !== profile._id)
+            const newArr = eventData.participants.filter((pid) => pid.person !== profile._id)
             setEventData({...eventData, participants: newArr})
         }
 
@@ -52,18 +39,16 @@ const PlayerProfile = ({profile, setEventData, eventData}) => {
 
 export function EventEditor({ date }) {
 
-    const [timeInvervalData, setTimeIntervalData] = useState(Array(48).fill(false))
-
     const [eventData, setEventData] = useState({
         tag: '',
         name: '',
         description: '',
-        year: date.getFullYear(),
-        month: date.getMonth(),
-        day: date.getDate(),
         group: '',
+        duration: 0,
         timeRange: [],
         participants: [],
+        ready: false,
+        finished: false
     })
 
     const [profiles, setProfiles] = useState([])
@@ -101,18 +86,13 @@ export function EventEditor({ date }) {
      * 
      * @param {Event} e - Submission onClick event
      */
-    async function onSubmit(e) {
+    function onSubmit(e) {
         e.preventDefault();
-
-        // Reduce to alphanumeric
-        const tag = eventData.name.replace(/[^a-z0-9]/gi, '')
-
-        setEventData({...eventData, tag: tag, timeRange: timeInvervalData})
 
         const upsertEventData = async () => {
 
             try {
-                await fetch(`${GetUrl}/api/events/ev/${eventData.year}/${eventData.month}/${eventData.day}/${tag}`, {
+                await fetch(`${GetUrl}/api/events/ev/${eventData.tag}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
@@ -155,11 +135,10 @@ export function EventEditor({ date }) {
             <ul ref={scrollRef} className="profile-list">{profileList()}</ul>
             <button onClick={() => shift(200)}>{'>'}</button>
         </div>
-        <TimeEntry timeInvervalData={timeInvervalData} setTimeIntervalData={setTimeIntervalData}/>
         <form onSubmit={onSubmit}>
             <input 
             value={eventData.name || ''} 
-            onChange={e => setEventData({...eventData, name: e.target.value})} 
+            onChange={e => setEventData({...eventData, name: e.target.value, tag: e.target.value.replace(/[^a-z0-9]/gi, '')})} 
             type='text'
             placeholder='Name'/>
             <input 
@@ -172,6 +151,11 @@ export function EventEditor({ date }) {
             onChange={e => setEventData({...eventData, group: e.target.value})} 
             type="text" 
             placeholder="Game/Event Type" />
+            <input
+            value={eventData.duration || ''}
+            onChange={e => setEventData({...eventData, duration: e.target.value})}
+            type="text"
+            placeholder="Duration (Hours)"/>
             <button type="submit">Submit</button>
         </form>
     </div>

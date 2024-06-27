@@ -9,6 +9,7 @@ import { GenerateBracketTree, getMaxDepth, treeToArray } from './Auxillery/tree'
 import { EditorPopUp } from "./EditorPopUp"
 
 export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
+
     const [highTree, setHighTree] = useState(null)
     const [lowTree, setLowTree] = useState(null)
     const [maxDepth, setMaxDepth] = useState(0)

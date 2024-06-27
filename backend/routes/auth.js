@@ -50,7 +50,7 @@ router.post("/login", upload.none(), async (req, res) => {
         }
 
         let options = {
-            maxAge: 30 * 60 * 1000,
+            maxAge: 300 * 60 * 1000,
             httpOnly: true,
             secure: true,
             sameSite: "None",

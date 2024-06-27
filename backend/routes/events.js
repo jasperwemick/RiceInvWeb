@@ -9,7 +9,7 @@ const router = express.Router()
 // const upload = multer({ storage: storage})
 
 const { getUserMonthTimeEntries, getUserTimeDateEntry, createTimeEntry, updateTimeEntry, deleteTimeEntry } = require('../controllers/timeController')
-const { getMonthlyRiceEvents, getDailyRiceEvents, getOneRiceEvents, createRiceEvent, upsertOneRiceEvent, deleteOneRiceEvent } = require('../controllers/eventController')
+const { getRiceEvents, getMonthlyRiceEvents, getDailyRiceEvents, getOneRiceEvents, createRiceEvent, upsertOneRiceEvent, deleteOneRiceEvent } = require('../controllers/eventController')
 
 // Time
 
@@ -23,8 +23,7 @@ router.put('/time/:user/:year/:month/:day', updateTimeEntry)
 
 router.delete('/time/:user/:year/:month/:day', deleteTimeEntry)
 
-
-//########################################################################################################
+// Events
 
 router.get('/ev/:year/:month', getMonthlyRiceEvents)
 
@@ -32,11 +31,12 @@ router.get('/ev/:year/:month/:day', getDailyRiceEvents)
 
 router.get('/ev/:year/:month/:day/:tag', getOneRiceEvents)
 
+router.get('/ev', getRiceEvents)
+
 router.post('/ev', createRiceEvent)
 
-router.put('/ev/:year/:month/:day/:tag', upsertOneRiceEvent)
+router.put('/ev/:tag', upsertOneRiceEvent)
 
-router.delete('/ev/:year/:month/:day/:tag', deleteOneRiceEvent)
-
+router.delete('/ev/:tag', deleteOneRiceEvent)
 
 module.exports = router

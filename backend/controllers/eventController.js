@@ -1,11 +1,25 @@
 const RiceEvent = require('../models/riceEventsModel')
 
+const getRiceEvents = async (req, res) => {
+
+    const ready = req.query.ready
+
+    try {
+        const events = await RiceEvent.find({ready: ready}).populate('participants').exec()
+        res.json(events)
+    }
+    catch(e) {
+        console.log('Error at GET /events', e)
+    }
+}
+
 const getMonthlyRiceEvents = async (req, res) => {
+
     const year = req.params.year
     const month = req.params.month
 
     try {
-        const events = await RiceEvent.find({year: year, month: month}).populate('participants.person').exec()
+        const events = await RiceEvent.find({year: year, month: month}).populate('participants').exec()
         res.json(events)
     }
     catch(e) {
@@ -20,7 +34,7 @@ const getDailyRiceEvents = async (req, res) => {
     const day = req.params.day
 
     try {
-        const events = await RiceEvent.find({year: year, month: month, day: day}).populate('participants.person')
+        const events = await RiceEvent.find({year: year, month: month, day: day}).populate('participants')
         res.json(events)
     }
     catch(e) {
@@ -36,7 +50,7 @@ const getOneRiceEvents = async (req, res) => {
     const tag = req.params.tag
 
     try {
-        const event = await RiceEvent.find({year: year, month: month, day: day, tag: tag}).populate('participants.person')
+        const event = await RiceEvent.find({year: year, month: month, day: day, tag: tag}).populate('participants')
         res.json(event)
     }
     catch(e) {
@@ -60,37 +74,31 @@ const createRiceEvent = async (req, res) => {
 
 const upsertOneRiceEvent = async (req, res) => {
 
-    const year = req.params.year
-    const month = req.params.month
-    const day = req.params.day
     const tag = req.params.tag
 
     const options = {upsert: true, new: true, setDefaultsOnInsert: true};
 
     try {
-        const result = await Set.findOneAndUpdate({year: year, month: month, day: day, tag: tag}, {...req.body}, options)
+        console.log(req.body)
+        const result = await RiceEvent.findOneAndUpdate({tag: tag}, {...req.body}, options)
         res.json(result)
     }
     catch(e) {
-        console.log('Error at PUT /events/:year/:month/:day/:tag', e)
+        console.log('Error at PUT /events/:tag', e)
     }
 }
 
 const deleteOneRiceEvent = async (req, res) => {
 
-    const year = req.params.year
-    const month = req.params.month
-    const day = req.params.day
     const tag = req.params.tag
 
-
     try {
-        const result = await Set.findOneAndDelete({year: year, month: month, day: day, tag: tag})
+        const result = await Set.findOneAndDelete({tag: tag})
         res.json(result)
     }
     catch(e) {
-        console.log('Error at DELETE /events/:year/:month/:day/:tag', e)
+        console.log('Error at DELETE /events/:tag', e)
     }
 }
 
-module.exports = { getMonthlyRiceEvents, getDailyRiceEvents, getOneRiceEvents, createRiceEvent, upsertOneRiceEvent, deleteOneRiceEvent }
+module.exports = { getRiceEvents, getMonthlyRiceEvents, getDailyRiceEvents, getOneRiceEvents, createRiceEvent, upsertOneRiceEvent, deleteOneRiceEvent }

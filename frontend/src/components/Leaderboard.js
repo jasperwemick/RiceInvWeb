@@ -22,7 +22,6 @@ export default function Leaderboard() {
 
     const [profiles, setProfiles] = useState([]);
  
-    // This method fetches the jobs from the database.
     useEffect(() => {
         async function getProfiles() {
 
@@ -53,7 +52,6 @@ export default function Leaderboard() {
         return;
     }, [profiles.length]);
  
-    // This method will map out the jobs on the table
     function scoresList() {
         return profiles.map((profile) => {
             return (

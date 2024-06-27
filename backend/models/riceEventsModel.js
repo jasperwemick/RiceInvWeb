@@ -17,35 +17,58 @@ const riceEventSchema = new Schema({
     },
     year: {
         type: Number,
-        required: true
     },
     month: {
         type: Number,
-        required: true
     },
     day: {
         type: Number,
-        required: true
     },
     group: {
         type: String,
         required: true 
     },
-    timeRange: [{
-        type: Boolean,
+    duration: {
+        type: Number,
         required: true
+    },
+    timeRanges: [{
+        year: {
+            type: Number,
+            required: true
+        },
+        month: {
+            type: Number,
+            required: true
+        },
+        day: {
+            type: Number,
+            required: true
+        },
+        timeRange: [{
+            type: Boolean,
+            required: true
+        }],
     }],
     participants: [{
         person: {
             type: mongoose.Schema.Types.ObjectId,
             ref: 'Profile',
             required: true
+        },
+        available: {
+            type: Boolean,
+            required :true
         }
     }],
+    ready: {
+        type: Boolean,
+        required: true
+    },
     finished: {
         type: Boolean,
         required: true
     }
-})
+}, { timestamps: true })
 
 module.exports = mongoose.model('RiceEvent', riceEventSchema)

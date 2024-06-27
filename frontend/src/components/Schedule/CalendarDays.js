@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import useAuth from '../hooks/userAuth'
-import GetUrl from '../GetUrl'
+import useAuth from '../../hooks/userAuth'
+import GetUrl from '../../GetUrl'
 
 export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatus, eventToggle, eventToggleStatus, setEntryDate}) => {
 
@@ -62,7 +62,10 @@ export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatu
                     <div className={`calendar-day ${calDay.currentMonth ? "current" : ""} ${calDay.selected ? " selected" : ""}`}
                         key={index}
                         onClick={() => changeCurrentDay(calDay)}
-                        style={monthTimeStatus.find(({ day }) => day === calDay.number) ? {backgroundColor: 'green'} : null}>
+                        style={monthTimeStatus.find(({ day, month, year }) => (
+                            day === calDay.number && month === calDay.month + 1 && year === calDay.year)) ? 
+                            {backgroundColor: 'green'} : null
+                        }>
                             
                         <p>{calDay.number}</p>
                         {

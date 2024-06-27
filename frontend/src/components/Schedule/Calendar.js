@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { CalendarDays } from './CalendarDays'
-import '../style/calendar.css'
-import useAuth from '../hooks/userAuth'
-import GetUrl from '../GetUrl'
+import '../../style/calendar.css'
 
 export const Calendar = ({timeToggle, timeToggleStatus, setEntryDate, eventToggle, eventToggleStatus}) => {
 

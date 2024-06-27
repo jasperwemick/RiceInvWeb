@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
-import useAuth from "../hooks/userAuth";
-import '../style/events.css'
-import GetUrl from "../GetUrl";
+import useAuth from "../../hooks/userAuth";
+import '../../style/events.css'
+import GetUrl from "../../GetUrl";
 import { TimeEntry } from "./TimeEntry";
 
 export const TimeEditor = ({ date, enabled, toggleSelf }) => {
@@ -27,8 +27,6 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
             catch(e) {
                 console.log(`Failed to fetch: ${e}`)
             }
-
-
         }
 
         if (enabled) {
@@ -43,6 +41,7 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
 
         const submissionData = {
             user: auth.user,
+            profileId: auth.profile ? auth.profile._id : '',
             year: dateSplit[0],
             month: dateSplit[1],
             day: dateSplit[2],

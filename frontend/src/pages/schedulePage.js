@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from "react";
 import GetUrl from "../GetUrl";
-import { Calendar } from "../components/Calendar";
-import { TimeEditor } from "../components/TimeEditor";
-import { EventEditor } from "../components/EventEditor";
+import { Calendar } from "../components/Schedule/Calendar";
+import { TimeEditor } from "../components/Schedule/TimeEditor";
+import { EventEditor } from "../components/Schedule/EventEditor";
+import { EventPool } from "../components/Schedule/EventPool";
 
 
 export default function SchedulePage() {
@@ -20,12 +21,15 @@ export default function SchedulePage() {
             <div className={`time-entry-window`} style={toggleEventEntry ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
                 <EventEditor date={entryDate}/>
             </div>
-            <Calendar 
-                timeToggle={setToggleTimeEntry} 
-                timeToggleStatus={toggleTimeEntry} 
-                eventToggle={setToggleEventEntry}
-                eventToggleStatus={toggleEventEntry}
-                setEntryDate={setEntryDate}/>
+            <div style={{display: 'flex'}}>
+                <Calendar 
+                    timeToggle={setToggleTimeEntry} 
+                    timeToggleStatus={toggleTimeEntry} 
+                    eventToggle={setToggleEventEntry}
+                    eventToggleStatus={toggleEventEntry}
+                    setEntryDate={setEntryDate}/>
+                <EventPool/>
+            </div>
         </div>
     )
 }

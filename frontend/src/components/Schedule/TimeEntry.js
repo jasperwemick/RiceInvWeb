@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
-import useAuth from "../hooks/userAuth";
-import '../style/events.css'
-import GetUrl from "../GetUrl";
+import useAuth from "../../hooks/userAuth";
+import '../../style/events.css'
 
 const TimeInterval = ({index, intervalData, toggleRange, updateRange}) => {
 
@@ -32,6 +31,14 @@ export const TimeEntry = ({ timeInvervalData, setTimeIntervalData }) => {
     const [startInterval, setStartInterval] = useState(0)
 
     const [mode, setMode] = useState(true)
+
+    useEffect(() => {
+
+        if (lockedClick) {
+            setOldData(timeInvervalData)
+        }
+        
+    },[lockedClick])
 
     const toggleRange = (index) => {
 
