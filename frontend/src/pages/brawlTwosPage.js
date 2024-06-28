@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "../style/brawlPage.css"
-import { GroupSet, GroupTable } from "../components/bracket.js"
-import { UpperBrawlTwos, LowerBrawlTwos, GauntletBrawl } from "../components/bracketStructure.js";
+import { GroupSet, GroupTable } from "../components/Bracket/bracket.js"
 import GetUrl from "../GetUrl.js";
 
 
@@ -109,18 +108,16 @@ export default function BrawlTwosPage() {
             <section>
                 <h3>GAUNTLET</h3>
                 <div className="gauntlet">
-                    <GauntletBrawl sets={gauntletSets}/>
+                    {/* <GauntletBrawl sets={gauntletSets}/> */}
                 </div>
             </section>
             <section>
                 <h3>PLAYOFFS</h3>
                 <div className="playoffs">
-                    <UpperBrawlTwos sets={upperPlayoffSets}/>
                 </div>
             </section>
             <section>
                 <div className="playoffs">
-                    <LowerBrawlTwos sets={lowerPlayoffSets}/>
                 </div>
             </section>
         </div>

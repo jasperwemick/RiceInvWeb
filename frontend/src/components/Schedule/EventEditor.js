@@ -10,15 +10,23 @@ const PlayerProfile = ({profile, setEventData, eventData}) => {
 
     const [selected, setSelected] = useState(false)
 
+    useEffect(() => {
+
+        if (eventData.participants.find((p) => p === profile._id)) {
+            setSelected(true)
+        }
+
+    }, [eventData.tag])
+
     const handleClick = () => {
         const newStatus = !selected
 
         if (newStatus) {
-            setEventData({...eventData, participants: [...eventData.participants, {person: profile._id, available: false}]})
+            setEventData({...eventData, participants: [...eventData.participants, profile._id]})
         }
         else {
 
-            const newArr = eventData.participants.filter((pid) => pid.person !== profile._id)
+            const newArr = eventData.participants.filter((pid) => pid !== profile._id)
             setEventData({...eventData, participants: newArr})
         }
 
@@ -37,19 +45,8 @@ const PlayerProfile = ({profile, setEventData, eventData}) => {
 }
 
 
-export function EventEditor({ date }) {
+export function EventEditor({eventData, setEventData}) {
 
-    const [eventData, setEventData] = useState({
-        tag: '',
-        name: '',
-        description: '',
-        group: '',
-        duration: 0,
-        timeRange: [],
-        participants: [],
-        ready: false,
-        finished: false
-    })
 
     const [profiles, setProfiles] = useState([])
 
@@ -76,11 +73,6 @@ export function EventEditor({ date }) {
         getProfiles();
         return;
     }, [])
-
-
-    useEffect(() => {   //debug
-        console.log(eventData.participants)
-    }, [eventData.participants.length])
     
     /**
      * 
@@ -137,25 +129,25 @@ export function EventEditor({ date }) {
         </div>
         <form onSubmit={onSubmit}>
             <input 
-            value={eventData.name || ''} 
-            onChange={e => setEventData({...eventData, name: e.target.value, tag: e.target.value.replace(/[^a-z0-9]/gi, '')})} 
-            type='text'
-            placeholder='Name'/>
+                value={eventData.name || ''} 
+                onChange={e => setEventData({...eventData, name: e.target.value, tag: e.target.value.replace(/[^a-z0-9]/gi, '')})} 
+                type='text'
+                placeholder='Name'/>
             <input 
-            value={eventData.description || ''} 
-            onChange={e => setEventData({...eventData, description: e.target.value})} 
-            type='text'
-            placeholder='Desc' />
+                value={eventData.description || ''} 
+                onChange={e => setEventData({...eventData, description: e.target.value})} 
+                type='text'
+                placeholder='Desc' />
             <input 
-            value={eventData.group || ''} 
-            onChange={e => setEventData({...eventData, group: e.target.value})} 
-            type="text" 
-            placeholder="Game/Event Type" />
+                value={eventData.group || ''} 
+                onChange={e => setEventData({...eventData, group: e.target.value})} 
+                type="text" 
+                placeholder="Game/Event Type" />
             <input
-            value={eventData.duration || ''}
-            onChange={e => setEventData({...eventData, duration: e.target.value})}
-            type="text"
-            placeholder="Duration (Hours)"/>
+                value={eventData.duration || ''}
+                onChange={e => setEventData({...eventData, duration: e.target.value})}
+                type="text"
+                placeholder="Duration (Hours)"/>
             <button type="submit">Submit</button>
         </form>
     </div>

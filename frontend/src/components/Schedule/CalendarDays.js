@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import useAuth from '../../hooks/userAuth'
 import GetUrl from '../../GetUrl'
 
-export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatus, eventToggle, eventToggleStatus, setEntryDate}) => {
+export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatus, setEntryDate}) => {
 
     const [events, setEvents] = useState([])
 
@@ -78,7 +78,6 @@ export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatu
                             // })
                         }
                         <button style={{width: 30, height: 30, position: 'relative'}} onClick={() => { timeToggle(!timeToggleStatus); setEntryDate(calDay.date); } }/>
-                        <button style={{width: 30, height: 30, position: 'relative', backgroundColor: 'blue'}} onClick={() => { eventToggle(!eventToggleStatus); setEntryDate(calDay.date)}}/>
                     </div>
                     )
                 })

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react"
 
-import '../style/Bracket.css'
+import '../../style/Bracket.css'
 
 export const BracketSet = ({setData}) => {
 

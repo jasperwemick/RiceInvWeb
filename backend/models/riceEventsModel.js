@@ -51,15 +51,9 @@ const riceEventSchema = new Schema({
         }],
     }],
     participants: [{
-        person: {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: 'Profile',
-            required: true
-        },
-        available: {
-            type: Boolean,
-            required :true
-        }
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Profile',
+        required: true
     }],
     ready: {
         type: Boolean,

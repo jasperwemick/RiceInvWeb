@@ -3,10 +3,15 @@ const RiceEvent = require('../models/riceEventsModel')
 const getRiceEvents = async (req, res) => {
 
     const ready = req.query.ready
-
     try {
-        const events = await RiceEvent.find({ready: ready}).populate('participants').exec()
-        res.json(events)
+        if (ready) {
+            const events = await RiceEvent.find({ready: ready}).populate('participants.person').exec()
+            res.json(events)
+        }
+        else {
+            const events = await RiceEvent.find().populate('participants.person').exec()
+            res.json(events)
+        }
     }
     catch(e) {
         console.log('Error at GET /events', e)
@@ -19,7 +24,7 @@ const getMonthlyRiceEvents = async (req, res) => {
     const month = req.params.month
 
     try {
-        const events = await RiceEvent.find({year: year, month: month}).populate('participants').exec()
+        const events = await RiceEvent.find({year: year, month: month}).populate('participants.person').exec()
         res.json(events)
     }
     catch(e) {
@@ -34,7 +39,7 @@ const getDailyRiceEvents = async (req, res) => {
     const day = req.params.day
 
     try {
-        const events = await RiceEvent.find({year: year, month: month, day: day}).populate('participants')
+        const events = await RiceEvent.find({year: year, month: month, day: day}).populate('participants.person').exec()
         res.json(events)
     }
     catch(e) {
@@ -50,7 +55,7 @@ const getOneRiceEvents = async (req, res) => {
     const tag = req.params.tag
 
     try {
-        const event = await RiceEvent.find({year: year, month: month, day: day, tag: tag}).populate('participants')
+        const event = await RiceEvent.find({year: year, month: month, day: day, tag: tag}).populate('participants.person').exec()
         res.json(event)
     }
     catch(e) {

@@ -1,12 +1,12 @@
 import React, { useEffect, useState, useRef } from "react"
 import Xarrow, { useXarrow } from 'react-xarrows'
 
-import '../style/Bracket.css'
-import '../style/home.css'
+import '../../style/Bracket.css'
+import '../../style/home.css'
 import { BracketSet } from "./BracketSet"
-import GetUrl from "../GetUrl"
+import GetUrl from "../../GetUrl"
 import { GenerateBracketTree, getMaxDepth, treeToArray } from './Auxillery/tree'
-import { EditorPopUp } from "./EditorPopUp"
+import { BracketSetEditor } from "./BracketSetEditor"
 
 export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
 
@@ -153,7 +153,7 @@ export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
 
         return (
             <React.Fragment>
-                <EditorPopUp 
+                <BracketSetEditor 
                     editorData={editorData} 
                     setEditorData={setEditorData} 
                     profiles={profiles}

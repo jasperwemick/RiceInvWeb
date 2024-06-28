@@ -38,14 +38,13 @@ timeEntrySchema.post('findOneAndUpdate', async function () {
 
         // Find the events involving the player whos time was just updated
         const thisTimeDoc = await this.model.findOne(this.getQuery())
-        const relevantEvents = await RiceEvent.find({participants: { $elemMatch: {person: thisTimeDoc.profileId} }, finished: false}).exec()
+        const relevantEvents = await RiceEvent.find({participants: [thisTimeDoc.profileId], finished: false}).exec()
 
         // Update each event
         relevantEvents.forEach(async (ev, evIndex) => {
 
             // Get the people (ids) involved in the event and all of their respective valid time entries
-            const people = ev.participants.map(p => String(p.person))
-            const playerTimes = await this.model.find({profileId: {$in: people}})
+            const playerTimes = await this.model.find({profileId: {$in: ev.participants}})
             // console.log(playerTimes)
 
             const now = new Date()

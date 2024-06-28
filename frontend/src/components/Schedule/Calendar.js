@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { CalendarDays } from './CalendarDays'
 import '../../style/calendar.css'
 
-export const Calendar = ({timeToggle, timeToggleStatus, setEntryDate, eventToggle, eventToggleStatus}) => {
+export const Calendar = ({timeToggle, timeToggleStatus, setEntryDate}) => {
 
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -34,8 +34,6 @@ export const Calendar = ({timeToggle, timeToggleStatus, setEntryDate, eventToggl
                     changeCurrentDay={changeCurrentDay} 
                     timeToggle={timeToggle} 
                     timeToggleStatus={timeToggleStatus} 
-                    eventToggle={eventToggle} 
-                    eventToggleStatus={eventToggleStatus} 
                     setEntryDate={setEntryDate}/>
             </div>
         </div>

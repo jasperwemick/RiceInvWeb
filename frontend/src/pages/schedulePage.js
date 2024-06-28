@@ -1,34 +1,60 @@
 import React, { useState, useEffect } from "react";
-import GetUrl from "../GetUrl";
 import { Calendar } from "../components/Schedule/Calendar";
 import { TimeEditor } from "../components/Schedule/TimeEditor";
-import { EventEditor } from "../components/Schedule/EventEditor";
 import { EventPool } from "../components/Schedule/EventPool";
+import { EventInfo } from "../components/Schedule/EventInfo";
+
+import '../style/schedule.css'
 
 
-export default function SchedulePage() {
+export default function SchedulePage({}) {
 
     const [toggleTimeEntry, setToggleTimeEntry] = useState(false)
-    const [toggleEventEntry, setToggleEventEntry] = useState(false)
+    const [toggleEventInfo, setToggleEventInfo] = useState(false)
 
     const [entryDate, setEntryDate] = useState(new Date())
+    const [currentEvent, setCurrentEvent] = useState({
+        tag: '',
+        name: '',
+        description: '',
+        year: 0,
+        month: 0,
+        day: 0,
+        group: '',
+        duration: 0,
+        timeRanges: [],
+        participants: [],
+        ready: false,
+        finished: false
+    })
 
     return (
         <div>
             <div className={`time-entry-window`} style={toggleTimeEntry ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
-                <TimeEditor date={entryDate} enabled={toggleTimeEntry} toggleSelf={setToggleTimeEntry}/>
+                <TimeEditor 
+                    date={entryDate} 
+                    enabled={toggleTimeEntry} 
+                    toggleSelf={setToggleTimeEntry}/>
             </div>
-            <div className={`time-entry-window`} style={toggleEventEntry ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
-                <EventEditor date={entryDate}/>
+            <div className={`time-entry-window`} style={toggleEventInfo ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
+                <EventInfo 
+                    toggleEventInfo={toggleEventInfo}
+                    setToggleEventInfo={setToggleEventInfo} 
+                    currentEvent={currentEvent} 
+                    setCurrentEvent={setCurrentEvent}/>
             </div>
             <div style={{display: 'flex'}}>
                 <Calendar 
                     timeToggle={setToggleTimeEntry} 
                     timeToggleStatus={toggleTimeEntry} 
-                    eventToggle={setToggleEventEntry}
-                    eventToggleStatus={toggleEventEntry}
                     setEntryDate={setEntryDate}/>
-                <EventPool/>
+                <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>        
+                    <p>{`EventPool`}</p>
+                    <EventPool 
+                        toggleEventInfo={toggleEventInfo} 
+                        setToggleEventInfo={setToggleEventInfo}
+                        setCurrentEvent={setCurrentEvent}/>
+                </div>
             </div>
         </div>
     )

@@ -1,9 +1,9 @@
 import React, { useEffect, useState, useRef } from "react"
 
-import { Profile } from "./Profile"
-import GetUrl from "../GetUrl"
+import { Profile } from "../Profile"
+import GetUrl from "../../GetUrl"
 
-export const EditorPopUp = ({editorData, setEditorData, profiles, toggleEditor, setToggleEditor}) => {
+export const BracketSetEditor = ({editorData, setEditorData, profiles, toggleEditor, setToggleEditor}) => {
 
     const [seedSelect, setSeedSelect] = useState('upper')
     const scrollRef = useRef(null);
