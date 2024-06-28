@@ -1,0 +1,27 @@
+.chat-page {
+    display: flex;
+    flex-direction: column;
+    height: 600px;
+    justify-content: space-between;
+    /* width: 50%; */
+    /* align-items: flex-end; */
+}
+
+.main-chat-box {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.chat-bar {
+    /* margin-top: 123px; */
+}
+
+.bubble {
+    background-color: lightgreen;
+    width: fit-content;
+    max-width: 50%;
+    padding: 6px;
+    overflow-wrap: break-word;
+    border-radius: 8px;
+}

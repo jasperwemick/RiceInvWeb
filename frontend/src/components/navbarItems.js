@@ -53,6 +53,13 @@ export const NavItems = [
                 text: 'Among Us',
             },
         ]
+    },
+    {
+        class: 'nav-button',
+        path: '/chat',
+        text: 'Chat',
+        dropdown: false,
+        dropItems: []
     }
 ]
 
