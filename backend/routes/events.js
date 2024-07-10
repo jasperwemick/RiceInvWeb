@@ -11,7 +11,7 @@ const router = express.Router()
 const { getUserMonthTimeEntries, getUserTimeDateEntry, createTimeEntry, updateTimeEntry, deleteTimeEntry } = require('../controllers/timeController')
 const { getRiceEvents, getMonthlyRiceEvents, getDailyRiceEvents, getOneRiceEvents, createRiceEvent, upsertOneRiceEvent, deleteOneRiceEvent } = require('../controllers/eventController')
 
-// Time
+// Time Entry
 
 router.get('/time/:user/:year/:month', getUserMonthTimeEntries)
 
@@ -33,10 +33,10 @@ router.get('/ev/:year/:month/:day/:tag', getOneRiceEvents)
 
 router.get('/ev', getRiceEvents)
 
-router.post('/ev', createRiceEvent)
+router.post('/ev', Verify, VerifyRole, createRiceEvent)
 
-router.put('/ev/:tag', upsertOneRiceEvent)
+router.put('/ev/:tag', Verify, VerifyRole, upsertOneRiceEvent)
 
-router.delete('/ev/:tag', deleteOneRiceEvent)
+router.delete('/ev/:tag', Verify, VerifyRole, deleteOneRiceEvent)
 
 module.exports = router

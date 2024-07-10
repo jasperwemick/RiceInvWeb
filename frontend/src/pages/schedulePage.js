@@ -12,9 +12,11 @@ export default function SchedulePage({}) {
     const [toggleTimeEntry, setToggleTimeEntry] = useState(false)
     const [toggleEventInfo, setToggleEventInfo] = useState(false)
 
+    const [events, setEvents] = useState([])
+
     const [entryDate, setEntryDate] = useState(new Date())
     const [currentEvent, setCurrentEvent] = useState({
-        tag: '',
+        _id: '0',
         name: '',
         description: '',
         year: 0,
@@ -47,13 +49,16 @@ export default function SchedulePage({}) {
                 <Calendar 
                     timeToggle={setToggleTimeEntry} 
                     timeToggleStatus={toggleTimeEntry} 
-                    setEntryDate={setEntryDate}/>
+                    setEntryDate={setEntryDate}
+                    events={events}/>
                 <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>        
                     <p>{`EventPool`}</p>
                     <EventPool 
                         toggleEventInfo={toggleEventInfo} 
                         setToggleEventInfo={setToggleEventInfo}
-                        setCurrentEvent={setCurrentEvent}/>
+                        setCurrentEvent={setCurrentEvent}
+                        events={events}
+                        setEvents={setEvents}/>
                 </div>
             </div>
         </div>

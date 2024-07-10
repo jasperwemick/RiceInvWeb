@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react"
 
-import { Profile } from "../Profile"
+import { Profile } from "../Profile/Profile"
 import GetUrl from "../../GetUrl"
 
 export const BracketSetEditor = ({editorData, setEditorData, profiles, toggleEditor, setToggleEditor}) => {

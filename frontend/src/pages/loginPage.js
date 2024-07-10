@@ -45,13 +45,17 @@ const Login = () => {
                 credentials: 'include'
             })
             const actualData = await responeAgain.json();
-            console.log(actualData.message)
-            const roles = actualData?.roles;
-            setAuth({ user, roles });
+            if (actualData.user) {
+                const validUser = actualData?.user;
+                const roles = actualData?.roles;
+                const profile = actualData?.profile;
+                setAuth({ user: validUser, roles, profile });
+
+                navigate(from, { replace: true});
+            }
+
             setUser('');
             setPass('');
-
-            navigate(from, { replace: true});
             
         }
         catch(e) {

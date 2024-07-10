@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import useAuth from '../../hooks/userAuth'
 import GetUrl from '../../GetUrl'
+import useAlert from '../../hooks/useAlert'
 
-export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatus, setEntryDate}) => {
-
-    const [events, setEvents] = useState([])
+export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatus, setEntryDate, events}) => {
 
     const [monthTimeStatus, setMonthTimeStatus] = useState([])
 
     const { auth, setAuth }  = useAuth()
+
+    const { alert, setAlert } = useAlert()
     
     useEffect(() => {
 
@@ -19,13 +20,14 @@ export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatu
                 const res = await fetch(`${GetUrl}/api/events/time/${auth.user}/${day.getFullYear()}/${'0' + String(day.getMonth() + 1)}`)
                 const jres = await res.json()
 
+                console.log(jres)
                 setMonthTimeStatus(jres)
             }
 
             getMonthTimes()
         }
 
-    }, [auth.user, day])
+    }, [auth.user, day, timeToggleStatus])
 
     let firstDayOfMonth = new Date(day.getFullYear(), day.getMonth(), 1);
     let weekdayOfFirstDay = firstDayOfMonth.getDay();
@@ -67,17 +69,25 @@ export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatu
                             {backgroundColor: 'green'} : null
                         }>
                             
-                        <p>{calDay.number}</p>
+                        <p className='no-select-text'>{calDay.number}</p>
+                        <button style={{width: 30, height: 30, position: 'relative'}} onClick={
+                            auth.user ? () => {
+                                timeToggle(!timeToggleStatus); 
+                                setEntryDate(calDay.date);
+                            } : () => { setAlert({active: true, message: 'Please Log In'}) } }
+                        />
+                        <div style={{display: 'flex'}}>
                         {
-                            // events.map((vnt, index) => {
-                            //     return (
-                            //         <div className='calendar-event' onClick={() => null /* Show event details, add button on popup to lead to editor*/}>
-                            //             <p>{vnt.name}</p><p>{vnt.time}</p>
-                            //         </div>
-                            //     )
-                            // })
+                            events.filter((vnt) => vnt.day === calDay.number && vnt.month - 1 === calDay.month && vnt.year === calDay.year).map((vnt, index) => {
+                                return (
+                                    <div key={index} className='calendar-event' onClick={() => null /* Show event details, add button on popup to lead to editor*/}>
+                                        <p className='no-select-text'>{vnt.name}</p>
+                                        <p></p>
+                                    </div>
+                                )
+                            })
                         }
-                        <button style={{width: 30, height: 30, position: 'relative'}} onClick={() => { timeToggle(!timeToggleStatus); setEntryDate(calDay.date); } }/>
+                        </div>
                     </div>
                     )
                 })

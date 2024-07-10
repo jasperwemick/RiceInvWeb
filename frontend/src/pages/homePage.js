@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "../style/home.css"
 import GetUrl from "../GetUrl";
 import { GenerateBracket } from "../components/Bracket/GenerateBracket";
-import { Profile } from "../components/Profile";
+import { Profile } from "../components/Profile/Profile";
  
 export default function Home() {
     const [profiles, setProfiles] = useState([]);

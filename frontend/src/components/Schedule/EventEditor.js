@@ -3,10 +3,12 @@ import { useNavigate } from "react-router";
 import { InferProps } from 'prop-types'
 import GetUrl from "../../GetUrl"
 import '../../style/home.css'
+import { Profile } from "../Profile/Profile";
+import { ProfileList } from "../Profile/ProfileList";
+import { SelectableProfile } from "../Profile/SelectableProfile";
 
 
-// TODO: Use proptypes to add defintion to params, https://stackoverflow.com/questions/71223891/react-and-jsdoc-how-to-document-a-react-component-properly
-const PlayerProfile = ({profile, setEventData, eventData}) => {
+const EventEditorProfile = ({profile, setEventData, eventData}) => {
 
     const [selected, setSelected] = useState(false)
 
@@ -15,8 +17,11 @@ const PlayerProfile = ({profile, setEventData, eventData}) => {
         if (eventData.participants.find((p) => p === profile._id)) {
             setSelected(true)
         }
+        else {
+            setSelected(false)
+        }
 
-    }, [eventData.tag])
+    }, [eventData._id])
 
     const handleClick = () => {
         const newStatus = !selected
@@ -34,46 +39,19 @@ const PlayerProfile = ({profile, setEventData, eventData}) => {
     }
 
     return (
-        <li>
-            <div style={selected ? {backgroundColor: "lightblue"} : null}
-                onClick={() => handleClick()}>
-                {/* <img src={profile.imageUrl} width={wt} height={ht} alt="Player Profile"></img> */}
-                <span>{profile.name}</span>
-            </div>
-        </li>
+        <Profile profile={profile} wt={50} ht={50} clickAction={handleClick} styleOptions={selected ? {backgroundColor: "lightblue"} : null}/>
     )
 }
 
 
-export function EventEditor({eventData, setEventData}) {
+export function EventEditor({eventData, setEventData, toggleEventInfo, setToggleEventInfo}) {
 
 
-    const [profiles, setProfiles] = useState([])
+    const setEventParticipants = (arr) => {
+        setEventData({...eventData, participants: arr})
+    }
 
-    const scrollRef = useRef(null);
 
-    const navigate = useNavigate();
-
-    useEffect(() => {
-
-        async function getProfiles() {
-            try {
-                const response = await fetch(`${GetUrl}/api/profiles/default`);
-                const jsponse = await response.json();
-
-                setProfiles(jsponse)
-            }
-            catch(e) {
-                const message = `An error occurred: ${e}`;
-                console.log(message)
-                return;
-            }
-        }
-        
-        getProfiles();
-        return;
-    }, [])
-    
     /**
      * 
      * @param {Event} e - Submission onClick event
@@ -84,11 +62,12 @@ export function EventEditor({eventData, setEventData}) {
         const upsertEventData = async () => {
 
             try {
-                await fetch(`${GetUrl}/api/events/ev/${eventData.tag}`, {
+                await fetch(`${GetUrl}/api/events/ev/${eventData._id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
                     },
+                    credentials: "include",
                     body: JSON.stringify(eventData)
                 })
             }
@@ -98,39 +77,22 @@ export function EventEditor({eventData, setEventData}) {
         }
 
         upsertEventData()
-    }
-
-    /**
-     * 
-     * @returns A list of PlayerProfile components
-     */
-    function profileList() {
-        return profiles.map((profile, index) => {
-            return (
-                <PlayerProfile profile={profile} setEventData={setEventData} eventData={eventData} key={index}/>
-            );
-        });
-    }
-
-    /**
-     * @param {Number} offset - The offset value to shift the list
-     */
-    const shift = (offset) => {
-        scrollRef.current.scrollLeft += offset;
+        setToggleEventInfo(false)
     }
     
     return (
     <div>
         <h3>Add Event</h3>
-        <div className="profile-list-container-small">
-            <button onClick={() => shift(-200)}>{'<'}</button>
-            <ul ref={scrollRef} className="profile-list">{profileList()}</ul>
-            <button onClick={() => shift(200)}>{'>'}</button>
-        </div>
+        <ProfileList 
+            shiftOffset={200}
+            Wrapper={SelectableProfile} 
+            WrapperProps={
+                {selectedList: eventData.participants, setSelectedList: setEventParticipants, refreshTrigger: eventData._id}
+            }/>
         <form onSubmit={onSubmit}>
             <input 
                 value={eventData.name || ''} 
-                onChange={e => setEventData({...eventData, name: e.target.value, tag: e.target.value.replace(/[^a-z0-9]/gi, '')})} 
+                onChange={e => setEventData({...eventData, name: e.target.value})} 
                 type='text'
                 placeholder='Name'/>
             <input 

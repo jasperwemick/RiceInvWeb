@@ -13,9 +13,7 @@ const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent}
 }
 
 // Pool of unresolved events
-export const EventPool = ({toggleEventInfo, setToggleEventInfo, setCurrentEvent}) => {
-
-    const [events, setEvents] = useState([])
+export const EventPool = ({toggleEventInfo, setToggleEventInfo, setCurrentEvent, events, setEvents}) => {
 
     useEffect(() => {
 
@@ -32,7 +30,7 @@ export const EventPool = ({toggleEventInfo, setToggleEventInfo, setCurrentEvent}
         }
 
         getEvents()
-    }, [])
+    }, [toggleEventInfo])
 
     const mapEvents = () => {
         return events.map((ev, index) => {

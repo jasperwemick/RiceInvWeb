@@ -24,42 +24,48 @@ import Logout from "./components/Logout";
 import BlastHomePage from "./pages/blastHomePage";
 import BlastJeopardyPage from "./pages/blastJeopardyPage";
 import BlastAmongusPage from "./pages/blastAmongusPage";
+import { Alert } from "./components/Alert";
+import { AlertProvider } from "./context/AlertProvider";
 
+import './style/global.css'
  
 const App = () => {
   return (
     <div>
       <Navbar/>
-      <Routes>
-        <Route path="" element={<Layout />}>
-          {/* PUBLIC */}
-          <Route exact path="/" element={<Home />} /> {/* Home page with player list */}
-          <Route path="/score" element={<Leaderboard />} /> {/* Overall leaderboard for the RI */}
-          <Route path="/:id" element={<Description />} /> {/* Main profile page for player */}
-          <Route path="/schedule" element={<SchedulePage />}/> {/* Schedule Page */}
-          <Route path="/login" element={<Login />}/> {/* Login Page (Admin only for now) */}
-          <Route path="/logout" element={<Logout />}/> {/* Logout Function */}
+      <AlertProvider>
+        <Alert/>
+        <Routes>
+          <Route path="" element={<Layout />}>
+            {/* PUBLIC */}
+            <Route exact path="/" element={<Home />} /> {/* Home page with player list */}
+            <Route path="/score" element={<Leaderboard />} /> {/* Overall leaderboard for the RI */}
+            <Route path="/:id" element={<Description />} /> {/* Main profile page for player */}
+            <Route path="/schedule" element={<SchedulePage />}/> {/* Schedule Page */}
+            <Route path="/login" element={<Login />}/> {/* Login Page (Admin only for now) */}
+            <Route path="/logout" element={<Logout />}/> {/* Logout Function */}
 
-          <Route path="/league/:id" element={<LeagueProfilePage />} /> {/* League of Legends focused profile page for player */}
-          <Route path="/league" element={<LeaguePage />} /> {/* Details regarding RI League of Legends rules, scoring, and highlights */}
-          <Route path="/league/games/:num" element={<LeagueGamePage />} /> {/* Game stats with listed individual player stats for a League of Legends game */}
+            <Route path="/league/:id" element={<LeagueProfilePage />} /> {/* League of Legends focused profile page for player */}
+            <Route path="/league" element={<LeaguePage />} /> {/* Details regarding RI League of Legends rules, scoring, and highlights */}
+            <Route path="/league/games/:num" element={<LeagueGamePage />} /> {/* Game stats with listed individual player stats for a League of Legends game */}
 
-          <Route path="/brawl/:id" element={<BrawlProfilePage/>}/> {/* Brawlhalla focused profile page for player */}
-          <Route path="/brawl" element={<BrawlPage />}/> {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
-          <Route path="/brawl/ones" element={<BrawlOnesPage />}/> {/* Brawlhalla ones games and stats */}
-          <Route path="/brawl/twos" element={<BrawlTwosPage />}/> {/* Brawlhalla twos games and stats */}
+            <Route path="/brawl/:id" element={<BrawlProfilePage/>}/> {/* Brawlhalla focused profile page for player */}
+            <Route path="/brawl" element={<BrawlPage />}/> {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
+            <Route path="/brawl/ones" element={<BrawlOnesPage />}/> {/* Brawlhalla ones games and stats */}
+            <Route path="/brawl/twos" element={<BrawlTwosPage />}/> {/* Brawlhalla twos games and stats */}
 
-          <Route path="/blast" element={<BlastHomePage />}/> {/* Bullshit Blast Page */}
-          <Route path="/blast/jeopardy" element={<BlastJeopardyPage />}/> {/* Bullshit Blast Jeopardy Page */}
-          <Route path="/blast/amongus" element={<BlastAmongusPage />}/> {/* Bullshit Blast Among Us Page */}
+            <Route path="/blast" element={<BlastHomePage />}/> {/* Bullshit Blast Page */}
+            <Route path="/blast/jeopardy" element={<BlastJeopardyPage />}/> {/* Bullshit Blast Jeopardy Page */}
+            <Route path="/blast/amongus" element={<BlastAmongusPage />}/> {/* Bullshit Blast Among Us Page */}
 
-          {/* PROTECTED */}
-          <Route element={<RequireAuth allowedRoles={['Admin']}/>}>
-            <Route path="/add" element={<Add />} /> {/* Allows for for new default profile additions */}
-            <Route path="/edit/:id" element={<Edit />} /> {/* Allows for updates to a player's default profile */}
+            {/* PROTECTED */}
+            <Route element={<RequireAuth allowedRoles={['Admin']}/>}>
+              <Route path="/add" element={<Add />} /> {/* Allows for for new default profile additions */}
+              <Route path="/edit/:id" element={<Edit />} /> {/* Allows for updates to a player's default profile */}
+            </Route>
           </Route>
-        </Route>
-      </Routes>
+        </Routes>
+      </AlertProvider>
     </div>
   );
 };

@@ -30,9 +30,16 @@
 
 .event-time-entries-container {
     position: relative;
-    width: 302px;
+    width: 325px;
     display: flex;
+    
+    align-items: center;
 
+    background-color: aliceblue;
+
+    border-radius: 20px;
+    
+    filter: drop-shadow(5px 5px 2px #7d7d7d);
 
     overflow: hidden;
     overflow-x: scroll;
@@ -46,5 +53,20 @@
 }
 
 .event-time-entries-container > div {
-    border: 1px solid black;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border: 3px solid black;
+    padding: 20px 10px 20px 10px;
+    border-radius: 20px;
+}
+
+.event-time-entries-container > div:hover {
+    opacity: 50%;
+    background-color: darkgray;
+}
+
+.event-info-window {
+    display: flex;
 }

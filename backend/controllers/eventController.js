@@ -1,4 +1,5 @@
 const RiceEvent = require('../models/riceEventsModel')
+const mongoose = require('mongoose')
 
 const getRiceEvents = async (req, res) => {
 
@@ -79,13 +80,17 @@ const createRiceEvent = async (req, res) => {
 
 const upsertOneRiceEvent = async (req, res) => {
 
-    const tag = req.params.tag
+    const id = req.params.tag
 
     const options = {upsert: true, new: true, setDefaultsOnInsert: true};
 
     try {
-        console.log(req.body)
-        const result = await RiceEvent.findOneAndUpdate({tag: tag}, {...req.body}, options)
+
+        const finalID = id === '0' ? new mongoose.Types.ObjectId() : id
+
+        console.log(finalID)
+
+        const result = await RiceEvent.findByIdAndUpdate(finalID, {...req.body, _id: finalID}, options)
         res.json(result)
     }
     catch(e) {

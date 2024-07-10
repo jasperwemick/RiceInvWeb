@@ -1,0 +1,22 @@
+.alert-popup-window {
+    position: fixed;
+    z-index: 10;
+
+    width: 200px;
+    height: 60px;
+    margin: 10px 0 0 10px;
+
+    display: flex;
+    background-color: lightgray;
+    filter: drop-shadow(5px 5px 2px #7d7d7d);
+    border: 1px solid black;
+    border-radius: 20px;
+
+    justify-content: center;
+    align-items: center;
+}
+
+.alert-popup-window > p {
+    color: black;
+    font-size: larger;
+}

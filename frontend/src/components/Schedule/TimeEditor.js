@@ -12,6 +12,10 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
 
     const dateFormatted = date.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3/$1/$2')
 
+    const [messages, setMessages] = useState([])
+
+    const [messageSent, setMessageSent] = useState(false)
+
     useEffect(() => {
 
         const getTimeData = async () => {
@@ -33,7 +37,7 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
             getTimeData()
         }
 
-    }, [enabled])
+    }, [enabled, messageSent])
 
     const submitTime = () => {
 
@@ -58,6 +62,9 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
                     },
                     body: JSON.stringify(submissionData)
                 })
+                setMessageSent(true)
+                toggleSelf(false)
+                setTimeIntervalData(Array(48).fill(false))
             }
             catch(e) {
                 console.log(`Failed to fetch (PUT): ${e}`)
@@ -65,7 +72,7 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
         }
 
         putTime()
-        toggleSelf(false)
+        
     }
 
     return (

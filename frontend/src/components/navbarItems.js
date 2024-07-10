@@ -60,7 +60,7 @@ export const LogItems = [
     {
         class: 'sign-in-button',
         path: '/login',
-        text: 'Administrator'
+        text: 'Login'
     },
     {
         class: 'sign-in-button',

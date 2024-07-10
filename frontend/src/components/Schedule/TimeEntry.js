@@ -13,11 +13,11 @@ const TimeInterval = ({index, intervalData, toggleRange, updateRange}) => {
 
     return (
         <div>
-            <div>{indexToTime()}</div>
+            <p className="no-select-text">{indexToTime()}</p>
             <div 
                 className={`time-interval-block ${intervalData ? `time-interval-selected` : null}`} 
-                onMouseEnter={() => updateRange(index)}
-                onClick={() => toggleRange(index)}></div>
+                onMouseEnter={toggleRange ? () => updateRange(index) : null}
+                onClick={toggleRange ? () => toggleRange(index) : null}></div>
         </div>
     )
 }
@@ -83,8 +83,8 @@ export const TimeEntry = ({ timeInvervalData, setTimeIntervalData }) => {
     return (
         <div>
             <div className={`time-entry-header`}>
-                <p>{`AM`}</p>
-                <p>{`PM`}</p>
+                <p className="no-select-text">{`AM`}</p>
+                <p className="no-select-text">{`PM`}</p>
             </div>
             <div className={`time-entry-container`} >
                 {
@@ -93,8 +93,8 @@ export const TimeEntry = ({ timeInvervalData, setTimeIntervalData }) => {
                             <TimeInterval 
                                 index={index} 
                                 intervalData={interval}
-                                toggleRange={toggleRange}
-                                updateRange={updateRange}
+                                toggleRange={setTimeIntervalData ? toggleRange : null}
+                                updateRange={setTimeIntervalData ? updateRange : null}
                                 key={index}/>
                         )
                     })

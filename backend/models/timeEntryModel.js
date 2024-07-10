@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const { AssessEventTimes } = require('../middleware/assessEventTimes')
-const RiceEvent = require('./riceEventsModel')
 
 const Schema = mongoose.Schema
 
@@ -32,13 +31,13 @@ const timeEntrySchema = new Schema({
     
 }, { timestamps: true })
 
-timeEntrySchema.post('findOneAndUpdate', async function () {
+timeEntrySchema.post('findOneAndUpdate', async function (doc, next) {
 
     try {
 
         // Find the events involving the player whos time was just updated
         const thisTimeDoc = await this.model.findOne(this.getQuery())
-        const relevantEvents = await RiceEvent.find({participants: [thisTimeDoc.profileId], finished: false}).exec()
+        const relevantEvents = await doc.model('RiceEvent').find({participants: [thisTimeDoc.profileId], finished: false}).exec()
 
         // Update each event
         relevantEvents.forEach(async (ev, evIndex) => {
@@ -107,9 +106,10 @@ timeEntrySchema.post('findOneAndUpdate', async function () {
             }
 
             // PUT time ranges 
-            await RiceEvent.findOneAndUpdate({_id: ev._id}, {
+            await doc.model('RiceEvent').findByIdAndUpdate(ev._id, {
                 $set: { timeRanges: evTimeRanges }, 
-                ready: (evTimeRanges.length === 0 ? false : true)}
+                ready: (evTimeRanges.length === 0 ? false : true),
+                }
             )
         })
     }
