@@ -4,6 +4,7 @@ import useAuth from "../../hooks/userAuth";
 import { EventSchedule } from "./EventSchedule";
 import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
 import EventContext from "./context/EventContextProvider";
+import { ProfileList } from "../Profile/ProfileList";
 
 export const EventInfo = ({}) => {
 
@@ -52,6 +53,7 @@ export const EventInfo = ({}) => {
                 <div style={eventView === 'view' ? null : {visibility: 'hidden', pointerEvents: 'none', width: 0, height: 0}}>
                     <p>{`Event: ${currentEvent.name}`}</p>
                     <p>{`Desc: ${currentEvent.description}`}</p>
+                    <ProfileList profileFilter={currentEvent.participants}/>
                 </div>
             </div>
         </div>

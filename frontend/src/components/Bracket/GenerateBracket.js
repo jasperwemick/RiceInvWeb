@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react"
 import Xarrow, { useXarrow } from 'react-xarrows'
 
-import '../../style/Bracket.css'
+import './style/Bracket.css'
 import '../../style/home.css'
 import { BracketSet } from "./BracketSet"
 import GetUrl from "../../GetUrl"

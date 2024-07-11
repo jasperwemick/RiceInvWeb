@@ -3,7 +3,7 @@ import { Profile } from "./Profile";
 import GetUrl from "../../GetUrl";
 import '../../style/home.css'
 
-export const ProfileList = ({shiftOffset=200, Wrapper={Profile}, WrapperProps={width: 200, height: 200, clickAction: null, styleOptions: null}}) => {
+export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={width: 200, height: 200, clickAction: null, styleOptions: null}, profileFilter=[]}) => {
 
     const scrollRef = useRef(null);
 
@@ -34,7 +34,7 @@ export const ProfileList = ({shiftOffset=200, Wrapper={Profile}, WrapperProps={w
      * @returns A list of PlayerProfile components
      */
     function profileList() {
-        return profiles.map((profile, index) => {
+        return profiles.filter((p) => (profileFilter.length === 0 ? true : (profileFilter.find((f) => f === p._id) ? true : false))).map((profile, index) => {
             return (
                 <Wrapper profile={profile} {...WrapperProps} key={index}/>
             );

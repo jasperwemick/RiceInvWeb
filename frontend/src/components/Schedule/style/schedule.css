@@ -195,8 +195,13 @@
     font-weight: bold;
 }
 
+.calendar-event-list {
+    list-style: none;
+    display: flex;
+}
+
 .calendar-event {
-    width: 40px;
+    width: 200px;
     height: 40px;
     border: 1px solid black;
     border-radius: 5px;
@@ -211,7 +216,7 @@
     width: 80%;
     height: 30px;
     background-color: #a6a6a6;
-    filter: drop-shadow(3px 3px 1px rgb(2, 66, 32));
+    border: 2px solid rgb(129, 129, 129);
     border-radius: 5px;
 }
 

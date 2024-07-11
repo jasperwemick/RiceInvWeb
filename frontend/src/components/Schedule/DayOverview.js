@@ -25,7 +25,9 @@ export const DayOverview = ({}) => {
 
     return (
         <div className={`time-entry-window`} style={toggleDayOverview ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
-            <div><ul>{mapEvents()}</ul></div>
+            <div>
+                <ul className='calendar-event-list'>{mapEvents()}</ul>
+            </div>
         </div>
     )
 }
