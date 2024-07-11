@@ -16,7 +16,6 @@ import BrawlProfilePage from "./pages/brawlProfilePage";
 import BrawlPage from "./pages/brawlHomePage";
 import BrawlOnesPage from "./pages/brawlOnesPage";
 import BrawlTwosPage from "./pages/brawlTwosPage";
-import SchedulePage from "./pages/schedulePage";
 import Layout from "./components/Layout";
 import Login from "./pages/loginPage";
 import RequireAuth from "./components/RequireAuth";
@@ -28,6 +27,7 @@ import { Alert } from "./components/Alert";
 import { AlertProvider } from "./context/AlertProvider";
 
 import './style/global.css'
+import SchedulePage from "./components/Schedule/schedulePage";
  
 const App = () => {
   return (

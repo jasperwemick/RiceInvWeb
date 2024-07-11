@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import useAuth from "../../hooks/userAuth";
-import '../../style/events.css'
 import GetUrl from "../../GetUrl";
 import { TimeEntry } from "./TimeEntry";
+import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
 
-export const TimeEditor = ({ date, enabled, toggleSelf }) => {
+export const TimeEditor = ({ date }) => {
 
     const [timeInvervalData, setTimeIntervalData] = useState(Array(48).fill(false))
 
@@ -12,9 +12,7 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
 
     const dateFormatted = date.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3/$1/$2')
 
-    const [messages, setMessages] = useState([])
-
-    const [messageSent, setMessageSent] = useState(false)
+    const { toggleTimeEntry, setToggleTimeEntry } = useContext(SchedulePopUpToggleContext)
 
     useEffect(() => {
 
@@ -33,11 +31,11 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
             }
         }
 
-        if (enabled) {
+        if (toggleTimeEntry) {
             getTimeData()
         }
 
-    }, [enabled, messageSent])
+    }, [toggleTimeEntry])
 
     const submitTime = () => {
 
@@ -62,8 +60,7 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
                     },
                     body: JSON.stringify(submissionData)
                 })
-                setMessageSent(true)
-                toggleSelf(false)
+                setToggleTimeEntry(false)
                 setTimeIntervalData(Array(48).fill(false))
             }
             catch(e) {
@@ -76,13 +73,13 @@ export const TimeEditor = ({ date, enabled, toggleSelf }) => {
     }
 
     return (
-        <React.Fragment>
+        <div className={`time-entry-window`} style={toggleTimeEntry ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
             <TimeEntry timeInvervalData={timeInvervalData} setTimeIntervalData={setTimeIntervalData}/>
             <div>
                 <div >{` Date: ${date.toLocaleDateString()} `}</div>
                 <div>{` Name: ${auth.profile ? auth.profile.name : ''} `}</div>
                 <button style={{width: 60, height: 60}} onClick={() => auth.user ? submitTime() : console.log('Please log in')}/>
             </div>
-        </React.Fragment>
+        </div>
     )
 }

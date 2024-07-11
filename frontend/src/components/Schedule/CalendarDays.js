@@ -1,15 +1,23 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import useAuth from '../../hooks/userAuth'
 import GetUrl from '../../GetUrl'
 import useAlert from '../../hooks/useAlert'
+import { DayOverview } from './DayOverview'
+import SchedulePopUpToggleContext from './context/SchedulePopUpToggleProvider'
+import EventContext from './context/EventContextProvider'
 
-export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatus, setEntryDate, events}) => {
+export const CalendarDays = ({day, changeCurrentDay, setEntryDate}) => {
 
     const [monthTimeStatus, setMonthTimeStatus] = useState([])
 
     const { auth, setAuth }  = useAuth()
 
     const { alert, setAlert } = useAlert()
+
+    const { toggleTimeEntry, setToggleTimeEntry, toggleDayOverview, setToggleDayOverview } = useContext(SchedulePopUpToggleContext)
+
+    const { events, setSelectedDayEvents } = useContext(EventContext)
+
     
     useEffect(() => {
 
@@ -27,7 +35,7 @@ export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatu
             getMonthTimes()
         }
 
-    }, [auth.user, day, timeToggleStatus])
+    }, [auth.user, day, toggleTimeEntry])
 
     let firstDayOfMonth = new Date(day.getFullYear(), day.getMonth(), 1);
     let weekdayOfFirstDay = firstDayOfMonth.getDay();
@@ -60,6 +68,9 @@ export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatu
         <div className="table-content">
             {
                 currentDays.map((calDay, index) => {
+
+                    let dayEventList = events.filter((vnt) => vnt.day === calDay.number && vnt.month - 1 === calDay.month && vnt.year === calDay.year)
+
                     return (
                     <div className={`calendar-day ${calDay.currentMonth ? "current" : ""} ${calDay.selected ? " selected" : ""}`}
                         key={index}
@@ -72,22 +83,18 @@ export const CalendarDays = ({day, changeCurrentDay, timeToggle, timeToggleStatu
                         <p className='no-select-text'>{calDay.number}</p>
                         <button style={{width: 30, height: 30, position: 'relative'}} onClick={
                             auth.user ? () => {
-                                timeToggle(!timeToggleStatus); 
+                                console.log(toggleTimeEntry)
+                                setToggleTimeEntry(!toggleTimeEntry); 
                                 setEntryDate(calDay.date);
                             } : () => { setAlert({active: true, message: 'Please Log In'}) } }
                         />
-                        <div style={{display: 'flex'}}>
-                        {
-                            events.filter((vnt) => vnt.day === calDay.number && vnt.month - 1 === calDay.month && vnt.year === calDay.year).map((vnt, index) => {
-                                return (
-                                    <div key={index} className='calendar-event' onClick={() => null /* Show event details, add button on popup to lead to editor*/}>
-                                        <p className='no-select-text'>{vnt.name}</p>
-                                        <p></p>
-                                    </div>
-                                )
-                            })
-                        }
+                        <div 
+                            className='calendar-event-blob' 
+                            style={dayEventList.length === 0 ? {visibility: 'hidden', pointerEvents: 'none'} : null}
+                            onClick={() => {setSelectedDayEvents(dayEventList); setToggleDayOverview(!toggleDayOverview)}}>
+                            <p className='no-select-text'>{`${dayEventList.length} Event(s)`}</p>
                         </div>
+
                     </div>
                     )
                 })

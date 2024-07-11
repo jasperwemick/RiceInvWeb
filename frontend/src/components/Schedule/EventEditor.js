@@ -1,56 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router";
-import { InferProps } from 'prop-types'
 import GetUrl from "../../GetUrl"
 import '../../style/home.css'
-import { Profile } from "../Profile/Profile";
 import { ProfileList } from "../Profile/ProfileList";
 import { SelectableProfile } from "../Profile/SelectableProfile";
 
 
-const EventEditorProfile = ({profile, setEventData, eventData}) => {
-
-    const [selected, setSelected] = useState(false)
-
-    useEffect(() => {
-
-        if (eventData.participants.find((p) => p === profile._id)) {
-            setSelected(true)
-        }
-        else {
-            setSelected(false)
-        }
-
-    }, [eventData._id])
-
-    const handleClick = () => {
-        const newStatus = !selected
-
-        if (newStatus) {
-            setEventData({...eventData, participants: [...eventData.participants, profile._id]})
-        }
-        else {
-
-            const newArr = eventData.participants.filter((pid) => pid !== profile._id)
-            setEventData({...eventData, participants: newArr})
-        }
-
-        setSelected(newStatus)
-    }
-
-    return (
-        <Profile profile={profile} wt={50} ht={50} clickAction={handleClick} styleOptions={selected ? {backgroundColor: "lightblue"} : null}/>
-    )
-}
-
-
 export function EventEditor({eventData, setEventData, toggleEventInfo, setToggleEventInfo}) {
-
 
     const setEventParticipants = (arr) => {
         setEventData({...eventData, participants: arr})
     }
-
 
     /**
      * 

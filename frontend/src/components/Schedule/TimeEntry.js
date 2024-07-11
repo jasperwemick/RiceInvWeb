@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from "react";
-import useAuth from "../../hooks/userAuth";
-import '../../style/events.css'
 
 const TimeInterval = ({index, intervalData, toggleRange, updateRange}) => {
 

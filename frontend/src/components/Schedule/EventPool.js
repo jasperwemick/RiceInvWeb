@@ -1,5 +1,7 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import GetUrl from "../../GetUrl"
+import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
+import EventContext from "./context/EventContextProvider";
 
 
 const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent}) => {
@@ -13,7 +15,11 @@ const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent}
 }
 
 // Pool of unresolved events
-export const EventPool = ({toggleEventInfo, setToggleEventInfo, setCurrentEvent, events, setEvents}) => {
+export const EventPool = ({}) => {
+
+    const { toggleEventInfo, setToggleEventInfo } = useContext(SchedulePopUpToggleContext)
+
+    const { currentEvent, setCurrentEvent, events, setEvents } = useContext(EventContext)
 
     useEffect(() => {
 

@@ -17,11 +17,11 @@ router.get('/time/:user/:year/:month', getUserMonthTimeEntries)
 
 router.get('/time/:user/:year/:month/:day', getUserTimeDateEntry)
 
-router.post('/time', createTimeEntry)
+router.post('/time', Verify, createTimeEntry)
 
-router.put('/time/:user/:year/:month/:day', updateTimeEntry)
+router.put('/time/:user/:year/:month/:day', Verify, updateTimeEntry)
 
-router.delete('/time/:user/:year/:month/:day', deleteTimeEntry)
+router.delete('/time/:user/:year/:month/:day', Verify, deleteTimeEntry)
 
 // Events
 
