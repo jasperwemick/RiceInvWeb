@@ -4,11 +4,11 @@ import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
 import EventContext from "./context/EventContextProvider";
 
 
-const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent}) => {
+const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent, clearEvent}) => {
     return (
         <li onClick={() => {
             setToggleEventInfo(!toggleEventInfo);
-            if (event) { setCurrentEvent({...event}) };
+            event ? setCurrentEvent({...event}) : clearEvent();
         }} 
             style={event ? (event.ready ? {backgroundColor: "forestgreen"} : null) : null}>{event ? event.name : 'Add Event'}</li>
     )
@@ -19,7 +19,7 @@ export const EventPool = ({}) => {
 
     const { toggleEventInfo, setToggleEventInfo } = useContext(SchedulePopUpToggleContext)
 
-    const { currentEvent, setCurrentEvent, events, setEvents } = useContext(EventContext)
+    const { currentEvent, setCurrentEvent, events, setEvents, clearEvent } = useContext(EventContext)
 
     useEffect(() => {
 
@@ -46,7 +46,8 @@ export const EventPool = ({}) => {
                     event={ev} 
                     toggleEventInfo={toggleEventInfo} 
                     setToggleEventInfo={setToggleEventInfo}
-                    setCurrentEvent={setCurrentEvent}/>
+                    setCurrentEvent={setCurrentEvent}
+                    clearEvent={clearEvent}/>
             )
         })
     }
@@ -58,7 +59,8 @@ export const EventPool = ({}) => {
                 event={null}
                 toggleEventInfo={toggleEventInfo} 
                 setToggleEventInfo={setToggleEventInfo}
-                setCurrentEvent={setCurrentEvent}/>
+                setCurrentEvent={setCurrentEvent}
+                clearEvent={clearEvent}/>
         </ul>
     )
 }

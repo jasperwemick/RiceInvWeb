@@ -82,9 +82,13 @@
     width: 50%;
     height: 80%;
     z-index: 20;
+
+    overflow: hidden;
+    overflow-x: scroll;
+    scroll-behavior: smooth;
 }
 
-.time-entry-header {
+/* .time-entry-header {
     position: relative;
     display: flex;
     justify-content: flex-start;
@@ -94,11 +98,12 @@
 
 .time-entry-header > p {
     width: 50%;
-}
+} */
 
 .time-entry-container {
     position: relative;
-    width: 300px;
+    padding: 20px 10px 20px 10px;
+    width: 280px;
     height: 480px;
     display: flex;
     flex-direction: column;
@@ -123,6 +128,23 @@
 
 .time-interval-selected {
     background-color: blue;
+}
+
+.time-entry-text {
+    display: flex;
+    flex-direction: column;
+    padding: 0 10px 0 0;
+    text-align: center;
+}
+
+.time-entry-text > * {
+    width: 100%;
+    height: 60px;
+    margin: 10px 0 10px 0;
+    border: 1px solid black;
+}
+
+.time-entry-text > p {
 }
 
 
@@ -177,7 +199,7 @@
 }
 
 .calendar-day:hover {
-    background-color: rgba(0, 0, 0, .10);
+    /* background-color: rgba(0, 0, 0, .10); */
 }
 
 .calendar-day > p {
@@ -198,6 +220,7 @@
 .calendar-event-list {
     list-style: none;
     display: flex;
+    flex-direction: column;
 }
 
 .calendar-event {
@@ -220,6 +243,14 @@
     border-radius: 5px;
 }
 
-.calendar-event-blob:hover {
-    background-color: #c9c9c9;
+.toggle-time-entry-button {
+    width: 60px;
+    height: 30px;
+    position: relative;
+    background-color: lightsteelblue;
+    border: none
+}
+
+.toggle-time-entry-button:hover {
+    opacity: 50%;
 }

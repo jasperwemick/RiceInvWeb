@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Profile } from "./Profile";
 import GetUrl from "../../GetUrl";
-import '../../style/home.css'
+import './style/profile.css'
 
 export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={width: 200, height: 200, clickAction: null, styleOptions: null}, profileFilter=[]}) => {
 
@@ -26,7 +26,6 @@ export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={wid
         }
         
         getProfiles();
-        return;
     }, [])
 
     /**

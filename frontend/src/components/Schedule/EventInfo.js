@@ -38,9 +38,9 @@ export const EventInfo = ({}) => {
             <div style={{position: 'relative', display: 'flex', flexDirection: 'column'}}>
                 <div>
                     <button 
-                        style={checkAuth() ? {width: 200, height: 30} : {visibility: 'hidden', pointerEvents: 'none', width: 0, height: 0}} 
-                        onClick={() => {setEventView(getEventView(eventView))}}>
-                        {getEventView(eventView)}
+                    style={checkAuth() ? {width: 200, height: 30} : {visibility: 'hidden', pointerEvents: 'none', width: 0, height: 0}} 
+                    onClick={() => {setEventView(getEventView(eventView))}}>
+                    {getEventView(eventView)}
                     </button>
                     <button style={{width: 200, height: 30}} onClick={() => {setToggleEventInfo(false)}}>{`Exit`}</button>
                 </div>
@@ -53,7 +53,7 @@ export const EventInfo = ({}) => {
                 <div style={eventView === 'view' ? null : {visibility: 'hidden', pointerEvents: 'none', width: 0, height: 0}}>
                     <p>{`Event: ${currentEvent.name}`}</p>
                     <p>{`Desc: ${currentEvent.description}`}</p>
-                    <ProfileList profileFilter={currentEvent.participants}/>
+                    <ProfileList profileFilter={currentEvent.participants} WrapperProps={{width: 200, height: 200, clickAction: null, styleOptions: null}}/>
                 </div>
             </div>
         </div>

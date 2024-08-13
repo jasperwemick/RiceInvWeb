@@ -11,8 +11,28 @@ export function EventEditor({eventData, setEventData, toggleEventInfo, setToggle
         setEventData({...eventData, participants: arr})
     }
 
+    const onDelete = () => {
+        const deleteEvent = async () => {
+            try {
+                await fetch(`${GetUrl}/api/events/ev/${eventData._id}`, {
+                    method: "DELETE",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include"
+                })
+            }
+            catch(e) {
+                console.log(`Failed to fetch (DELETE): ${e}`)
+            }
+        }
+
+        deleteEvent()
+    }
+
+
+
     /**
-     * 
      * @param {Event} e - Submission onClick event
      */
     function onSubmit(e) {
@@ -45,9 +65,11 @@ export function EventEditor({eventData, setEventData, toggleEventInfo, setToggle
         <ProfileList 
             shiftOffset={200}
             Wrapper={SelectableProfile} 
-            WrapperProps={
-                {selectedList: eventData.participants, setSelectedList: setEventParticipants, refreshTrigger: eventData._id}
-            }/>
+            WrapperProps={{
+                selectedList: eventData.participants, 
+                setSelectedList: setEventParticipants, 
+                refreshTrigger: [eventData._id]
+            }}/>
         <form onSubmit={onSubmit}>
             <input 
                 value={eventData.name || ''} 
@@ -71,6 +93,7 @@ export function EventEditor({eventData, setEventData, toggleEventInfo, setToggle
                 placeholder="Duration (Hours)"/>
             <button type="submit">Submit</button>
         </form>
+        <button onClick={() => onDelete()}>{`Delete Event`}</button>
     </div>
     );
 }

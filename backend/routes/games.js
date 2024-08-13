@@ -6,7 +6,7 @@ const BrawlSet = require('../models/brawlSetModel')
 const brawlSetOnesStat = require('../models/brawlSetOnesStatsModel')
 const brawlSetTwosStat = require('../models/brawlSetTwosStatsModel')
 const Set = require('../models/setModel')
-const { getBracketSets, getOneBracketSet, createOneBracketSet, upsertOneBracketSet, deleteOneBracketSet } = require('../controllers/setController')
+const { getBracketSets, getOneBracketSet, createOneBracketSet, upsertOneBracketSet, deleteOneBracketSet, upsertManyBracketSets } = require('../controllers/setController')
 
 const router = express.Router()
 
@@ -17,6 +17,8 @@ router.get('/set/:tag/:num', getOneBracketSet)
 router.post('/set', createOneBracketSet)
 
 router.put('/set/:tag/:num', upsertOneBracketSet)
+
+router.put('/set/:tag', upsertManyBracketSets)
 
 router.delete('/set/:tag/:num', deleteOneBracketSet)
 

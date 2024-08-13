@@ -1,24 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { TimeInterval } from "./TimeInterval";
 
-const TimeInterval = ({index, intervalData, toggleRange, updateRange}) => {
-
-    const indexToTime = () => {
-        const hour = String(Math.floor(index / 2))
-        const prefix = hour.length == 1 ? '0' : ''
-        const minutes = index % 2 == 0 ? '00' : '30'
-        return prefix + hour + ':' + minutes
-    }
-
-    return (
-        <div>
-            <p className="no-select-text">{indexToTime()}</p>
-            <div 
-                className={`time-interval-block ${intervalData ? `time-interval-selected` : null}`} 
-                onMouseEnter={toggleRange ? () => updateRange(index) : null}
-                onClick={toggleRange ? () => toggleRange(index) : null}></div>
-        </div>
-    )
-}
 
 export const TimeEntry = ({ timeInvervalData, setTimeIntervalData }) => {
 
@@ -79,25 +61,19 @@ export const TimeEntry = ({ timeInvervalData, setTimeIntervalData }) => {
     }
 
     return (
-        <div>
-            <div className={`time-entry-header`}>
-                <p className="no-select-text">{`AM`}</p>
-                <p className="no-select-text">{`PM`}</p>
-            </div>
-            <div className={`time-entry-container`} >
-                {
-                    timeInvervalData.map((interval, index) => {
-                        return (
-                            <TimeInterval 
-                                index={index} 
-                                intervalData={interval}
-                                toggleRange={setTimeIntervalData ? toggleRange : null}
-                                updateRange={setTimeIntervalData ? updateRange : null}
-                                key={index}/>
-                        )
-                    })
-                }
-            </div>
+        <div className={`time-entry-container`} >
+            {
+                timeInvervalData.map((interval, index) => {
+                    return (
+                        <TimeInterval 
+                            index={index} 
+                            intervalData={interval}
+                            toggleRange={setTimeIntervalData ? toggleRange : null}
+                            updateRange={setTimeIntervalData ? updateRange : null}
+                            key={index}/>
+                    )
+                })
+            }
         </div>
     )
 }

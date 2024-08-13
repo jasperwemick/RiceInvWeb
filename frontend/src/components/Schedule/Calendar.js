@@ -30,7 +30,7 @@ export const Calendar = ({setEntryDate}) => {
                 }
                 </div>
                 <CalendarDays 
-                    day={currentDay} 
+                    currentDay={currentDay} 
                     changeCurrentDay={changeCurrentDay} 
                     setEntryDate={setEntryDate} />
             </div>

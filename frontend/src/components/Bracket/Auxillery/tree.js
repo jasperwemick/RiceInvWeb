@@ -6,6 +6,7 @@ const BracketNode = (val, lev, par, buddy) => {
         parent: par,
         left: null, 
         right: null,
+        another: null,
         buddy: buddy
     }
 }
@@ -118,10 +119,17 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
     }
     else {
 
-        var grandFinals = BracketNode(0, 0, null, null)
+        let bracketReset = BracketNode(2, -1, null, null)
 
-        grandFinals.right = BracketNode(numUpperSets + 2, 1, grandFinals, null) //Lower Final
-        
+        let grandFinals = BracketNode(0, 0, bracketReset, bracketReset)
+
+        bracketReset.right = grandFinals
+
+        const rightNode = BracketNode(numUpperSets + 2, 1, grandFinals, null) //Lower Final
+        grandFinals.right = rightNode
+
+        console.log(grandFinals)
+
         // Lower Bracket
         for (let i = numUpperSets + 3; i <= numSets; i++) {
             insertNode(grandFinals.right, i, nearestPowerOf2(numPlayers) * 2, 'L', null)
@@ -135,6 +143,7 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
         for (let i = 3; i <= numUpperSets + 1; i++) {
             insertNode(grandFinals.left, i, nearestPowerOf2(numPlayers), 'U', data)
         }
+
 
         // traverse(grandFinals)
         return grandFinals
@@ -183,7 +192,7 @@ export const treeToArray = (node, maxDepth) => {
                 q.push(temp.right);
             }
 
-            treeMap[temp.level].push(temp)
+            treeMap[temp.level + 1].push(temp)
         }
     }
 

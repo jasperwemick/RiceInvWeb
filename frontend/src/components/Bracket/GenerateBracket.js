@@ -2,33 +2,46 @@ import React, { useEffect, useState, useRef } from "react"
 import Xarrow, { useXarrow } from 'react-xarrows'
 
 import './style/Bracket.css'
-import '../../style/home.css'
-import { BracketSet } from "./BracketSet"
 import GetUrl from "../../GetUrl"
+import { BracketSet } from "./BracketSet"
 import { GenerateBracketTree, getMaxDepth, treeToArray } from './Auxillery/tree'
 import { BracketSetEditor } from "./BracketSetEditor"
+import useAuth from '../../hooks/userAuth'
 
 export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
 
     const [highTree, setHighTree] = useState(null)
     const [lowTree, setLowTree] = useState(null)
     const [maxDepth, setMaxDepth] = useState(0)
+    const [allNodes, setAllNodes] = useState([])
+
+    const { auth, setAuth }  = useAuth()
     
     useEffect(() => {
 
         let bracketTree = GenerateBracketTree(type, numPlayers, format)
-        setMaxDepth(getMaxDepth(bracketTree))
+        const depth = getMaxDepth(bracketTree.parent ? bracketTree.parent : bracketTree)
+        setMaxDepth(depth)
+
+        const treeArr = treeToArray(bracketTree.parent ? bracketTree.parent : bracketTree, depth).flat()
+        setAllNodes(treeArr)
         
         let lowerBracketTree = null
         let upperBracketTree = null
 
         if (type === 'Single') {
-            upperBracketTree = bracketTree
+            upperBracketTree = { ...bracketTree }
         }
         else {
-            lowerBracketTree = bracketTree.right
-            bracketTree.right = null
-            upperBracketTree = bracketTree
+            // Insane voodoo shit in order to preserve upper and lower bracket connectivity at grandfinals
+            lowerBracketTree = { ...bracketTree.right }
+            upperBracketTree = { ...bracketTree }
+            upperBracketTree.right = null
+            if (upperBracketTree.parent != null) {
+                let gf = { ...upperBracketTree }
+                upperBracketTree = upperBracketTree.parent
+                upperBracketTree.right = gf
+            }
         }
 
         setHighTree(upperBracketTree)
@@ -38,8 +51,6 @@ export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
 
     const BracketMap = ({tag}) => {
 
-        const [profiles, setProfiles] = useState([]);
-
         const upperBracketArray = treeToArray(highTree, maxDepth)
         const lowerBracketArray = treeToArray(lowTree, maxDepth)
 
@@ -48,12 +59,16 @@ export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
         const [editorData, setEditorData] = useState({
             setID: 0,
             gameTag: "",
-            upperSeed: null,
+            upperSeedIDs: [],
+            upperSeedProfiles: [],
             upperSeedWins: '',
-            lowerSeed: null,
+            lowerSeedIDs: [],
+            lowerSeedProfiles: [],
             lowerSeedWins: '',
             bestOf: '',
-            parents: []
+            parents: [],
+            lowerSetID: -1,
+            nextSetID: -1
         })
 
         const [sets, setSets] = useState([])
@@ -64,9 +79,17 @@ export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
 
                 try {
                     const setData = await fetch(`${GetUrl}/api/games/set/${tag}`)
-                    const jsetData = await setData.json()
+                    let jsetData = await setData.json()
 
-                    setSets(jsetData)
+                    setSets(() => {
+                        return jsetData.map((set) => {
+                            return {
+                                ...set,
+                                upperSeedIDs: set.upperSeedProfiles.map(x => x._id),
+                                lowerSeedIDs: set.lowerSeedProfiles.map(x => x._id)
+                            }
+                        })
+                    })
                 }
                 catch(e) {
                     console.log('Failed to fetch: ', e)
@@ -85,7 +108,13 @@ export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
                         {level.map((node, index) => {   
                             return (
                                 <React.Fragment key={index}>
-                                    <div className="bracket-set-shell" id={`${tag}-bracket-set-${node.value}`} onClick={() => handleSlotClick(node, tag)}>
+                                    <div className="bracket-set-shell" id={`${tag}-bracket-set-${node.value}`} onClick={() => {
+                                        if (auth.user) {
+                                            if (auth.roles.includes('Admin')) {
+                                                handleSlotClick(node, tag)
+                                            }
+                                        }
+                                    }}>
                                         <BracketSet setData={sets.find(({ setID }) => setID === node.value)}/>
                                     </div>
                                     {node.parent ? <Xarrow start={`${tag}-bracket-set-${node.value}`} end={`${tag}-bracket-set-${node.parent.value}`} headSize={0}/> : null}
@@ -101,34 +130,29 @@ export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
             
             setToggleEditor(!toggleEditor)
 
-            const retrieveSetData = async () => {
+            const retrieveSetData = () => {
 
                 try {
-                    console.log(sets)
                     const jsponse = sets.find(({ setID }) => setID === node.value)
-
-                    if (profiles.length === 0) {
-                        const resTwo = await fetch(`${GetUrl}/api/profiles/default/noimg`)
-                        const twosponse = await resTwo.json()
-                        console.log(twosponse)
-
-                        setProfiles(twosponse)
-                    }
 
                     if (jsponse) {
                         setEditorData({
                             ...editorData,
                             setID: node.value,
                             gameTag: tag,
-                            upperSeed: jsponse.upperSeed,
+                            upperSeedIDs: jsponse.upperSeedIDs,
+                            upperSeedProfiles: jsponse.upperSeedProfiles,
                             upperSeedWins: jsponse.upperSeedWins,
-                            lowerSeed: jsponse.lowerSeed,
+                            lowerSeedIDs: jsponse.lowerSeedIDs,
+                            lowerSeedProfiles: jsponse.lowerSeedProfiles,
                             lowerSeedWins: jsponse.lowerSeedWins,
                             bestOf: jsponse.bestOf,
                             parents: [
                                 node.left ? `${tag}-bracket-set-${node.left.value}` : null, 
                                 node.right ? `${tag}-bracket-set-${node.right.value}`: null
-                            ]
+                            ],
+                            lowerSetID: node.buddy ? node.buddy.value : -1,
+                            nextSetID: node.parent ? node.parent.value : -1
                         })
                     }
                     else {
@@ -139,7 +163,9 @@ export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
                             parents: [
                                 node.left ? `${tag}-bracket-set-${node.left.value}` : null, 
                                 node.right ? `${tag}-bracket-set-${node.right.value}`: null
-                            ]
+                            ],
+                            lowerSetID: node.buddy ? node.buddy.value : -1,
+                            nextSetID: node.parent ? node.parent.value : -1
                         })
                     }
                 }
@@ -156,9 +182,9 @@ export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
                 <BracketSetEditor 
                     editorData={editorData} 
                     setEditorData={setEditorData} 
-                    profiles={profiles}
                     toggleEditor={toggleEditor}
-                    setToggleEditor={setToggleEditor}/>
+                    setToggleEditor={setToggleEditor}
+                    allSets={allNodes}/>
                 <div><BuildBracket nodeArr={upperBracketArray}/></div>
                 <div><BuildBracket nodeArr={lowerBracketArray}/></div>
             </React.Fragment>

@@ -5,7 +5,6 @@ export const SelectableProfile = ({profile, setSelectedList, selectedList, refre
 
     const [selected, setSelected] = useState(false)
 
-
     useEffect(() => {
 
         if (selectedList.find((p) => p === profile._id)) {
@@ -15,10 +14,11 @@ export const SelectableProfile = ({profile, setSelectedList, selectedList, refre
             setSelected(false)
         }
 
-    }, [refreshTrigger])
+    }, refreshTrigger)
 
     const handleClick = () => {
         const newStatus = !selected
+
 
         if (newStatus) {
             setSelectedList([...selectedList, profile._id])
@@ -28,6 +28,7 @@ export const SelectableProfile = ({profile, setSelectedList, selectedList, refre
         }
 
         setSelected(newStatus)
+
     }
 
     return (

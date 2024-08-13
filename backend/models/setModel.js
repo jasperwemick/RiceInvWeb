@@ -11,20 +11,20 @@ const setSchema = new Schema({
         type: String,
         required: true
     },
-    upperSeed: {
+    upperSeedProfiles: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Profile',
         required: true
-    },
+    }],
     upperSeedWins: {
         type: Number,
         required: true,
     },
-    lowerSeed: {
+    lowerSeedProfiles: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Profile',
         required: true
-    },
+    }],
     lowerSeedWins: {
         type: Number,
         required: true,
@@ -35,9 +35,19 @@ const setSchema = new Schema({
     },
     parents: [{
         type: String
-    }]
+    }],
+    lowerSetID: {
+        type: Number
+    },
+    nextSetID: {
+        type: Number
+    }
 
-    
 }, { timestamps: false })
+
+
+setSchema.post('findOneAndUpdate', async function(doc, next) {
+
+})
 
 module.exports = mongoose.model('Set', setSchema)

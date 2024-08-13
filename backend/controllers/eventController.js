@@ -94,20 +94,20 @@ const upsertOneRiceEvent = async (req, res) => {
         res.json(result)
     }
     catch(e) {
-        console.log('Error at PUT /events/:tag', e)
+        console.log('Error at PUT /events/:id', e)
     }
 }
 
 const deleteOneRiceEvent = async (req, res) => {
 
-    const tag = req.params.tag
+    const id = req.params.tag
 
     try {
-        const result = await Set.findOneAndDelete({tag: tag})
+        const result = await RiceEvent.findByIdAndDelete(id)
         res.json(result)
     }
     catch(e) {
-        console.log('Error at DELETE /events/:tag', e)
+        console.log('Error at DELETE /events/:id', e)
     }
 }
 

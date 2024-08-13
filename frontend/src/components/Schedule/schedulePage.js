@@ -21,7 +21,7 @@ export default function SchedulePage({}) {
                 <EventContextProvider>
                     <TimeEditor date={entryDate}/>
                     <EventInfo />
-                    <DayOverview />
+                    <DayOverview date={entryDate}/>
                     <div style={{display: 'flex'}}>
                         <Calendar setEntryDate={setEntryDate}/>
                         <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>        
