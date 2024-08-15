@@ -16,7 +16,7 @@ const app = express();
 if (process.env.NODE_ENV === "development"){
     app.use(
         cors({
-            origin: "http://localhost:3000",
+            origin: "http://rice.riceinvitational.org",
             credentials: true,
         })
     );
