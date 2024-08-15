@@ -1,6 +1,9 @@
 require('dotenv').config()
 const express = require('express')
 const mongoose = require('mongoose')
+const fs = require('fs');
+const http = require('http');
+const https = require('https');
 
 const authRoutes = require('./routes/auth')
 const profileRoutes = require('./routes/profiles')
@@ -48,10 +51,12 @@ app.use('/api/profiles', profileRoutes)
 app.use('/api/games', gameRoutes)
 app.use('/api/events', eventRoutes)
 
+const httpServer = http.createServer(app);
+
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         // request listener
-        app.listen(process.env.PORT, () => {
+        httpServer.listen(process.env.PORT, () => {
             console.log('Connected to DB')
             console.log('Listening active on port:', process.env.PORT)
         })
