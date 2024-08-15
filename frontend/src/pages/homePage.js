@@ -28,17 +28,6 @@ export default function Home() {
     //     return;
     // }, [profiles.length]);
 
-    function profileList() {
-        return profiles.map((profile) => {
-            return (
-                <Profile
-                    profile={profile}
-                    key={profile._id}
-                />
-            );
-        });
-    }
-
     const shift = (offset) => {
         scrollRef.current.scrollLeft += offset;
     }
@@ -46,20 +35,10 @@ export default function Home() {
     return (
         <div>
             <section className="head">
-                <span>The Rice Invitational<br/><br/></span>
-                <span>Welcome the Rice Invitational web page, a page I made for a tournament that my friends (and sometimes I) play in<br/><br/></span>
-                <span>I'm sure you'll notice the styling is greatly lacking! A Heavy WIP with much more to come, I'm developing this on a MERN stack for educational purposes<br/><br/></span>
-                <span>Thanks for visiting - Jasper<br/><br/></span>
+                <p>The Rice Invitational<br/><br/></p>
             </section>
-            {/* <section className="profiles">
-                <span>Profile List</span>
-                <div className="profile-list-container">
-                    <button onClick={() => shift(-1260)}>{'<'}</button>
-                    <ul ref={scrollRef} className="profile-list">{profileList()}</ul>
-                    <button onClick={() => shift(1260)}>{'>'}</button>
-                </div>
-            </section> */}
             <section>
+                <p>Cool Thing!</p>
                 {/* Full Format: All players start in upper */}
                 {/* Split Format: Half players start in upper, and half start in lower */}
                 <GenerateBracket 

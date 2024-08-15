@@ -6,11 +6,14 @@ import EventContext from "./context/EventContextProvider";
 
 const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent, clearEvent}) => {
     return (
-        <li onClick={() => {
+        <li 
+        onClick={() => {
             setToggleEventInfo(!toggleEventInfo);
             event ? setCurrentEvent({...event}) : clearEvent();
         }} 
-            style={event ? (event.ready ? {backgroundColor: "forestgreen"} : null) : null}>{event ? event.name : 'Add Event'}</li>
+        style={event ? (event.ready ? {backgroundColor: "forestgreen"} : null) : null}>
+            {event ? event.name : 'Add Event'}
+        </li>
     )
 }
 

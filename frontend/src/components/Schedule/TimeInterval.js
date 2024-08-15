@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 
-export const TimeInterval = ({index, intervalData, toggleRange, updateRange}) => {
+export const TimeInterval = ({index, intervalData, toggleRange, updateRange, laterHalf}) => {
 
     const indexToTime = () => {
         let hour = String(Math.floor(index / 2) % 12)
         hour = hour.length === 1 ? '0' + hour : '' + hour 
         hour = hour === '00' ? '12' : hour
         const minutes = index % 2 == 0 ? '00' : '30'
-        const mmm = Math.floor(index / 2) < 12 ? 'AM' : 'PM'
+        const mmm = laterHalf ? 'PM' : Math.floor(index / 2) < 12 ? 'AM' : 'PM'
         return hour + ':' + minutes + ' ' + mmm
     }
 

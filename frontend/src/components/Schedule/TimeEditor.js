@@ -14,7 +14,8 @@ const TimeEntryDisplay = ({intervalData, config}) => {
                         <TimeInterval 
                             index={index} 
                             intervalData={interval}
-                            key={index}/>
+                            key={index}
+                            laterHalf={config.show === 'PM'}/>
                     )
                 })
             }
@@ -90,10 +91,8 @@ export const TimeEditor = ({ date }) => {
     }, [])
 
     const alignTime = (alignment, setAlignmentTo, entries) => {
-        console.log(alignment)
         const shift = 2 * (alignment / 60)
 
-        console.log(shift)
         if (shift === 0) {
             setEastAlignment(0)
             return
@@ -106,7 +105,19 @@ export const TimeEditor = ({ date }) => {
 
         const offset = shift < 0 ? 2 * Math.abs(shift) : 0
 
-        setTimeIntervalData(alignedTime.slice(0 + offset, 48 + offset))
+        if (offset === 0) {
+            // Shift prev and next times forwards by shift amount ex: pst -> est
+            setPrevPMIntervalData(Array(Math.abs(shift)).fill(false).concat(entries.prev.slice(0, 48 - Math.abs(shift))))
+            setNextAMIntervalData(entries.current.slice(48 - Math.abs(shift), 48).concat(entries.next.slice(0, 48 - Math.abs(shift))))
+        }
+        else {
+            // Move time backwards by shift ex: est -> pst
+            setPrevPMIntervalData(entries.prev.slice(Math.abs(shift), 48).concat(entries.current.slice(0, Math.abs(shift))))
+            setNextAMIntervalData(entries.next.slice(Math.abs(shift), 48).concat(Array(Math.abs(shift)).fill(false)))
+        }
+
+        setTimeIntervalData(alignedTime.slice(offset, 48 + offset))
+        
         setEastAlignment(setAlignmentTo)
     }
 

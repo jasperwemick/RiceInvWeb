@@ -13,7 +13,7 @@ export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={wid
 
         async function getProfiles() {
             try {
-                const response = await fetch(`${GetUrl}/api/profiles/default`);
+                const response = await fetch(`${GetUrl}/api/profiles/default/noimg`);
                 const jsponse = await response.json();
 
                 setProfiles(jsponse)

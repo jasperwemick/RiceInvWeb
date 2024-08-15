@@ -73,7 +73,7 @@ const Login = () => {
     return (
         <div>
             <p ref={errRef}>{errMessage}</p>
-            <div><span>Administrator Login</span></div>
+            <div><p>Login</p></div>
             <form onSubmit={onSubmit}>
                 <input
                 value={user}

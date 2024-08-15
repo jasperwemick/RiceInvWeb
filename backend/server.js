@@ -25,7 +25,7 @@ if (process.env.NODE_ENV === "development"){
 if (process.env.NODE_ENV === "production"){
     app.use(
         cors({
-            origin: "https://www.riceinvitational.org",
+            origin: "https://rice.riceinvitational.org",
             credentials: true,
         })
     );

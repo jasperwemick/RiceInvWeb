@@ -16,6 +16,7 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
 
     const { events, setSelectedDayEvents } = useContext(EventContext)
 
+    const today = new Date()
     
     useEffect(() => {
 
@@ -92,7 +93,10 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
                         <button 
                         className='toggle-time-entry-button'
                         style={
-                            (auth.user) ? 
+                            (auth.user && (
+                                (calDay.month === today.getMonth() || calDay.month === (today.getMonth() === 11 ? 0 : today.getMonth() + 1)) && 
+                                today.getFullYear() === calDay.year)
+                            ) ? 
                             null : 
                             {visibility: 'hidden', pointerEvents: 'none'}
                         } 

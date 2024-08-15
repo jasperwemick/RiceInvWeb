@@ -15,7 +15,6 @@ const upload = multer({ storage: storage})
 const { Verify, VerifyRole } = require('../middleware/verify')
 
 router.use(function(req, res, next) {
-    console.log('what')
     res.setHeader('Access-Control-Allow-Credentials', true);
     res.setHeader('Access-Control-Allow-Headers', ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'].join(', '));
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
