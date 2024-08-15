@@ -11,14 +11,15 @@ const gameRoutes = require('./routes/games')
 const eventRoutes = require('./routes/events')
 
 const cors = require("cors");
-const cookieParser = require('cookie-parser')
+const cookieParser = require('cookie-parser');
+const path = require('path');
 
 // express app 
 const app = express();
 
 // Certificate
-const privateKey = fs.readFileSync('/etc/letsencrypt/live/riceinvitational.org/privkey.pem', 'utf8');
-const certificate = fs.readFileSync('/etc/letsencrypt/live/riceinvitational.org/fullchain.pem', 'utf8');
+const privateKey = fs.readFileSync(path.resolve(__dirname, '/etc/letsencrypt/live/riceinvitational.org/privkey.pem'), 'utf8');
+const certificate = fs.readFileSync(path.resolve(__dirname, '/etc/letsencrypt/live/riceinvitational.org/fullchain.pem'), 'utf8');
 
 if (process.env.NODE_ENV === "development"){
     app.use(
