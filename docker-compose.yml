@@ -9,8 +9,8 @@ services:
     container_name: myapp-node-server
     # command: node server.js
     volumes:
-      - ./backend/:/app
-      - /app/node_modules
+      - ./backend/:/usr/src/app
+      - /usr/src/app/node_modules
     ports:
       - "4000:4000"
     env_file: ./backend/.env
@@ -26,8 +26,8 @@ services:
     container_name: myapp-react-client
     # command: npm start
     volumes:
-      - ./frontend/:/app
-      - /app/node_modules
+      - ./frontend/:/usr/app
+      - /usr/app/node_modules
     depends_on:
       - backend
     ports:
