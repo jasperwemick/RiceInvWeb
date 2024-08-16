@@ -1,20 +1,30 @@
 # Dockerfile for React client
 
-# Build react client
-FROM node:20.9.0
+FROM node:20.9.0 AS builder
 
-# Working directory be app
-WORKDIR /usr/src/app
+# Create a directory  and go to the directory 
+WORKDIR /app
 
-COPY package*.json ./
+# Copy the package.json file to my current directory to install the necessary dependence  
+COPY package.json .
 
-###  Installing dependencies
-
+# Install the dependence
 RUN npm install --silent
 
-# copy local files to app folder
+# Copy other files to my current directory
 COPY . .
 
+# Build and optimize static file
+RUN npm run build
+
+# Stage-2
+FROM nginx:1.25.2-alpine-slim
+
+# Copy the static file to my Nginx folder to serve static contain
+COPY --from=builder /app/build /usr/share/nginx/html
+
+# Open the port to react
 EXPOSE 80
 
-CMD ["npm","start"]
+# Run nginx in the foreground
+CMD ["nginx", "-g", "daemon off;"]

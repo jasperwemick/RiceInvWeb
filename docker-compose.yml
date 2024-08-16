@@ -1,4 +1,4 @@
-version: '1.0'
+version: '1.1'
 
 services:
   backend:
@@ -7,15 +7,15 @@ services:
       dockerfile: Dockerfile
     image: myapp-server
     container_name: myapp-node-server
-    command: node server.js
+    # command: node server.js
     volumes:
-      - ./backend/:/usr/src/app
-      - /usr/src/app/node_modules
+      - ./backend/:/app
+      - /app/node_modules
     ports:
       - "4000:4000"
     env_file: ./backend/.env
-    environment:
-      - NODE_ENV=development
+    # environment:
+    #   - NODE_ENV=development
     networks:
       - app-network
   frontend:
@@ -24,10 +24,10 @@ services:
       dockerfile: Dockerfile
     image: myapp-client
     container_name: myapp-react-client
-    command: npm start
+    # command: npm start
     volumes:
-      - ./frontend/:/usr/app
-      - /usr/app/node_modules
+      - ./frontend/:/app
+      - /app/node_modules
     depends_on:
       - backend
     ports:

@@ -2,19 +2,20 @@
 
 FROM node:20.9.0
 
-# Create App Directory
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+# Create a directory  and go to the directory 
+WORKDIR /app
 
-# Install Dependencies
-COPY package*.json ./
+# Copy the package.json file to my current directory to install the necessary dependence  
+COPY package.json .
 
+# Install the dependence
 RUN npm install --silent
 
-# Copy app source code
+# Copy other files to my current directory
 COPY . .
 
-# Exports
+# Open the port for the express server
 EXPOSE 4000
 
-CMD ["npm","start"]
+# Run express rum in the foreground
+CMD ["npm", "start"]
