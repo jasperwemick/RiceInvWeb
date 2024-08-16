@@ -6,7 +6,7 @@ FROM node:20.9.0 AS builder
 WORKDIR /usr/src/app
 
 # Copy the package.json file to my current directory to install the necessary dependence  
-COPY package.json .
+COPY package*.json ./
 
 # Install the dependence
 RUN npm install

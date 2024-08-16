@@ -7,7 +7,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Copy the package.json file to my current directory to install the necessary dependence  
-COPY package.json .
+COPY package*.json ./
 
 # Install the dependence
 RUN npm install --silent
