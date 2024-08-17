@@ -16,59 +16,56 @@ services:
     env_file: ./backend/.env
     # environment:
     #   - NODE_ENV=development
-    networks:
-      - app-network
+    # networks:
+    #   - app-network
   frontend:
     build:
       context: ./frontend
       dockerfile: Dockerfile
-    image: client-react-app
+    image: frontend
     container_name: frontend
     # command: npm start
     volumes:
-      - ./frontend/:/usr/app
-      - /usr/app/node_modules
+      - ./frontend/:/usr/src/app
+      - /usr/src/app/node_modules
     depends_on:
       - backend
+    # env_file: ./frontend/.env
+    # networks:
+    #   - app-network
+
+  nginx:
+    container_name: nginx
+    restart: unless-stopped
+    image: nginx:1.25.2-alpine-slim
     ports:
       - 80:80
       - 443:443
-    # env_file: ./frontend/.env
-    networks:
-      - app-network
-
-  # nginx:
-  #   container_name: nginx
-  #   restart: unless-stopped
-  #   image: nginx:1.25.2-alpine-slim
-  #   ports:
-  #     - 80:80
-  #     - 443:443
-  #   volumes:
-  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-  #     - ./certbot/conf:/etc/letsencrypt
-  #     - ./certbot/www:/var/www/certbot
-  #     - /etc/letsencrypt/ssl/riceinvitational.org/fullchain.pem:/etc/nginx/ssl/fullchain.pem
-  #     - /etc/letsencrypt/ssl/riceinvitational.org/privkey.pem:/etc/nginx/ssl/privkey.pem
-  #   networks:
-  #     - app-network
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    # networks:
+    #   - app-network
   
-  # certbot:
-  #   image: certbot/certbot
-  #   container_name: certbot
-  #   volumes:
-  #     - ./certbot/conf:/etc/letsencrypt
-  #     - ./certbot/www:/var/www/certbot
-  #   command: certonly --webroot -w /var/www/certbot --keep-until-expiring --email jasper.emick@gmail.com -d riceinvitational.org --agree-tos
-  #   networks:
-  #     - app-network
+  certbot:
+    image: certbot/certbot
+    container_name: certbot
+    volumes:
+      - ./certbot/conf:/etc/letsencrypt
+      - ./certbot/www:/var/www/certbot
+    command: certonly --webroot -w /var/www/certbot --keep-until-expiring --email jasper.emick@gmail.com -d riceinvitational.org -d rice.riceinvitational.org --agree-tos
+    depends_on:
+      - nginx
+    # networks:
+    #   - app-network
 
-networks:
-    app-network:
-        driver: bridge
+# networks:
+#     app-network:
+#         driver: bridge
 
 volumes:
     data-volume:
     node_modules:
-    web-root:
-      driver: local
+    # web-root:
+    #   driver: local
