@@ -54,7 +54,7 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --keep-until-expiring --email jasper.emick@gmail.com -d riceinvitational.org --agree-tos
+    command: certonly --webroot -w /var/www/certbot --force-renewal --email jasper.emick@gmail.com -d riceinvitational.org --agree-tos
     # networks:
     #   - app-network
 
