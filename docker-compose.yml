@@ -1,29 +1,29 @@
 version: '1.1'
 
 services:
-  backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: express-server
-    container_name: node-server
-    # command: node server.js
-    volumes:
-      - ./backend/:/usr/src/app
-      - /usr/src/app/node_modules
-    ports:
-      - 4000:4000
-    env_file: ./backend/.env
+  # backend:
+  #   build:
+  #     context: ./backend
+  #     dockerfile: Dockerfile
+  #   image: express-server
+  #   container_name: node-server
+  #   # command: node server.js
+  #   volumes:
+  #     - ./backend/:/usr/src/app
+  #     - /usr/src/app/node_modules
+  #   ports:
+  #     - 4000:4000
+  #   env_file: ./backend/.env
     # environment:
     #   - NODE_ENV=development
     # networks:
     #   - app-network
-  frontend:
+  helloworld:
     # build:
     #   context: ./frontend
     #   dockerfile: Dockerfile
     image: crccheck/hello-world
-    container_name: frontend
+    container_name: helloworld
     # command: npm start
     # volumes:
     #   - ./frontend/:/usr/src/app
@@ -37,7 +37,7 @@ services:
   nginx:
     container_name: nginx
     restart: unless-stopped
-    image: nginx:1.25.2-alpine-slim
+    image: nginx
     ports:
       - 80:80
       - 443:443
@@ -54,9 +54,7 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --keep-until-expiring --email jasper.emick@gmail.com -d riceinvitational.org -d rice.riceinvitational.org --agree-tos
-    depends_on:
-      - nginx
+    command: certonly --webroot -w /var/www/certbot --keep-until-expiring --email jasper.emick@gmail.com -d riceinvitational.org --agree-tos
     # networks:
     #   - app-network
 
@@ -64,8 +62,8 @@ services:
 #     app-network:
 #         driver: bridge
 
-volumes:
-    data-volume:
-    node_modules:
-    # web-root:
-    #   driver: local
+# volumes:
+#     data-volume:
+#     node_modules:
+#     # web-root:
+#     #   driver: local
