@@ -27,8 +27,8 @@ COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/conf.d/default.conf
 
 # Copy SSL certificates from the host
-COPY /etc/letsencrypt/live/riceinvitational.org/fullchain.pem /etc/nginx/ssl/fullchain.pem
-COPY /etc/letsencrypt/live/riceinvitational.org/privkey.pem /etc/nginx/ssl/privkey.pem
+COPY /etc/letsencrypt/ssl/fullchain.pem /etc/nginx/ssl/fullchain.pem
+COPY /etc/letsencrypt/ssl/privkey.pem /etc/nginx/ssl/privkey.pem
 
 EXPOSE 80 443
 
