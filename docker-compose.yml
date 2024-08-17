@@ -12,43 +12,46 @@ services:
       - ./backend/:/usr/src/app
       - /usr/src/app/node_modules
     ports:
-      - "4000:4000"
+      - 4000:4000
     env_file: ./backend/.env
     # environment:
     #   - NODE_ENV=development
     networks:
       - app-network
   frontend:
-    # build:
-    #   context: ./frontend
-    #   dockerfile: Dockerfile
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
     image: client-react-app
     container_name: frontend
     # command: npm start
-    # volumes:
-    #   - ./frontend/:/usr/app
-    #   - /usr/app/node_modules
-    # depends_on:
-    #   - backend
+    volumes:
+      - ./frontend/:/usr/app
+      - /usr/app/node_modules
+    depends_on:
+      - backend
+    ports:
+      - 80:80
+      - 443:443
     # env_file: ./frontend/.env
     networks:
       - app-network
 
-  nginx:
-    container_name: nginx
-    restart: unless-stopped
-    image: nginx:1.25.2-alpine-slim
-    ports:
-      - 80:80
-      - 443:443
-    volumes:
-      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
-      - ./certbot/conf:/etc/letsencrypt
-      - ./certbot/www:/var/www/certbot
-      - /etc/letsencrypt/ssl/riceinvitational.org/fullchain.pem:/etc/nginx/ssl/fullchain.pem
-      - /etc/letsencrypt/ssl/riceinvitational.org/privkey.pem:/etc/nginx/ssl/privkey.pem
-    networks:
-      - app-network
+  # nginx:
+  #   container_name: nginx
+  #   restart: unless-stopped
+  #   image: nginx:1.25.2-alpine-slim
+  #   ports:
+  #     - 80:80
+  #     - 443:443
+  #   volumes:
+  #     - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+  #     - ./certbot/conf:/etc/letsencrypt
+  #     - ./certbot/www:/var/www/certbot
+  #     - /etc/letsencrypt/ssl/riceinvitational.org/fullchain.pem:/etc/nginx/ssl/fullchain.pem
+  #     - /etc/letsencrypt/ssl/riceinvitational.org/privkey.pem:/etc/nginx/ssl/privkey.pem
+  #   networks:
+  #     - app-network
   
   # certbot:
   #   image: certbot/certbot

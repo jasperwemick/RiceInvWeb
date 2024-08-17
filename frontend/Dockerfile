@@ -18,10 +18,19 @@ COPY . .
 RUN npm run build
 
 # Stage-2
-FROM nginx
+FROM nginx:1.25.2-alpine-slim
 
 # Copy the static file to my Nginx folder to serve static contain
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+
+# Copy custom Nginx configuration file
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+# Copy SSL certificates from the host
+COPY /etc/letsencrypt/live/riceinvitational.org/fullchain.pem /etc/nginx/ssl/fullchain.pem
+COPY /etc/letsencrypt/live/riceinvitational.org/privkey.pem /etc/nginx/ssl/privkey.pem
+
+EXPOSE 80 443
 
 # Run nginx in the foreground
 CMD ["nginx", "-g", "daemon off;"]
