@@ -19,17 +19,17 @@ services:
     # networks:
     #   - app-network
   frontend:
-    build:
-      context: ./frontend
-      dockerfile: Dockerfile
-    image: frontend
+    # build:
+    #   context: ./frontend
+    #   dockerfile: Dockerfile
+    image: crccheck/hello-world
     container_name: frontend
     # command: npm start
-    volumes:
-      - ./frontend/:/usr/src/app
-      - /usr/src/app/node_modules
-    depends_on:
-      - backend
+    # volumes:
+    #   - ./frontend/:/usr/src/app
+    #   - /usr/src/app/node_modules
+    # depends_on:
+    #   - backend
     # env_file: ./frontend/.env
     # networks:
     #   - app-network
