@@ -37,7 +37,7 @@ services:
   nginx:
     container_name: nginx
     restart: unless-stopped
-    image: nginx
+    image: nginx:1.15-alpine
     ports:
       - 80:80
       - 443:443
@@ -45,6 +45,8 @@ services:
       - ./nginx/nginx.conf:/etc/nginx/nginx.conf
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
+    command: "/bin/sh -c 'while :; do sleep 6h & wait $${!}; nginx -s reload; done & nginx -g \"daemon off;\"'"
+    
     # networks:
     #   - app-network
   
@@ -54,7 +56,8 @@ services:
     volumes:
       - ./certbot/conf:/etc/letsencrypt
       - ./certbot/www:/var/www/certbot
-    command: certonly --webroot -w /var/www/certbot --force-renewal --email jasper.emick@gmail.com -d riceinvitational.org --agree-tos
+    # command: certonly --webroot -w /var/www/certbot --keep-until-expiring --email jasper.emick@gmail.com -d riceinvitational.org --agree-tos
+    entrypoint: "/bin/sh -c 'trap exit TERM; while :; do certbot renew; sleep 12h & wait $${!}; done;'"
     # networks:
     #   - app-network
 
