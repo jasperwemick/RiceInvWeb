@@ -24,7 +24,7 @@ const certificate = fs.readFileSync('/etc/letsencrypt/live/riceinvitational.org/
 if (process.env.NODE_ENV === "development"){
     app.use(
         cors({
-            origin: "http://riceinvitational.org:3000",
+            origin: "https://rice.riceinvitational.org",
             credentials: true,
         })
     );
@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === "development"){
 if (process.env.NODE_ENV === "production"){
     app.use(
         cors({
-            origin: "http://riceinvitational.org:3000",
+            origin: "https://rice.riceinvitational.org",
             credentials: true,
         })
     );
