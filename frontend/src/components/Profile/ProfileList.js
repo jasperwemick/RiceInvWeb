@@ -6,6 +6,8 @@ import './style/profile.css'
 export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={width: 200, height: 200, clickAction: null, styleOptions: null}, profileFilter=[]}) => {
 
     const scrollRef = useRef(null);
+    console.log("hello")
+
 
     const [profiles, setProfiles] = useState([])
 
@@ -13,7 +15,7 @@ export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={wid
 
         async function getProfiles() {
             try {
-                const response = await fetch(`${GetUrl}/api/profiles/default/noimg`);
+                const response = await fetch(`${GetUrl}/api/profiles/default`);
                 const jsponse = await response.json();
 
                 setProfiles(jsponse)

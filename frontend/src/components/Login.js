@@ -3,7 +3,7 @@ import useAuth from "../hooks/userAuth";
 import { useRef, useState, useEffect } from 'react';
 import GetUrl from "../GetUrl";
 
-const Login = () => {
+export const Login = () => {
 
     const [user, setUser] = useState("");
     const [pass, setPass] = useState("");
@@ -97,5 +97,3 @@ const Login = () => {
 
     )
 }
-
-export default Login;

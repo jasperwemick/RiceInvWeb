@@ -192,6 +192,6 @@ export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
     }
     
     return (
-        <div onLoad={useXarrow()} className="bracket-container"><BracketMap tag={gameTag}/></div>
+        <div /*onLoadStart={useXarrow()}*/ className="bracket-container"><BracketMap tag={gameTag}/></div>
     )
 }

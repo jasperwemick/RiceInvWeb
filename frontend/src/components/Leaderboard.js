@@ -36,7 +36,7 @@ export default function Leaderboard() {
             } 
 
             try {
-                const profileList = await fetch(`${GetUrl}/api/profiles/default`)
+                const profileList = await fetch(`${GetUrl}/api/profiles/default/noimg`)
                 const p = await profileList.json();
                 p.sort(descendingOrder);
                 setProfiles(p);
