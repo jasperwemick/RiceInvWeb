@@ -24,6 +24,8 @@ services:
     #   dockerfile: Dockerfile
     image: crccheck/hello-world
     container_name: helloworld
+    expose:
+      - 8000
     # command: npm start
     # volumes:
     #   - ./frontend/:/usr/src/app
