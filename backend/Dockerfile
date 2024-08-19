@@ -3,7 +3,7 @@
 FROM node:20.9.0
 
 # Create a directory  and go to the directory 
-RUN mkdir -p /app
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Copy the package.json file to my current directory to install the necessary dependence  
