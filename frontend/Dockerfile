@@ -20,9 +20,11 @@ RUN npm run build
 # # Copy the static file to my Nginx folder to serve static contain
 # COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
+RUN npm install -g serve
+
 EXPOSE 3000
 
 # # Run nginx in the foreground
 # CMD ["nginx", "-g", "daemon off;"]
 
-CMD ["serve", "-s", "build"]
+CMD ["serve", "-s", "build", "-l", "3000"]
