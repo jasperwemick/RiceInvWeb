@@ -17,13 +17,10 @@ COPY . .
 # Build and optimize static file
 RUN npm run build
 
-# Stage-2
-FROM nginx:1.15-alpine
-
 # Copy the static file to my Nginx folder to serve static contain
 COPY --from=builder /usr/src/app/build /usr/share/nginx/html
 
 EXPOSE 80
 
-# Run nginx in the foreground
-CMD ["nginx", "-g", "daemon off;"]
+# # Run nginx in the foreground
+# CMD ["nginx", "-g", "daemon off;"]
