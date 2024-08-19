@@ -24,7 +24,7 @@ const app = express();
 if (process.env.NODE_ENV === "development"){
     app.use(
         cors({
-            origin: "https://rice.riceinvitational.org",
+            origin: "http://riceinvitational.org:3000",
             credentials: true,
         })
     );
@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === "development"){
 if (process.env.NODE_ENV === "production"){
     app.use(
         cors({
-            origin: "https://rice.riceinvitational.org",
+            origin: "http://riceinvitational.org:3000",
             credentials: true,
         })
     );
