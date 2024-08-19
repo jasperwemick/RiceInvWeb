@@ -1,40 +1,39 @@
 version: '1.1'
 
 services:
-  # backend:
-  #   build:
-  #     context: ./backend
-  #     dockerfile: Dockerfile
-  #   image: express-server
-  #   container_name: node-server
-  #   # command: node server.js
-  #   volumes:
-  #     - ./backend/:/usr/src/app
-  #     - /usr/src/app/node_modules
-  #   ports:
-  #     - 4000:4000
-  #   env_file: ./backend/.env
-  #   environment:
-  #     - NODE_ENV=development
-    # networks:
-    #   - app-network
-  helloworld:
-    # build:
-    #   context: ./frontend
-    #   dockerfile: Dockerfile
-    image: crccheck/hello-world
-    container_name: helloworld
-    # ports:
-    #   - 80:8000
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: express-server
+    container_name: node-server
+    # command: node server.js
+    volumes:
+      - ./backend/:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - 4000:4000
+    env_file: ./backend/.env
+    # environment:
+    #   - NODE_ENV=development
+    networks:
+      - app-network
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    image: react-client
+    container_name: frontend
     # command: npm start
-    # volumes:
-    #   - ./frontend/:/usr/src/app
-    #   - /usr/src/app/node_modules
-    # depends_on:
-    #   - backend
-    # env_file: ./frontend/.env
-    # networks:
-    #   - app-network
+    volumes:
+      - ./frontend/:/usr/src/app
+      - /usr/src/app/node_modules
+    depends_on:
+      - backend
+    env_file: ./frontend/.env
+    networks:
+      - app-network
 
   nginx:
     container_name: nginx
@@ -63,12 +62,12 @@ services:
     # networks:
     #   - app-network
 
-# networks:
-#     app-network:
-#         driver: bridge
+networks:
+    app-network:
+        driver: bridge
 
-# volumes:
-#     data-volume:
-#     node_modules:
-#     # web-root:
-#     #   driver: local
+volumes:
+    data-volume:
+    node_modules:
+    web-root:
+      driver: local
