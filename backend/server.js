@@ -18,8 +18,8 @@ const path = require('path');
 const app = express();
 
 // Certificate
-// const privateKey = fs.readFileSync(path.resolve(__dirname, '/etc/letsencrypt/live/riceinvitational.org/privkey.pem'), 'utf8');
-// const certificate = fs.readFileSync(path.resolve(__dirname, '/etc/letsencrypt/live/riceinvitational.org/fullchain.pem'), 'utf8');
+const privateKey = fs.readFileSync('/etc/letsencrypt/live/riceinvitational.org/privkey.pem', 'utf8');
+const certificate = fs.readFileSync('/etc/letsencrypt/live/riceinvitational.org/fullchain.pem', 'utf8');
 
 if (process.env.NODE_ENV === "development"){
     app.use(
@@ -39,10 +39,10 @@ if (process.env.NODE_ENV === "production"){
     );
 }
 
-// const credentials = {
-// 	key: privateKey,
-// 	cert: certificate,
-// };
+const credentials = {
+	key: privateKey,
+	cert: certificate,
+};
 
 app.use(cookieParser());
 
@@ -62,12 +62,12 @@ app.use('/api/games', gameRoutes)
 app.use('/api/events', eventRoutes)
 
 // const httpServer = http.createServer(app);
-// const httpsServer = https.createServer(credentials, app);
+const httpsServer = https.createServer(credentials, app);
 
 mongoose.connect(process.env.MONGO_URI)
     .then(() => {
         // request listener
-        app.listen(process.env.PORT, () => {
+        httpsServer.listen(process.env.PORT, () => {
             console.log('Connected to DB')
             console.log('Listening active on port:', process.env.PORT)
         })
