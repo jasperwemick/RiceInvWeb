@@ -38,7 +38,7 @@ docker-compose run --rm --entrypoint "\
 echo
 
 echo "### Starting helloworld ..."
-docker-compose up helloworld
+docker-compose up -d helloworld
 echo
 
 echo "### Starting nginx ..."
