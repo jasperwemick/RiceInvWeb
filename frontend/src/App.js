@@ -25,6 +25,7 @@ import BlastJeopardyPage from "./pages/blastJeopardyPage";
 import BlastAmongusPage from "./pages/blastAmongusPage";
 import { Alert } from "./components/Alert";
 import { AlertProvider } from "./context/AlertProvider";
+import { ProfileContextProvider } from "./components/Profile/context/ProfileContextProvider";
 
 import './style/global.css'
 import SchedulePage from "./components/Schedule/schedulePage";
@@ -34,6 +35,7 @@ const App = () => {
     <div>
       <Navbar/>
       <AlertProvider>
+      <ProfileContextProvider>
         <Alert/>
         <Routes>
           <Route path="" element={<Layout />}>
@@ -65,6 +67,7 @@ const App = () => {
             </Route>
           </Route>
         </Routes>
+      </ProfileContextProvider>
       </AlertProvider>
     </div>
   );

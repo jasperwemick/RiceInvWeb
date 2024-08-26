@@ -1,34 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Profile } from "./Profile";
-import GetUrl from "../../GetUrl";
 import './style/profile.css'
+import ProfileContext from "./context/ProfileContextProvider";
+import useProfiles from "./hooks/useProfiles";
 
 export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={width: 200, height: 200, clickAction: null, styleOptions: null}, profileFilter=[]}) => {
 
     const scrollRef = useRef(null);
-    console.log("hello")
 
+    // const [profiles, setProfiles] = useState([])
 
-    const [profiles, setProfiles] = useState([])
+    const { profiles } = useContext(ProfileContext)
 
-    useEffect(() => {
-
-        async function getProfiles() {
-            try {
-                const response = await fetch(`${GetUrl}/api/profiles/default`);
-                const jsponse = await response.json();
-
-                setProfiles(jsponse)
-            }
-            catch(e) {
-                const message = `An error occurred: ${e}`;
-                console.log(message)
-                return;
-            }
-        }
-        
-        getProfiles();
-    }, [])
+    useProfiles()
 
     /**
      * 
@@ -56,5 +40,4 @@ export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={wid
             <button onClick={() => shift(shiftOffset)}>{'>'}</button>
         </div>
     )
-    
 };
