@@ -1,35 +1,36 @@
-import React, { useState } from "react";
-import { GenerateBracket } from "./Bracket/GenerateBracket";
+import React from "react";
 import { ProfileList } from "./Profile/ProfileList"; 
+import { NavigationProfile } from "./Profile/NavigationProfile";
+import './style/home.css'
 
 
 export default function Home() {
 
-    const [numPlayers, setNumPlayers] = useState(8);
+    // const [numPlayers, setNumPlayers] = useState(8);
  
     return (
         <div>
-            <section className="head">
-                <p>The Rice Invitational<br/><br/></p>
+            <section>
+                <div className={`home-title-container`}>
+                    <div className={`home-title-text`}>
+                        <p>The Rice Invitational</p>
+                        <br/>
+                        <br/>
+                        <p>Gaming! Epic! Hell Yeah!</p>
+                        <br/>
+                        <br/>
+                        <p>The Beautiful Competitors (and Me)</p>
+                        <br/>
+                    </div>
+                    <div style={{display: "flex", justifyContent: 'center', width: '100%', height: '100%'}}>
+                        <ProfileList Wrapper={NavigationProfile} WrapperProps={{currentLocation: '/'}}/>
+                    </div>
+                </div>
             </section>
             <section>
-                <ProfileList />
-                {/* <ul style={{width: 600, height: 200, position: 'relative'}}>{mapProfiles()}</ul> */}
-                <p>Cool Thing!</p>
-                {/* Full Format: All players start in upper */}
-                {/* Split Format: Half players start in upper, and half start in lower */}
-                <GenerateBracket 
-                    type={'Double'} 
-                    numPlayers={numPlayers} 
-                    format={'full'}
-                    gameTag={'null'}/>
-                <input 
-                    type="range"
-                    min={4}
-                    max={24}
-                    defaultValue={numPlayers}
-                    onChange={(e) => setNumPlayers(e.target.value)}/>
-                <span>{`Players: ${numPlayers}`}</span>
+                <div className={`home-grid`}>
+
+                </div>
             </section>
         </div>
     );

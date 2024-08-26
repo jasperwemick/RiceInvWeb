@@ -128,8 +128,6 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
         const rightNode = BracketNode(numUpperSets + 2, 1, grandFinals, null) //Lower Final
         grandFinals.right = rightNode
 
-        console.log(grandFinals)
-
         // Lower Bracket
         for (let i = numUpperSets + 3; i <= numSets; i++) {
             insertNode(grandFinals.right, i, nearestPowerOf2(numPlayers) * 2, 'L', null)

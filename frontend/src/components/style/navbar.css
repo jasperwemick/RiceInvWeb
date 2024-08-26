@@ -6,13 +6,13 @@
 
 .nav-items {
     display: flex;
-    background-color: grey;
+    background-color: rgb(90, 108, 151);
     width: auto;
 }
 
 .nav-dropdown {
     position: absolute;
-    background-color: lightgray;
+    background-color: rgb(181, 195, 225);
     list-style: none;
     top: 60px;
     width: auto;
@@ -28,41 +28,18 @@
 
 .nav-button-link {
     text-decoration: none;
-    color: #151414;
+    color: #fff;
     font-size: 16px;
     width: 90%;
     height: 70%;
     display: flex;
     align-items: center;
     padding: 0 16px;
+    border-radius: 10px;
 }
 
 .nav-button-link:hover {
-    background-color: #000000;
-    color: #fff;
-}
-
-.sign-in-button {
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    list-style: none;
-    height: 60px;
-}
-
-.sign-in-button a {
-    text-decoration: none;
-    color: #151414;
-    font-size: 16px;
-    width: 90%;
-    height: 70%;
-    display: flex;
-    align-items: center;
-    padding: 0 14px;
-}
-
-.sign-in-button a:hover {
-    background-color: #000000;
+    background-color: #c3c6df;
     color: #fff;
 }
 
@@ -86,6 +63,6 @@
 }
 
 .nav-drop-button a:hover {
-    background-color: gray;
+    background-color: #c3c6df;
     color: white;
 }

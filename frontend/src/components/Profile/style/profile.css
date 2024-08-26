@@ -1,8 +1,3 @@
-.profiles {
-    position: relative;
-    min-height: 600px;
-}
-
 .profiles button {
     position: relative;
     background-color: gray;
@@ -18,12 +13,12 @@
 }
 
 .profile-list-container {
-    position: absolute;
-    display: inline-flex;
+    position: relative;
+    display: flex;
     align-items: center;
-    margin: 40px 0 40px 0;
-    left: 50%;
-    transform: translateX(-50%);
+    justify-content: space-around;
+    width: 919.5px;
+    height: fit-content;
 }
 
 .profile-list-container-small {
@@ -36,7 +31,7 @@
 
 .profile-list {
     width: 100%;
-    height: 100%;
+    height: fit-content;
 
     display: flex;
     justify-content: space-between;
@@ -54,20 +49,29 @@
     display: none;
 }
 
+.profile-list > li {
+    width: 100%;
+    height: 100%;
+}
+
 
 .profile-list > li > div {
     display: flex;
     flex-direction: column;
     position: relative;
-    width: 100%;
+    padding: 10px 10px 10px 10px;
+    width: fit-content;
     min-width: 60px;
     height: 100%;
     border-radius: 10px;
-    border: 1px solid black;
+    border: 2px solid rgb(77, 77, 77);
+
+    background: linear-gradient(#afc0df, #a1a7e4);
 }
 
 .profile-list > li > div > p {
     text-align: center;
+    width: 100%;
 }
 
 .profile-list li:hover {
