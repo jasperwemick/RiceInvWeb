@@ -9,6 +9,7 @@ import { EventContextProvider } from "./context/EventContextProvider";
 import { DayOverview } from "./DayOverview";
 
 import './style/schedule.css'
+import { TimeOverview } from "./TimeOverview";
 
 
 export default function SchedulePage({}) {
@@ -21,6 +22,7 @@ export default function SchedulePage({}) {
                 <EventContextProvider>
                     <TimeEditor date={entryDate}/>
                     <EventInfo />
+                    <TimeOverview date={entryDate}/>
                     <DayOverview date={entryDate}/>
                     <div style={{display: 'flex'}}>
                         <Calendar setEntryDate={setEntryDate}/>

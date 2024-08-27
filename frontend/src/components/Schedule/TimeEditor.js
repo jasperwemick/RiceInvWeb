@@ -185,7 +185,7 @@ export const TimeEditor = ({ date }) => {
                     {eastAlignment === 0 ? `Aligned with EST` : `Click to Align with EST`}
                 </p>
                 <p className="no-select-text">{` User: ${auth.profile ? auth.profile.name : ''} `}</p>
-                <button style={{width: 60, height: 60}} onClick={() => auth.user ? submitTime() : console.log('Please log in')}>
+                <button style={{width: 60, height: 60}} onClick={() => (auth.user && eastAlignment === 0) ? submitTime() : console.log('Time not EST')}>
                     {`Submit Time`}
                 </button>
                 <button 

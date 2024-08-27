@@ -12,7 +12,12 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
 
     const { alert, setAlert } = useAlert()
 
-    const { toggleTimeEntry, setToggleTimeEntry, toggleDayOverview, setToggleDayOverview, monthlyTimeEntries, setMonthlyTimeEntries } = useContext(SchedulePopUpToggleContext)
+    const { 
+        toggleTimeEntry, setToggleTimeEntry, 
+        toggleDayOverview, setToggleDayOverview, 
+        monthlyTimeEntries, setMonthlyTimeEntries, 
+        toggleTimeOverview, setToggleTimeOverview 
+    } = useContext(SchedulePopUpToggleContext)
 
     const { events, setSelectedDayEvents } = useContext(EventContext)
 
@@ -90,30 +95,49 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
                     }>
                             
                         <p className='no-select-text'>{calDay.number}</p>
-                        <button 
-                        className='toggle-time-entry-button'
-                        style={
-                            (auth.user && (
-                                (calDay.month === today.getMonth() || calDay.month === (today.getMonth() === 11 ? 0 : today.getMonth() + 1)) && 
-                                today.getFullYear() === calDay.year)
-                            ) ? 
-                            null : 
-                            {visibility: 'hidden', pointerEvents: 'none'}
-                        } 
-                        onClick={
-                            auth.user ? 
-                            (e) => {
-                                setToggleTimeEntry(!toggleTimeEntry)
-                                setEntryDate(calDay.date)
-                                e.stopPropagation()
-                            } : 
-                            (e) => { 
-                                setAlert({active: true, message: 'Please Log In'}) 
-                                e.stopPropagation()
+                        <div style={{display:'flex', justifyContent:'space-evenly'}}>
+                            <button 
+                            className='toggle-time-entry-button'
+                            style={
+                                (auth.user && (
+                                    (calDay.month === today.getMonth() || calDay.month === (today.getMonth() === 11 ? 0 : today.getMonth() + 1)) && 
+                                    today.getFullYear() === calDay.year)
+                                ) ? 
+                                null : 
+                                {visibility: 'hidden', pointerEvents: 'none'}
                             } 
-                        }>
+                            onClick={
+                                auth.user ? 
+                                (e) => {
+                                    setToggleTimeEntry(true)
+                                    setEntryDate(calDay.date)
+                                    e.stopPropagation()
+                                } : 
+                                (e) => { 
+                                    setAlert({active: true, message: 'Please Log In'}) 
+                                    e.stopPropagation()
+                                } 
+                            }>
                             {`${timeEntryProvided ? `Update` : `Add`}`}
-                        </button>
+                            </button>
+                            <button
+                            className={`toggle-time-entry-button`}
+                            style={
+                                (auth.user && (auth.roles ? auth.roles.includes('Admin') : false)) ?
+                                null :
+                                {visibility: 'hidden', pointerEvents: 'none'}
+                            }
+                            onClick={
+                                (e) => {
+                                    setToggleTimeOverview(true)
+                                    setEntryDate(calDay.date)
+                                    e.stopPropagation()
+                                }
+                            }
+                            >
+                            {`Overview`}
+                            </button>
+                        </div>
                         <div 
                         className='calendar-event-blob' 
                         style={dayEventList.length === 0 ? {visibility: 'hidden', pointerEvents: 'none'} : null}>

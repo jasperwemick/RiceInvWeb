@@ -254,3 +254,10 @@
 .toggle-time-entry-button:hover {
     opacity: 50%;
 }
+
+.time-overview-player-list {
+    width: 120px;
+    min-width: 60px;
+    height: 300px;
+    list-style: none;
+}

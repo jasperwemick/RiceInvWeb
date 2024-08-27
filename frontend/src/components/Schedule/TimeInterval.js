@@ -11,13 +11,31 @@ export const TimeInterval = ({index, intervalData, toggleRange, updateRange, lat
         return hour + ':' + minutes + ' ' + mmm
     }
 
-    return (
-        <div>
-            <p className="no-select-text" style={{fontSize: 9, marginTop: -4}}>{indexToTime()}</p>
-            <div
-                className={`time-interval-block ${intervalData ? `time-interval-selected` : null}`} 
-                onMouseEnter={toggleRange ? () => updateRange(index) : null}
-                onClick={toggleRange ? () => toggleRange(index) : null}></div>
-        </div>
-    )
+    if (typeof intervalData === 'boolean') {
+        return (
+            <div>
+                <p className="no-select-text" style={{fontSize: 9, marginTop: -4}}>{indexToTime()}</p>
+                <div
+                    className={`time-interval-block ${intervalData ? `time-interval-selected` : null}`} 
+                    onMouseEnter={toggleRange ? () => updateRange(index) : null}
+                    onClick={toggleRange ? () => toggleRange(index) : null}>
+                </div>
+            </div>
+        )
+    }
+    else {
+        return (
+            <div>
+                <p className="no-select-text" style={{fontSize: 9, marginTop: -4}}>{indexToTime()}</p>
+                <div
+                    className={`time-interval-block ${intervalData.strength > 0 ? `time-interval-selected` : null}`} 
+                    style={intervalData.strength > 0 ? {opacity: intervalData.strength} : null}
+                    onMouseEnter={() => {toggleRange(index); console.log('hi')}}
+                    onMouseLeave={() => toggleRange(-1)}>
+                </div>
+            </div>
+        )
+    }
+
+
 }

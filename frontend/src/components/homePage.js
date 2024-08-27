@@ -23,7 +23,7 @@ export default function Home() {
                         <br/>
                     </div>
                     <div style={{display: "flex", justifyContent: 'center', width: '100%', height: 'fit-content'}}>
-                        <ProfileList shiftOffset={500} Wrapper={NavigationProfile} WrapperProps={{currentLocation: '/'}}/>
+                        <ProfileList shiftOffset={500} Wrapper={NavigationProfile} WrapperProps={{currentLocation: '/', styleOptions: {background: 'linear-gradient(#afc0df, #a1a7e4)'}}}/>
                     </div>
                 </div>
             </section>

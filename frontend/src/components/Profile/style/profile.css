@@ -26,7 +26,8 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    width: 300px;
+    width: 500px;
+    height: fit-content;
 }
 
 .profile-list {
@@ -65,8 +66,6 @@
     height: 100%;
     border-radius: 10px;
     border: 2px solid rgb(77, 77, 77);
-
-    background: linear-gradient(#afc0df, #a1a7e4);
 }
 
 .profile-list > li > div > p {
@@ -81,7 +80,7 @@
 .profile-shift-button {
     width: 40px;
     height: 80px;
-    background-color: rgb(185, 206, 255);
+    background-color: rgb(185, 185, 185);
     border: 2px solid #696c8f;
     border-radius: 5px;
 }
