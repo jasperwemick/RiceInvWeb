@@ -4,7 +4,7 @@ import { Route, Routes } from "react-router-dom";
  
 // We import all the components we need in our app
 import Navbar from "./components/Navbar";
-import Home from "./pages/homePage";
+import Home from "./components/homePage";
 import Add from "./pages/addProfilePage";
 import Edit from "./pages/editProfilePage";
 import Leaderboard from "./components/Leaderboard";
@@ -17,7 +17,7 @@ import BrawlPage from "./pages/brawlHomePage";
 import BrawlOnesPage from "./pages/brawlOnesPage";
 import BrawlTwosPage from "./pages/brawlTwosPage";
 import Layout from "./components/Layout";
-import Login from "./pages/loginPage";
+import { Login } from "./components/Login";
 import RequireAuth from "./components/RequireAuth";
 import Logout from "./components/Logout";
 import BlastHomePage from "./pages/blastHomePage";
@@ -25,6 +25,7 @@ import BlastJeopardyPage from "./pages/blastJeopardyPage";
 import BlastAmongusPage from "./pages/blastAmongusPage";
 import { Alert } from "./components/Alert";
 import { AlertProvider } from "./context/AlertProvider";
+import { ProfileContextProvider } from "./components/Profile/context/ProfileContextProvider";
 
 import './style/global.css'
 import SchedulePage from "./components/Schedule/schedulePage";
@@ -34,6 +35,7 @@ const App = () => {
     <div>
       <Navbar/>
       <AlertProvider>
+      <ProfileContextProvider>
         <Alert/>
         <Routes>
           <Route path="" element={<Layout />}>
@@ -65,6 +67,7 @@ const App = () => {
             </Route>
           </Route>
         </Routes>
+      </ProfileContextProvider>
       </AlertProvider>
     </div>
   );

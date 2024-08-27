@@ -1,35 +1,18 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
 import { Profile } from "./Profile";
-import GetUrl from "../../GetUrl";
 import './style/profile.css'
+import ProfileContext from "./context/ProfileContextProvider";
+import useProfiles from "./hooks/useProfiles";
 
-export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={width: 200, height: 200, clickAction: null, styleOptions: null}, profileFilter=[]}) => {
+export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={width: 200, height: 200, clickAction: null, styleOptions: null}, profileFilter=[], profileContainer='profile-list-container'}) => {
 
     const scrollRef = useRef(null);
 
-    const [profiles, setProfiles] = useState([])
+    const { profiles } = useContext(ProfileContext)
 
-    useEffect(() => {
-
-        async function getProfiles() {
-            try {
-                const response = await fetch(`${GetUrl}/api/profiles/default/noimg`);
-                const jsponse = await response.json();
-
-                setProfiles(jsponse)
-            }
-            catch(e) {
-                const message = `An error occurred: ${e}`;
-                console.log(message)
-                return;
-            }
-        }
-        
-        getProfiles();
-    }, [])
+    useProfiles()
 
     /**
-     * 
      * @returns A list of PlayerProfile components
      */
     function profileList() {
@@ -48,11 +31,10 @@ export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={wid
     }
 
     return (
-        <div className="profile-list-container-small">
-            <button onClick={() => shift(-1 * shiftOffset)}>{'<'}</button>
+        <div className={profileContainer}>
+            <button className={`profile-shift-button`} onClick={() => shift(-1 * shiftOffset)}>{'<'}</button>
             <ul ref={scrollRef} className="profile-list">{profileList()}</ul>
-            <button onClick={() => shift(shiftOffset)}>{'>'}</button>
+            <button className={`profile-shift-button`} onClick={() => shift(shiftOffset)}>{'>'}</button>
         </div>
     )
-    
 };

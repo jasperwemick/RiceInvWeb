@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Link } from "react-router-dom";
 import "../style/leaguePage.css"
 import Placement from "../components/Placement";
 import GetUrl from "../GetUrl";
+import useProfiles from "../components/Profile/hooks/useProfiles";
+import ProfileContext from "../components/Profile/context/ProfileContextProvider";
 
 const Game = (props) => (
     <li className="game-item">
@@ -18,6 +20,9 @@ export default function LeaguePage() {
     const [games, setGames] = useState([]);
     const [places, setPlaces] = useState([]);
 
+    const { profiles } = useContext(ProfileContext)
+    useProfiles()
+
     useEffect(() => {
         async function getGames() {
 
@@ -28,12 +33,9 @@ export default function LeaguePage() {
                 const responseLeague = await fetch(`${GetUrl}/api/profiles/league`);
                 const profileList = await responseLeague.json();
 
-                const responseProfiles = await fetch(`${GetUrl}/api/profiles/default`);
-                const def = await responseProfiles.json();
-
                 const placements = profileList.map((item) => {
                     const { playerID, placing } = item;
-                    const mappedName = [ def.find(x => x._id === playerID).name ]
+                    const mappedName = [ profiles.find(x => x._id === playerID).name ]
                     return { mappedName, placing, scores: 3 }
                 });
     

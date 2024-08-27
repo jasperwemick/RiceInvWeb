@@ -2,16 +2,19 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import GetUrl from "../../GetUrl"
 import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
 import EventContext from "./context/EventContextProvider";
+import useAuth from "../../hooks/userAuth";
 
 
-const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent, clearEvent}) => {
+const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent, clearEvent, auth}) => {
     return (
         <li 
         onClick={() => {
             setToggleEventInfo(!toggleEventInfo);
             event ? setCurrentEvent({...event}) : clearEvent();
-        }} 
-        style={event ? (event.ready ? {backgroundColor: "forestgreen"} : null) : null}>
+        }}
+        style={event ? (event.ready ? {backgroundColor: "forestgreen"} : null) : 
+            ((auth.user && (auth.roles ? auth.roles.includes('Admin') : false)) ? 
+                null : {pointerEvents: 'none', visibility: 'hidden'})}>
             {event ? event.name : 'Add Event'}
         </li>
     )
@@ -22,7 +25,9 @@ export const EventPool = ({}) => {
 
     const { toggleEventInfo, setToggleEventInfo } = useContext(SchedulePopUpToggleContext)
 
-    const { currentEvent, setCurrentEvent, events, setEvents, clearEvent } = useContext(EventContext)
+    const { setCurrentEvent, events, setEvents, clearEvent } = useContext(EventContext)
+
+    const { auth }  = useAuth()
 
     useEffect(() => {
 
@@ -50,7 +55,8 @@ export const EventPool = ({}) => {
                     toggleEventInfo={toggleEventInfo} 
                     setToggleEventInfo={setToggleEventInfo}
                     setCurrentEvent={setCurrentEvent}
-                    clearEvent={clearEvent}/>
+                    clearEvent={clearEvent}
+                    auth={auth}/>
             )
         })
     }
@@ -63,7 +69,8 @@ export const EventPool = ({}) => {
                 toggleEventInfo={toggleEventInfo} 
                 setToggleEventInfo={setToggleEventInfo}
                 setCurrentEvent={setCurrentEvent}
-                clearEvent={clearEvent}/>
+                clearEvent={clearEvent}
+                auth={auth}/>
         </ul>
     )
 }

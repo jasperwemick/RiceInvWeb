@@ -1,5 +1,3 @@
-import "../style/navbar.css"
-
 export const NavItems = [
     {
         class: 'nav-button',
@@ -58,12 +56,12 @@ export const NavItems = [
 
 export const LogItems = [
     {
-        class: 'sign-in-button',
+        class: 'nav-button',
         path: '/login',
         text: 'Login'
     },
     {
-        class: 'sign-in-button',
+        class: 'nav-button',
         path: '/logout',
         text: 'Logout'
     }

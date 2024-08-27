@@ -1,7 +1,7 @@
 import { NavItems, LogItems } from "./navbarItems"
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import "../style/navbar.css"
+import "./style/navbar.css"
 import useAuth from "../hooks/userAuth";
 import GetUrl from "../GetUrl";
 
@@ -70,7 +70,7 @@ export default function Navbar() {
     const item = (obj) => {
         return (
             <li className={obj.class}>
-                <Link to={obj.path}>{obj.text}</Link>
+                <Link to={obj.path} className={`nav-button-link`}>{obj.text}</Link>
             </li>
         )
     }

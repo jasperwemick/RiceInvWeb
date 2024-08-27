@@ -1,8 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import "../style/brawlPage.css"
 import { Link } from "react-router-dom";
 import Placement from "../components/Placement";
 import GetUrl from "../GetUrl";
+import useProfiles from "../components/Profile/hooks/useProfiles";
+import ProfileContext from "../components/Profile/context/ProfileContextProvider";
 
 
 export default function BrawlHomePage() {
@@ -10,6 +12,10 @@ export default function BrawlHomePage() {
     // const [brawlProfiles, setBrawlProfiles] = useState([])
     const [ones, setOnes] = useState([])
     const [twos, setTwos] = useState([])
+
+    const { profiles } = useContext(ProfileContext)
+
+    useProfiles()
 
     useEffect(() => {
 
@@ -28,14 +34,10 @@ export default function BrawlHomePage() {
                 
                 const responseBrawl = await fetch(`${GetUrl}/api/profiles/brawl`);
                 const brawl = await responseBrawl.json();
-    
-                const responseProfiles = await fetch(`${GetUrl}/api/profiles/default`);
-                const def = await responseProfiles.json();
-    
                 
                 const onevone = brawl.map((item) => {
                     const { playerID, onesPlacing } = item;
-                    const mappedName = [ def.find(x => x._id === playerID).name ]
+                    const mappedName = [ profiles.find(x => x._id === playerID).name ]
                     const placing = onesPlacing;
                     return { mappedName, placing, scores: 1 }
                 });
@@ -44,8 +46,8 @@ export default function BrawlHomePage() {
     
                 const twovtwo = brawl.map((item) => {
                     const { playerID, twosPlacing, partner } = item;
-                    const mappedName = [ def.find(x => x._id === playerID).name ];
-                    let partnerName = def.find(x => x._id === partner)?.name;
+                    const mappedName = [ profiles.find(x => x._id === playerID).name ];
+                    let partnerName = profiles.find(x => x._id === partner)?.name;
                     if (!partnerName) {
                         partnerName = "";
                     }

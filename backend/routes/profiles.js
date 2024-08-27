@@ -49,7 +49,7 @@ router.get('/default', async (req, res) => {
     
             profile.imageUrl = url
         }
-    
+        
         res.json(profiles)
     }
     catch(e) {

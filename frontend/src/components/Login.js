@@ -2,8 +2,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import useAuth from "../hooks/userAuth";
 import { useRef, useState, useEffect } from 'react';
 import GetUrl from "../GetUrl";
+import './style/login.css'
 
-const Login = () => {
+export const Login = () => {
 
     const [user, setUser] = useState("");
     const [pass, setPass] = useState("");
@@ -71,10 +72,10 @@ const Login = () => {
 
 
     return (
-        <div>
+        <div className={`login-container`}>
             <p ref={errRef}>{errMessage}</p>
-            <div><p>Login</p></div>
-            <form onSubmit={onSubmit}>
+            <p>Login</p>
+            <form onSubmit={onSubmit} className={`login-form`}>
                 <input
                 value={user}
                 type="text"
@@ -97,5 +98,3 @@ const Login = () => {
 
     )
 }
-
-export default Login;

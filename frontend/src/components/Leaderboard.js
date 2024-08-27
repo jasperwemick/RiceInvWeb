@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import "../style/scoreboard.css"
-import GetUrl from "../GetUrl";
+import ProfileContext from "./Profile/context/ProfileContextProvider";
+import useProfiles from "./Profile/hooks/useProfiles";
 
 const LeaderboardRow = ({profile}) => (
     <tr className="leaderboard-row">
@@ -20,40 +21,23 @@ const LeaderboardRow = ({profile}) => (
 
 export default function Leaderboard() {
 
-    const [profiles, setProfiles] = useState([]);
- 
-    useEffect(() => {
-        async function getProfiles() {
+    const { profiles, setProfiles } = useContext(ProfileContext)
 
-            function descendingOrder(a, b) {
-                if (a.ricePoints > b.ricePoints) {
-                    return -1;
-                }
-                if (a.ricePoints < b.ricePoints) {
-                    return 1;
-                }
-                return 0;
-            } 
-
-            try {
-                const profileList = await fetch(`${GetUrl}/api/profiles/default`)
-                const p = await profileList.json();
-                p.sort(descendingOrder);
-                setProfiles(p);
-            }
-            catch(err) {
-                const message = `An error occurred: ${err}`;
-                console.log(message)
-                return;
-            }
-        }
-        
-        getProfiles();
-        return;
-    }, [profiles.length]);
+    useProfiles()
  
     function scoresList() {
-        return profiles.map((profile) => {
+
+        function descendingOrder(a, b) {
+            if (a.ricePoints > b.ricePoints) {
+                return -1;
+            }
+            if (a.ricePoints < b.ricePoints) {
+                return 1;
+            }
+            return 0;
+        } 
+
+        return profiles.sort(descendingOrder).map((profile) => {
             return (
                 <LeaderboardRow
                     profile={profile}
