@@ -32,9 +32,9 @@ export const ProfileList = ({shiftOffset=200, Wrapper=Profile, WrapperProps={wid
 
     return (
         <div className={profileContainer}>
-            <button onClick={() => shift(-1 * shiftOffset)}>{'<'}</button>
+            <button className={`profile-shift-button`} onClick={() => shift(-1 * shiftOffset)}>{'<'}</button>
             <ul ref={scrollRef} className="profile-list">{profileList()}</ul>
-            <button onClick={() => shift(shiftOffset)}>{'>'}</button>
+            <button className={`profile-shift-button`} onClick={() => shift(shiftOffset)}>{'>'}</button>
         </div>
     )
 };

@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    width: 919.5px;
+    width: 970.5px;
     height: fit-content;
 }
 
@@ -78,3 +78,14 @@
     opacity: .5;
 }
 
+.profile-shift-button {
+    width: 40px;
+    height: 80px;
+    background-color: rgb(185, 206, 255);
+    border: 2px solid #696c8f;
+    border-radius: 5px;
+}
+
+.profile-shift-button:hover {
+    opacity: 50%;
+}

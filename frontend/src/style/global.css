@@ -7,3 +7,9 @@
               user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
   }
+
+  /* html { height: 100% }
+  
+  body { min-height: 100% }
+
+  * { border: 1px solid red !important; } */

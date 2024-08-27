@@ -16,22 +16,22 @@ export default function Home() {
                         <p>The Rice Invitational</p>
                         <br/>
                         <br/>
-                        <p>Gaming! Epic! Hell Yeah!</p>
+                        <p>What??? Hell Yeah!!!</p>
                         <br/>
                         <br/>
                         <p>The Beautiful Competitors (and Me)</p>
                         <br/>
                     </div>
-                    <div style={{display: "flex", justifyContent: 'center', width: '100%', height: '100%'}}>
-                        <ProfileList Wrapper={NavigationProfile} WrapperProps={{currentLocation: '/'}}/>
+                    <div style={{display: "flex", justifyContent: 'center', width: '100%', height: 'fit-content'}}>
+                        <ProfileList shiftOffset={500} Wrapper={NavigationProfile} WrapperProps={{currentLocation: '/'}}/>
                     </div>
                 </div>
             </section>
-            <section>
+            {/* <section>
                 <div className={`home-grid`}>
 
                 </div>
-            </section>
+            </section> */}
         </div>
     );
 }
