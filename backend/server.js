@@ -4,9 +4,6 @@ const mongoose = require('mongoose')
 const fs = require('fs');
 const http = require('http');
 const https = require('https');
-const fs = require('fs');
-const http = require('http');
-const https = require('https');
 
 const authRoutes = require('./routes/auth')
 const profileRoutes = require('./routes/profiles')
