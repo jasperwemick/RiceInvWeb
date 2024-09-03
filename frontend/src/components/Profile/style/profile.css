@@ -38,7 +38,7 @@
     justify-content: space-between;
     overflow: hidden;
     overflow-x: scroll;
-    scroll-behavior: smooth;
+    /* scroll-behavior: smooth; */
     flex-wrap: nowrap;
     list-style-type: none;
 

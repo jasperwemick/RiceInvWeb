@@ -107,7 +107,7 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
                                 {visibility: 'hidden', pointerEvents: 'none'}
                             } 
                             onClick={
-                                auth.user ? 
+                                (auth.user && calDay.month === today.getMonth()) ? 
                                 (e) => {
                                     setToggleTimeEntry(true)
                                     setEntryDate(calDay.date)
