@@ -12,9 +12,23 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
 
     const { alert, setAlert } = useAlert()
 
-    const { toggleTimeEntry, setToggleTimeEntry, toggleDayOverview, setToggleDayOverview, monthlyTimeEntries, setMonthlyTimeEntries } = useContext(SchedulePopUpToggleContext)
+    const { 
+        toggleTimeEntry, setToggleTimeEntry, 
+        toggleDayOverview, setToggleDayOverview, 
+        monthlyTimeEntries, setMonthlyTimeEntries, 
+        toggleTimeOverview, setToggleTimeOverview 
+    } = useContext(SchedulePopUpToggleContext)
 
     const { events, setSelectedDayEvents } = useContext(EventContext)
+
+    const [selectionBox, setSelectionBox] = useState({
+        origin: {
+            x: 7,
+            y: 200
+        },
+        width: 2,
+        height: 1
+    })
 
     const today = new Date()
     
@@ -26,8 +40,6 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
 
                 const res = await fetch(`${GetUrl}/api/events/time/${auth.user}/${currentDay.getFullYear()}/${'0' + String(currentDay.getMonth() + 1)}/borders`)
                 let entries = await res.json()
-
-                
 
                 console.log(entries)
                 setMonthlyTimeEntries(entries)
@@ -41,6 +53,7 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
     let firstDayOfMonth = new Date(currentDay.getFullYear(), currentDay.getMonth(), 1);
     let weekdayOfFirstDay = firstDayOfMonth.getDay();
     let currentDays = [];
+    let selectionGrid = []
     for (let dayNum = 0; dayNum < 42; dayNum++) {
 
         if (dayNum === 0 && weekdayOfFirstDay === 0) {
@@ -62,10 +75,35 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
             year: firstDayOfMonth.getFullYear()
         }
 
+        const gridDay = {
+            selected: firstDayOfMonth.toDateString() === currentDay.toDateString()
+        }
+
         currentDays.push(calendarDay);
+        selectionGrid.push(gridDay)
+    }
+
+    const handleGridboxClick = (e) => {
+        
     }
   
     return (
+        <React.Fragment>
+        {/* <div className={`selection-table-content`}>
+            {
+                selectionGrid.map((gridDay, index) => {
+
+                    return (
+                        <div 
+                        key={index}
+                        className={`calendar-selection-day`} 
+                        style={gridDay.selected ? {backgroundColor: 'rgb(240, 189, 240)'} : {backgroundColor: 'transparent'}}
+                        onClick={(e) => {handleGridboxClick(e); gridDay.selected = !gridDay.selected}}>
+                        </div>
+                    )
+                })
+            }
+        </div> */}
         <div className="table-content">
             {
                 currentDays.map((calDay, index) => {
@@ -86,34 +124,52 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
                         }
                         changeCurrentDay(calDay)
                     }}
-                    style={ timeEntryProvided ? {backgroundColor: 'green'} : null
-                    }>
+                    style={ timeEntryProvided ? {backgroundColor: 'green'} : null }>
                             
                         <p className='no-select-text'>{calDay.number}</p>
-                        <button 
-                        className='toggle-time-entry-button'
-                        style={
-                            (auth.user && (
-                                (calDay.month === today.getMonth() || calDay.month === (today.getMonth() === 11 ? 0 : today.getMonth() + 1)) && 
-                                today.getFullYear() === calDay.year)
-                            ) ? 
-                            null : 
-                            {visibility: 'hidden', pointerEvents: 'none'}
-                        } 
-                        onClick={
-                            auth.user ? 
-                            (e) => {
-                                setToggleTimeEntry(!toggleTimeEntry)
-                                setEntryDate(calDay.date)
-                                e.stopPropagation()
-                            } : 
-                            (e) => { 
-                                setAlert({active: true, message: 'Please Log In'}) 
-                                e.stopPropagation()
+                        <div style={{display:'flex', justifyContent:'space-evenly'}}>
+                            <button 
+                            className='toggle-time-entry-button'
+                            style={
+                                (auth.user && (
+                                    (calDay.month === today.getMonth() || calDay.month === (today.getMonth() === 11 ? 0 : today.getMonth() + 1)) && 
+                                    today.getFullYear() === calDay.year)
+                                ) ? 
+                                null : 
+                                {visibility: 'hidden', pointerEvents: 'none'}
                             } 
-                        }>
+                            onClick={
+                                (auth.user && calDay.month === today.getMonth()) ? 
+                                (e) => {
+                                    setToggleTimeEntry(true)
+                                    setEntryDate(calDay.date)
+                                    e.stopPropagation()
+                                } : 
+                                (e) => { 
+                                    setAlert({active: true, message: 'Please Log In'}) 
+                                    e.stopPropagation()
+                                } 
+                            }>
                             {`${timeEntryProvided ? `Update` : `Add`}`}
-                        </button>
+                            </button>
+                            <button
+                            className={`toggle-time-entry-button`}
+                            style={
+                                (auth.user && (auth.roles ? auth.roles.includes('Admin') : false)) ?
+                                null :
+                                {visibility: 'hidden', pointerEvents: 'none'}
+                            }
+                            onClick={
+                                (e) => {
+                                    setToggleTimeOverview(true)
+                                    setEntryDate(calDay.date)
+                                    e.stopPropagation()
+                                }
+                            }
+                            >
+                            {`Overview`}
+                            </button>
+                        </div>
                         <div 
                         className='calendar-event-blob' 
                         style={dayEventList.length === 0 ? {visibility: 'hidden', pointerEvents: 'none'} : null}>
@@ -125,5 +181,6 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
                 })
             }
         </div>
+        </React.Fragment>
     )
 }

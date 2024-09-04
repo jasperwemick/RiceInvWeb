@@ -63,34 +63,36 @@ export function EventEditor({eventData, setEventData, toggleEventInfo, setToggle
     <div>
         <h3>Add Event</h3>
         <ProfileList 
-            shiftOffset={200}
-            Wrapper={SelectableProfile} 
-            WrapperProps={{
-                selectedList: eventData.participants, 
-                setSelectedList: setEventParticipants, 
-                refreshTrigger: [eventData._id]
-            }}/>
+        shiftOffset={200}
+        Wrapper={SelectableProfile} 
+        WrapperProps={{
+            selectedList: eventData.participants, 
+            setSelectedList: setEventParticipants, 
+            refreshTrigger: [eventData._id]
+        }}
+        profileContainer="profile-list-container-small"
+        />
         <form onSubmit={onSubmit}>
             <input 
-                value={eventData.name || ''} 
-                onChange={e => setEventData({...eventData, name: e.target.value})} 
-                type='text'
-                placeholder='Name'/>
+            value={eventData.name || ''} 
+            onChange={e => setEventData({...eventData, name: e.target.value})} 
+            type='text'
+            placeholder='Name'/>
             <input 
-                value={eventData.description || ''} 
-                onChange={e => setEventData({...eventData, description: e.target.value})} 
-                type='text'
-                placeholder='Desc' />
+            value={eventData.description || ''} 
+            onChange={e => setEventData({...eventData, description: e.target.value})} 
+            type='text'
+            placeholder='Desc' />
             <input 
-                value={eventData.group || ''} 
-                onChange={e => setEventData({...eventData, group: e.target.value})} 
-                type="text" 
-                placeholder="Game/Event Type" />
+            value={eventData.group || ''} 
+            onChange={e => setEventData({...eventData, group: e.target.value})} 
+            type="text" 
+            placeholder="Game/Event Type" />
             <input
-                value={eventData.duration || ''}
-                onChange={e => setEventData({...eventData, duration: e.target.value})}
-                type="text"
-                placeholder="Duration (Hours)"/>
+            value={eventData.duration || ''}
+            onChange={e => setEventData({...eventData, duration: e.target.value})}
+            type="text"
+            placeholder="Duration (Hours)"/>
             <button type="submit">Submit</button>
         </form>
         <button onClick={() => onDelete()}>{`Delete Event`}</button>

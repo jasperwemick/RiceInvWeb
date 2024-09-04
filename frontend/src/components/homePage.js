@@ -3,7 +3,6 @@ import { ProfileList } from "./Profile/ProfileList";
 import { NavigationProfile } from "./Profile/NavigationProfile";
 import './style/home.css'
 
-
 export default function Home() {
 
     // const [numPlayers, setNumPlayers] = useState(8);
@@ -23,7 +22,10 @@ export default function Home() {
                         <br/>
                     </div>
                     <div style={{display: "flex", justifyContent: 'center', width: '100%', height: 'fit-content'}}>
-                        <ProfileList shiftOffset={500} Wrapper={NavigationProfile} WrapperProps={{currentLocation: '/'}}/>
+                        <ProfileList 
+                        Wrapper={NavigationProfile} 
+                        WrapperProps={{currentLocation: '/', styleOptions: {background: 'linear-gradient(#afc0df, #a1a7e4)'}}}
+                        isInfinite={true}/>
                     </div>
                 </div>
             </section>

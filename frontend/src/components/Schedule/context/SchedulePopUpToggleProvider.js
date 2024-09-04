@@ -5,6 +5,7 @@ const SchedulePopUpToggleContext = createContext({})
 export const SchedulePopUpToggleProvider = ({children}) => {
 
     const [toggleTimeEntry, setToggleTimeEntry] = useState(false)
+    const [toggleTimeOverview, setToggleTimeOverview] = useState(false)
     const [toggleEventInfo, setToggleEventInfo] = useState(false)
     const [toggleDayOverview, setToggleDayOverview] = useState(false)
     const [monthlyTimeEntries, setMonthlyTimeEntries] = useState([])
@@ -12,7 +13,7 @@ export const SchedulePopUpToggleProvider = ({children}) => {
 
     return (
         <SchedulePopUpToggleContext.Provider value={{toggleTimeEntry, setToggleTimeEntry, toggleEventInfo, setToggleEventInfo, 
-            toggleDayOverview, setToggleDayOverview, monthlyTimeEntries, setMonthlyTimeEntries}}>
+            toggleDayOverview, setToggleDayOverview, monthlyTimeEntries, setMonthlyTimeEntries, toggleTimeOverview, setToggleTimeOverview}}>
             {children}
         </SchedulePopUpToggleContext.Provider>
     )

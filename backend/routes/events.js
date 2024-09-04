@@ -8,7 +8,7 @@ const router = express.Router()
 // const storage = multer.memoryStorage()
 // const upload = multer({ storage: storage})
 
-const { getUserMonthTimeEntries, getMonthTimeEntriesWithBorderEntries, getUserTimeDateEntry, createTimeEntry, updateTimeEntry, deleteTimeEntry, getThreeDayTimeEntry } = require('../controllers/timeController')
+const { getUserMonthTimeEntries, getMonthTimeEntriesWithBorderEntries, getUserTimeDateEntry, createTimeEntry, updateTimeEntry, deleteTimeEntry } = require('../controllers/timeController')
 const { getRiceEvents, getMonthlyRiceEvents, getDailyRiceEvents, getOneRiceEvents, createRiceEvent, upsertOneRiceEvent, deleteOneRiceEvent } = require('../controllers/eventController')
 
 // Time Entry
@@ -18,8 +18,6 @@ router.get('/time/:user/:year/:month', getUserMonthTimeEntries)
 router.get('/time/:user/:year/:month/borders', getMonthTimeEntriesWithBorderEntries)
 
 router.get('/time/:user/:year/:month/:day', getUserTimeDateEntry)
-
-router.get('/time/:user/:year/:month/:day/ext', getThreeDayTimeEntry)
 
 router.post('/time', Verify, createTimeEntry)
 

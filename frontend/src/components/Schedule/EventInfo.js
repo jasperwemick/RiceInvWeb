@@ -53,7 +53,10 @@ export const EventInfo = ({}) => {
                 <div style={eventView === 'view' ? null : {visibility: 'hidden', pointerEvents: 'none', width: 0, height: 0}}>
                     <p>{`Event: ${currentEvent.name}`}</p>
                     <p>{`Desc: ${currentEvent.description}`}</p>
-                    <ProfileList profileFilter={currentEvent.participants} WrapperProps={{width: 200, height: 200, clickAction: null, styleOptions: null}}/>
+                    <ProfileList 
+                    profileFilter={currentEvent.participants} 
+                    WrapperProps={{width: 100, height: 100, clickAction: null, styleOptions: null}}
+                    profileContainer="profile-list-container-small"/>
                 </div>
             </div>
         </div>

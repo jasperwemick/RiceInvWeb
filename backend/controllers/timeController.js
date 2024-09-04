@@ -50,30 +50,22 @@ const getUserTimeDateEntry = async (req, res) => {
     const day = req.params.day
 
     try {
-        const entry = await TimeEntry.findOne({user: user, year: year, month: month, day: day})
-        res.json(entry)
+        if (user !== 'all') {
+            const entry = await TimeEntry.findOne({user: user, year: year, month: month, day: day})
+            res.json(entry)
+        }
+        else {
+            const date = new Date(year, month - 1, day)
+            const prevDate = new Date(new Date(date).setDate(date.getDate() - 1))
+            const nextDate = new Date(new Date(date).setDate(date.getDate() + 1))
+
+            const entry = await TimeEntry.find({year: year, month: month, day: {$in: [prevDate.getDate(), day, nextDate.getDate()]}})
+            res.json(entry)
+        }
+
     }
     catch(e) {
         console.log('Error at GET /time/:user/:year/:month/:day', e)
-    }
-}
-
-const getThreeDayTimeEntry = async (req, res) => {
-    const user = req.params.user
-    const year = req.params.year
-    const month = req.params.month
-    const day = req.params.day
-
-    const date = new Date(year, month - 1, day)
-    const prevDate = new Date(new Date(date).setDate(date.getDate() - 1))
-    const nextDate = new Date(new Date(date).setDate(date.getDate() + 1))
-
-    try {
-        const entries = await TimeEntry.find({user: user, year: year, month: month, day: {$in: [prevDate.getDate(), day, nextDate.getDate()]}})
-        res.json(entries)
-    }
-    catch(e) {
-        console.log('Error at GET /time/:user/:year/:month/:day/ext', e)
     }
 }
 
@@ -116,5 +108,5 @@ const deleteTimeEntry = async (req, res) => {
     const day = req.params.day
 }
 
-module.exports = { getUserMonthTimeEntries, getMonthTimeEntriesWithBorderEntries, getUserTimeDateEntry, getThreeDayTimeEntry, 
+module.exports = { getUserMonthTimeEntries, getMonthTimeEntriesWithBorderEntries, getUserTimeDateEntry, 
     createTimeEntry, updateTimeEntry, deleteTimeEntry }

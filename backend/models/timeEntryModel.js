@@ -114,7 +114,7 @@ timeEntrySchema.post('findOneAndUpdate', async function (doc, next) {
         })
     }
     catch(e) {
-        console.log("blalalf", e)
+        console.log("I quit", e)
     }
 }) 
 
