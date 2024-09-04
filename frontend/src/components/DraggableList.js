@@ -28,6 +28,16 @@ export const DraggableList = ({setScrollLength, setListLength, profileTicks, chi
         }
     }, [profileTicks])
 
+    // Do some shit to make the list consistently shift one direction
+
+    // useEffect(() => {
+    //     const id = setInterval(() => {
+
+    //     }, 1000)
+
+    //     return () => clearInterval(id)
+    // })
+
     const handleDragStart = (e) => {
         if (!ourRef.current) return
         const slider = ourRef.current;

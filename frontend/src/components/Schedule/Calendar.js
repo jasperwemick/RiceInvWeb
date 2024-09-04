@@ -13,7 +13,6 @@ export const Calendar = ({setEntryDate}) => {
         setCurrentDay(new Date(day.year, day.month, day.number))
     }
 
-
     return (
         <div className="calendar">
             <div className="calendar-header">
