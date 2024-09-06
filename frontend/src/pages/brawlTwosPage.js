@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import "../style/brawlPage.css"
 import { GroupSet, GroupTable } from "../components/Bracket/bracket.js"
 import GetUrl from "../GetUrl.js";
+import { GenerateBracket } from "../components/Bracket/GenerateBracket.js";
 
 
 export default function BrawlTwosPage() {
@@ -100,26 +101,13 @@ export default function BrawlTwosPage() {
 
     return (
         <div>
-            <section>
-                <h3>GROUPS</h3>
-                <GroupTable listFunc={mapList(groupSets, GroupSet, 0, 6)} groupName={"Group A"}/>
-                <GroupTable listFunc={mapList(groupSets, GroupSet, 6, 12)} groupName={"Group B"}/>
-            </section>
-            <section>
-                <h3>GAUNTLET</h3>
-                <div className="gauntlet">
-                    {/* <GauntletBrawl sets={gauntletSets}/> */}
-                </div>
-            </section>
-            <section>
-                <h3>PLAYOFFS</h3>
-                <div className="playoffs">
-                </div>
-            </section>
-            <section>
-                <div className="playoffs">
-                </div>
-            </section>
+            <h3>GROUPS</h3>
+            <GroupTable listFunc={mapList(groupSets, GroupSet, 0, 6)} groupName={"Group A"}/>
+            <GroupTable listFunc={mapList(groupSets, GroupSet, 6, 12)} groupName={"Group B"}/>
+            <h3>GAUNTLET</h3>
+            <div>
+            <GenerateBracket type={'Double'} numPlayers={13} format={'full'} gameTag={'brawlhalla-allstar-qualifier'}/>
+            </div>
         </div>
     )
 }

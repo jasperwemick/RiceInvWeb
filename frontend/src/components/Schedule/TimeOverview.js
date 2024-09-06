@@ -32,6 +32,7 @@ export const TimeOverview = ({ date }) => {
     const [nextAMIntervalData, setNextAMIntervalData] = useState(Array(48).fill().map((_) => ({ strength: 0, players: [] })))
 
     const [currentIndex, setCurrentIndex] = useState(-1)
+    const [entrants, setEntrants] = useState([])
 
     const dateFormatted = date.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3/$1/$2')
 
@@ -65,11 +66,13 @@ export const TimeOverview = ({ date }) => {
                     return temp
                 })
 
+
+                setEntrants(todaysEntries.map((x) => x.user))
                 setTimeIntervalData(newArr)
                 return
             }
 
-
+            setEntrants([])
             setTimeIntervalData(mergedEntries)
         }
 
@@ -79,14 +82,18 @@ export const TimeOverview = ({ date }) => {
 
     }, [toggleTimeOverview])
 
-    const showPlayers = () => {
-        if (currentIndex !== -1) {
-            return timeInvervalData[currentIndex].players.map((player, index) => {
+    const showAll = () => {
+        return entrants.map((player, index) => {
+
+            if (currentIndex !== -1) {
                 return (
-                    <li key={index}>{player}</li>
+                    <li key={index} style={timeInvervalData[currentIndex].players.includes(player) ? {backgroundColor: 'forestgreen'} : {backgroundColor: 'darkred'}}>{player}</li>
                 )
-            })
-        }
+            }
+            return (
+                <li key={index}>{player}</li>
+            )
+        })
     }
 
     return (
@@ -104,8 +111,8 @@ export const TimeOverview = ({ date }) => {
                 <TimeEntryDisplay intervalData={nextAMIntervalData.slice(0, 24)} config={{show: 'AM', opacity: 0.4}} stateFunction={setCurrentIndex}/>
             </div>
             <div className={`time-entry-text`}>
-                <p>{`${currentIndex > 0 ? timeInvervalData[currentIndex].players.length : 0} Available`}</p>
-                <ul className={`time-overview-player-list`}>{showPlayers()}</ul>
+                <p>{`${currentIndex > 0 ? timeInvervalData[currentIndex].players.length : 0} / ${entrants.length} Available`}</p>
+                <ul className={`time-overview-player-list`}>{showAll()}</ul>
                 <button 
                 style={{width: 60, height: 60, position: 'relative'}}
                 onClick={() => {

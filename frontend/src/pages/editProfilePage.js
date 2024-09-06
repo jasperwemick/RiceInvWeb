@@ -15,6 +15,8 @@ export default function Edit() {
     const [counterPoints, setCounterPoints] = useState(0)
     const [bonusPoints, setBonusPoints] = useState(0)
 
+    const [gamertag, setGamertag] = useState("")
+
     const [url, setUrl] = useState("")
 
     const params = useParams();
@@ -27,8 +29,11 @@ export default function Edit() {
                 const profiles = await fetch(`${GetUrl}/api/profiles/default/${id}`);
                 const profile = await profiles.json();
 
+                console.log(profile)
+
                 setName(profile.name);
                 setDescription(profile.description);
+                setGamertag(profile.gamertag)
                 setUrl(profile.imageUrl)
                 setBrawlPoints(profile.brawlPoints);
                 setLeaguePoints(profile.leaguePoints);
@@ -63,6 +68,7 @@ export default function Edit() {
         const profileData = new FormData();
         profileData.append("name", name);
         profileData.append("description", description);
+        profileData.append("gamertag", gamertag)
         profileData.append("ricePoints", sum)
         profileData.append("brawlPoints", brawlPoints)
         profileData.append("leaguePoints", leaguePoints)
@@ -154,6 +160,11 @@ export default function Edit() {
             <input
             value={description}
             onChange={e => setDescription(e.target.value)}
+            type="text"
+            />
+            <input
+            value={gamertag}
+            onChange={e => setGamertag(e.target.value)}
             type="text"
             />
             <input

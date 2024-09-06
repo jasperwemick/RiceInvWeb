@@ -108,11 +108,15 @@ router.post('/default', Verify, VerifyRole, upload.single('image'), async (req, 
     
         const command = new PutObjectCommand(params);
         await s3.send(command);
+
+        console.log(req.body)
     
         const post = await Profile.create({
             name: req.body.name,
             description: req.body.description,
             imageName: req.file.originalname,
+            gamertag: req.body.gamertag,
+            user: req.body.user,
             ricePoints: req.body.ricePoints,
             brawlPoints: req.body.brawlPoints,
             leaguePoints: req.body.leaguePoints,

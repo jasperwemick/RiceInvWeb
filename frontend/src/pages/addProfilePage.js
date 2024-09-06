@@ -16,6 +16,9 @@ export default function Add() {
     const [counterPoints, setCounterPoints] = useState(0)
     const [bonusPoints, setBonusPoints] = useState(0)
 
+    const [gamertag, setGamertag] = useState("")
+    const [user, setUser] = useState("")
+
     const navigate = useNavigate();
     
     // This function will handle the submission.
@@ -38,6 +41,8 @@ export default function Add() {
             profileData.append("mysteryPoints", mysteryPoints)
             profileData.append("counterPoints", counterPoints)
             profileData.append("bonusPoints", bonusPoints)
+            profileData.append("gamertag", gamertag)
+            profileData.append("user", user)
 
             await fetch(`${GetUrl}/api/profiles/default`, {
                 method: "POST",
@@ -83,6 +88,16 @@ export default function Add() {
             onChange={e => setDescription(e.target.value)} 
             type="text" 
             placeholder="Description" />
+            <input
+            value={gamertag}
+            onChange={e => setGamertag(e.target.value)}
+            type="text"
+            placeholder="Gamertag" />
+            <input
+            value={user}
+            onChange={e => setUser(e.target.value)}
+            type="text"
+            placeholder="User" />
             <input 
             onChange={e => setFile(e.target.files[0])} 
             type="file" 
