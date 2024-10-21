@@ -74,6 +74,32 @@ export const EventSchedule = ({eventData, setEventData, toggleEventInfo, setTogg
 
     }
 
+    const completeEvent = () => {
+        setEventData({...eventData, finished: true})
+
+        const submission = {...eventData, finished: true}
+
+        const upsertEventData = async () => {
+
+            try {
+                await fetch(`${GetUrl}/api/events/ev/${eventData._id}`, {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    credentials: "include",
+                    body: JSON.stringify(submission)
+                })
+                setToggleEventInfo(!toggleEventInfo)
+            }
+            catch(e) {
+                console.log(`Failed to fetch (PUT): ${e}`)
+            }
+        }
+
+        upsertEventData()
+    }
+
 
     return (
         <div className='event-info-window'>
@@ -100,6 +126,7 @@ export const EventSchedule = ({eventData, setEventData, toggleEventInfo, setTogg
                 <p>{eventData.name}</p>
                 <p>{`Duration: ${eventData.duration} Hours`}</p>
                 <ul>{possibleStartTimesList()}</ul>
+                <button onClick={() => {completeEvent()}}>FINISH</button>
             </div>
         </div>
     )

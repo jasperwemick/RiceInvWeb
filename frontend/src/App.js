@@ -29,6 +29,7 @@ import { ProfileContextProvider } from "./components/Profile/context/ProfileCont
 
 import './style/global.css'
 import SchedulePage from "./components/Schedule/schedulePage";
+import { Account } from "./components/Account";
  
 const App = () => {
   return (
@@ -61,6 +62,9 @@ const App = () => {
             <Route path="/blast/amongus" element={<BlastAmongusPage />}/> {/* Bullshit Blast Among Us Page */}
 
             {/* PROTECTED */}
+            <Route element={<RequireAuth allowedRoles={['Visitor']}/>}>
+              <Route path="/account" element={<Account />} /> {/* Account info for user */}
+            </Route>
             <Route element={<RequireAuth allowedRoles={['Admin']}/>}>
               <Route path="/add" element={<Add />} /> {/* Allows for for new default profile additions */}
               <Route path="/edit/:id" element={<Edit />} /> {/* Allows for updates to a player's default profile */}

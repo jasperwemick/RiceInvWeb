@@ -72,7 +72,6 @@ export const DraggableList = ({setScrollLength, setListLength, profileTicks, chi
     const updateScroll = () => {
         if (!ourRef.current) return
         setScrollLength(ourRef.current.scrollLeft)
-        console.log(mouseCoords.current)
     }
   
     return (

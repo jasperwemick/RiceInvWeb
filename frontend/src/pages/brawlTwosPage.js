@@ -64,7 +64,7 @@ export default function BrawlTwosPage() {
                             gamePackage[i].loserStats.prevSet = {setNumber: parentSet.setNumber, formatType: parentSet.formatType, details: parentSet.details}
                         }
                     })
-                    console.log(item)
+                    // console.log(item)
                 });
 
                 const groups = gamePackage.filter(x => x.formatType === 'Group')
@@ -106,7 +106,7 @@ export default function BrawlTwosPage() {
             <GroupTable listFunc={mapList(groupSets, GroupSet, 6, 12)} groupName={"Group B"}/>
             <h3>GAUNTLET</h3>
             <div>
-            <GenerateBracket type={'Double'} numPlayers={13} format={'full'} gameTag={'brawlhalla-allstar-qualifier'}/>
+            <GenerateBracket type={'Double'} numPlayers={14} format={'full'} gameTag={'brawlhalla-allstar-qualifier'}/>
             </div>
         </div>
     )

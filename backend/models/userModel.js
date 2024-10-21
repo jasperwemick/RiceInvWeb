@@ -47,6 +47,27 @@ userSchema.pre("save", function (next){
     });
 });
 
+userSchema.pre('findOneAndUpdate', async function (next){
+    const user = await this.model.findOne(this.getQuery())
+
+    console.log('asjdflkajdfskl')
+    console.log(user)//stankfish123
+
+    if (user.isModified('password')) {
+        return next();
+    }
+
+    bcrypt.genSalt(10, (err, salt) => {
+        if (err) return next(err);
+
+        bcrypt.hash(user.password, salt, (err, hash) => {
+            if (err) return next(err);
+            user.password = hash;
+            next();
+        });
+    });
+});
+
 userSchema.methods.generateAccessJWT = function () {
     let payload = {
         id: this._id

@@ -126,18 +126,19 @@ router.get('/logout', async (req, res) => {
     }
 })
 
-router.post("/admin/create", upload.none(), Verify, VerifyRole, async (req, res) => {
+router.put("/password/reset", upload.none(), Verify, async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username });
-        if (user) {
+        if (!user) {
             res.status(401).json({
                 status: 'failed',
                 data: [],
-                message: 'Username already exists'
+                message: 'User does not exist'
             })
             return;
         }
+
 
         const isValid = () => {
 
@@ -149,12 +150,15 @@ router.post("/admin/create", upload.none(), Verify, VerifyRole, async (req, res)
             const numbers = /[0-9]/
             
 
-            if (!validSpecials.test(password) || 
-                invalidSpecials.test(password) || 
-                !capitals.test(password) || 
-                !lowercase.test(password) || 
-                !numbers.test(password)) {
-                return false
+            if (invalidSpecials.test(password)) {
+
+                    // console.log(!validSpecials.test(password))
+                    // console.log(invalidSpecials.test(password))
+                    // console.log(!capitals.test(password))
+                    // console.log(!lowercase.test(password))
+                    // console.log(!numbers.test(password))
+
+                    return false
             }
 
             if (password.length < 8) {
@@ -163,27 +167,35 @@ router.post("/admin/create", upload.none(), Verify, VerifyRole, async (req, res)
 
             return true
         }
-        if (!isValid) {
+
+        if (!isValid()) {
             res.status(401).json({
                 status: 'failed',
                 data: [],
-                message: 'Password needs to be 8 characters, \
-                include a capital and lowercase character, \
-                include a number, \
-                and have 1 of the following special characters: @#$%^&*()_+\-?'
+                message: 'Password needs to be atleast 8 characters long, \
+                also don\'t use weirdo characters'
             })
             return;
         }
 
-        const post = await User.create({
-            ...req.body
-        })
-        const result = await post.save()
+        console.log(username)
+        console.log(user)
+
+        const update = await User.findOneAndUpdate(
+            {
+                username: username
+            },
+            {
+                ...user,
+                password: password
+            }
+        )
+
         
         res.status(200).json({
             status: 'success',
             data: result,
-            message: 'Signup Successful'
+            message: 'Password Update Successful'
         });
     }
     catch(e) {

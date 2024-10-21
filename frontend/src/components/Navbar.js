@@ -1,4 +1,4 @@
-import { NavItems, LogItems } from "./navbarItems"
+import { NavItems, LogItems, AccountItems } from "./navbarItems"
 import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import "./style/navbar.css"
@@ -79,6 +79,7 @@ export default function Navbar() {
         <nav className="navbar">
             <ul className="nav-items">
                 {listItems(NavItems)}
+                {auth?.user ? item(AccountItems[0]) : null}
                 {auth?.user ? item(LogItems[1]): item(LogItems[0]) }
             </ul>
         </nav>

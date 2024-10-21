@@ -26,10 +26,7 @@ export default function SchedulePage({}) {
                     <DayOverview date={entryDate}/>
                     <div style={{display: 'flex'}}>
                         <Calendar setEntryDate={setEntryDate}/>
-                        <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>        
-                            <p>{`EventPool`}</p>
-                            <EventPool />
-                        </div>
+                        <EventPool />
                     </div>
                 </EventContextProvider>
                 </SchedulePopUpToggleProvider>

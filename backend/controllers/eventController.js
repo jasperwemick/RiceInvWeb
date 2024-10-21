@@ -4,9 +4,15 @@ const mongoose = require('mongoose')
 const getRiceEvents = async (req, res) => {
 
     const ready = req.query.ready
+    const finished = req.query.finished === 'false' ? false : true
+
     try {
-        if (ready) {
+        if (ready !== undefined) {
             const events = await RiceEvent.find({ready: ready}).populate('participants.person').exec()
+            res.json(events)
+        }
+        else if (finished !== undefined) {
+            const events = await RiceEvent.find({finished: finished}).populate('participants.person').exec()
             res.json(events)
         }
         else {

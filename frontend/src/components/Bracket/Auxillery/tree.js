@@ -6,7 +6,6 @@ const BracketNode = (val, lev, par, buddy) => {
         parent: par,
         left: null, 
         right: null,
-        another: null,
         buddy: buddy
     }
 }
@@ -73,12 +72,17 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
 
     const getOpenNodes = (temp) => {
 
-        let openNodes = []
+        // THIS DOES NOT WORK IF BRACKET DEPTH IS GREATER THAN 10, LAZY SOLUTION FOR NOW
+        var openNodes = Array(10).fill().map(()=>Array())
+
+        console.log(openNodes)
+
+        let origin = {...temp}
 
         if (temp) {
             var q = [];
     
-            q.push(temp);
+            q.push(origin);
     
             while (q.length > 0) {
     
@@ -87,25 +91,35 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
                     q.push(temp.right);
                 } 
                 else {
-                    openNodes.push(temp)
+                    openNodes[temp.level].push(temp)
                 }
 
                 if (temp.left !== null) {
-                    if (temp.left.value !== -1) {
-                        q.push(temp.left);
-                    }
-                    else {
-                        temp.left = null
-                    }
+                    q.push(temp.left);
                 } 
-                else {
-                    temp.left = BracketNode(-1, -1, temp, null)
-                    q.push(temp);
+            }
+
+            q.push(origin)
+
+            while (q.length > 0) {
+
+                temp = q.shift();
+
+                if (temp.left !== null) {
+                    q.push(temp.left)
+                }
+
+                if (temp.right !== null) {
+                    q.push(temp.right);
+                } 
+
+                if (temp.left === null && temp.right === null) {
+                    openNodes[temp.level].push(temp)
                 }
             }
         }
 
-        return openNodes
+        return openNodes.flat()
     }
 
     if (!numLowerSets) {
@@ -135,6 +149,9 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
 
         // Gets an ordered list of lower bracket set nodes that are open to upper bracket contenders to fall to
         let data = getOpenNodes(grandFinals.right)
+        data.forEach((openNode) => {
+            console.log(openNode)
+        })
         grandFinals.left = BracketNode(1, 2, grandFinals, data.shift())
 
         // Upper Bracket
@@ -143,7 +160,7 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
         }
 
 
-        // traverse(grandFinals)
+        console.log(grandFinals)
         return grandFinals
     }
 }

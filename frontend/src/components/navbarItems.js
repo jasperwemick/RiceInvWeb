@@ -66,3 +66,11 @@ export const LogItems = [
         text: 'Logout'
     }
 ]
+
+export const AccountItems = [
+    {
+        class: 'nav-button',
+        path: '/account',
+        text: 'Account'
+    }
+]
