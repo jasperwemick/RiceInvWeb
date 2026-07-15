@@ -8,7 +8,6 @@ export default function Logout() {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
-
     const { setAuth } = useAuth();
 
     useEffect(() => {
@@ -16,14 +15,13 @@ export default function Logout() {
             const response = await fetch(`${GetUrl}/auth/logout`, {
                 credentials: "include",
             })
-            const taskResult = await response.json();
-            console.log(taskResult.message)
+            await response.json();
             setAuth({})
+            navigate(from, {replace: true});
         }
 
         log();
-        navigate(from, {replace: true});
-        return;
-    })
+    }, [])
 
+    return null;
 }

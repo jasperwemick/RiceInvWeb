@@ -1,4 +1,4 @@
-const GetUrl = () => {
+export default function GetUrl() {
     console.log(process.env.NODE_ENV)
     let url;
     if (process.env.NODE_ENV === 'development') {
@@ -10,5 +10,3 @@ const GetUrl = () => {
 
     return url;
 }
-
-export default GetUrl()

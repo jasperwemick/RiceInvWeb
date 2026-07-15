@@ -1,12 +1,19 @@
-import React, { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Dispatch, SetStateAction, ReactNode } from "react";
 import './Profile/style/profile.css'
 import { useOverflowDimensions } from "../hooks/UseOverflowDimensions";
 
-export const DraggableList = ({setScrollLength, setListLength, profileTicks, children}) => {
-    const ourRef = useRef(null);
+interface DraggableListProps {
+    setScrollLength : Dispatch<SetStateAction<number>>;
+    setListLength : Dispatch<SetStateAction<number>>;
+    profileTicks : number;
+    children : ReactNode;
+}
+
+export default function DraggableList({setScrollLength, setListLength, profileTicks, children} : DraggableListProps) {
+    const sliderRef = useRef<HTMLUListElement>(null);
     const [isMouseDown, setIsMouseDown] = useState(false);
 
-    const { scrollWidth } = useOverflowDimensions(ourRef)
+    const { scrollWidth } = useOverflowDimensions(sliderRef)
 
     const [resetLoop, setResetLoop] = useState(false)
 
@@ -22,9 +29,12 @@ export const DraggableList = ({setScrollLength, setListLength, profileTicks, chi
     }, [scrollWidth])
 
     useEffect(() => {
-        ourRef.current.scrollLeft = scrollWidth * 0.25
-        if (isMouseDown) {
-            setResetLoop(true)
+        const current = sliderRef.current
+        if (current) {
+            current.scrollLeft = scrollWidth * 0.25
+            if (isMouseDown) {
+                setResetLoop(true)
+            }
         }
     }, [profileTicks])
 
@@ -38,26 +48,26 @@ export const DraggableList = ({setScrollLength, setListLength, profileTicks, chi
     //     return () => clearInterval(id)
     // })
 
-    const handleDragStart = (e) => {
-        if (!ourRef.current) return
-        const slider = ourRef.current;
+    const handleDragStart = (e : React.MouseEvent<HTMLUListElement>) => {
+        if (!sliderRef.current) return
+        const slider = sliderRef.current;
         const startX = e.pageX - slider.offsetLeft;
         const scrollLeft = slider.scrollLeft;
         mouseCoords.current = { startX, scrollLeft }
         setIsMouseDown(true)
         document.body.style.cursor = "grabbing"
     }
-    const handleDragEnd = (e) => {
+    const handleDragEnd = (e : React.MouseEvent<HTMLUListElement>) => {
         e.stopPropagation()
         setIsMouseDown(false)
-        if (!ourRef.current) return
+        if (!sliderRef.current) return
         document.body.style.cursor = "default"
     }
-    const handleDrag = (e) => {
-        if (!isMouseDown || !ourRef.current) return;
+    const handleDrag = (e : React.MouseEvent<HTMLUListElement>) => {
+        if (!isMouseDown || !sliderRef.current) return;
         e.preventDefault();
 
-        const slider = ourRef.current;
+        const slider = sliderRef.current;
         const x = e.pageX - slider.offsetLeft;
         if (resetLoop) {
             mouseCoords.current = { startX: x, scrollLeft: slider.scrollLeft}
@@ -70,13 +80,13 @@ export const DraggableList = ({setScrollLength, setListLength, profileTicks, chi
     }
 
     const updateScroll = () => {
-        if (!ourRef.current) return
-        setScrollLength(ourRef.current.scrollLeft)
+        if (!sliderRef.current) return
+        setScrollLength(sliderRef.current.scrollLeft)
     }
   
     return (
         <ul 
-        ref={ourRef} 
+        ref={sliderRef} 
         onMouseDown={handleDragStart} 
         onMouseUp={handleDragEnd} 
         onMouseMove={handleDrag} 

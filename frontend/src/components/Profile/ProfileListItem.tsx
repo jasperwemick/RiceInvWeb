@@ -1,0 +1,21 @@
+import { CSSProperties } from "react";
+import { Profile } from "../../data/types"
+
+interface ProfileListItemProps {
+    profile : Profile;
+    width : number;
+    height : number;
+    clickAction : () => void;
+    styleOptions : CSSProperties | undefined
+}
+
+export default function ProfileListItem({profile, width=200, height=200, clickAction=(() => {}), styleOptions=undefined} : ProfileListItemProps) {
+    return (
+        <li>
+            <div onDoubleClick={() => clickAction ? clickAction(): null} style={styleOptions}>
+                <img src={profile.imageURL} width={width} height={height} alt="Player Profile" draggable={`false`}></img>
+                <p>{profile.name}</p>
+            </div>
+        </li>
+    )
+};

@@ -1,0 +1,9 @@
+{
+    "extends": "@tsconfig/create-react-app/tsconfig.json",
+
+    "compilerOptions": {
+        "preserveConstEnums": true
+    },
+    "include": ["src/**/*"],
+    "exclude": ["node_modules", "build", "**/*.spec.ts"]
+}

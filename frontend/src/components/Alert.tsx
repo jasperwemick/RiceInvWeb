@@ -3,12 +3,11 @@ import useAuth from "../hooks/userAuth";
 import useAlert from "../hooks/useAlert"
 import '../style/alert.css'
 
-export const Alert = () => {
+export default function Alert() {
 
     const { alert, setAlert } = useAlert()
 
-    const timerId = useRef(null);
-
+    const timerId = useRef(0);
     const alertDuration = 3000
 
     useEffect(() => {
@@ -32,7 +31,7 @@ export const Alert = () => {
     }, [alert])
 
     return (
-        <div className="alert-popup-window" style={alert.active ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
+        <div className="alert-popup-window" style={alert.active ? {} : {visibility: 'hidden', pointerEvents: 'none'}}>
             <p>{alert.message}</p>
         </div>
     )

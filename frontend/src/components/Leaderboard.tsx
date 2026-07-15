@@ -1,27 +1,33 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link } from "wouter"
 import "../style/scoreboard.css"
-import ProfileContext from "./Profile/context/ProfileContextProvider";
 import useProfiles from "./Profile/hooks/useProfiles";
+import { Profile } from "../data/types";
 
-const LeaderboardRow = ({profile}) => (
-    <tr className="leaderboard-row">
-        <td><Link to={`/${profile._id}`}>{profile.name}</Link></td>
-        <td><span>{profile.ricePoints}</span></td>
-        <td><Link to={`/brawl/${profile._id}`}>{profile.brawlPoints}</Link></td>
-        <td><Link to={`/league/${profile._id}`}>{profile.leaguePoints}</Link></td>
-        <td><span>{profile.valPoints}</span></td>
-        <td><span>{profile.bullPoints}</span></td>
-        <td><span>{profile.rocketPoints}</span></td>
-        <td><span>{profile.mysteryPoints}</span></td>
-        <td><span>{profile.counterPoints}</span></td>
-        <td><span>{profile.bonusPoints}</span></td>
-    </tr>
-);
+interface LearderboardRowProps {
+    profile : Profile;
+}
+
+function LeaderboardRow({ profile } : LearderboardRowProps) {
+    return (
+        <tr className="leaderboard-row">
+            <td><Link to={`/${profile._id}`}>{profile.name}</Link></td>
+            <td><span>{profile.ricePoints}</span></td>
+            <td><Link to={`/brawl/${profile._id}`}>{profile.brawlPoints}</Link></td>
+            <td><Link to={`/league/${profile._id}`}>{profile.leaguePoints}</Link></td>
+            <td><span>{profile.valPoints}</span></td>
+            <td><span>{profile.bullPoints}</span></td>
+            <td><span>{profile.rocketPoints}</span></td>
+            <td><span>{profile.mysteryPoints}</span></td>
+            <td><span>{profile.counterPoints}</span></td>
+            <td><span>{profile.bonusPoints}</span></td>
+        </tr>
+    )
+};
 
 export default function Leaderboard() {
 
-    const { profiles, setProfiles } = useContext(ProfileContext)
+    const { profiles, setProfiles } = useProfiles()
 
     useProfiles()
  
