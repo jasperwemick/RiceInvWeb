@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef, useContext } from "react";
 import GetUrl from "../../GetUrl"
 import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
 import EventContext from "./context/EventContextProvider";
-import useAuth from "../../hooks/userAuth";
+import useAuth from "../../hooks/useAuth";
 
 
 const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent, clearEvent, auth}) => {

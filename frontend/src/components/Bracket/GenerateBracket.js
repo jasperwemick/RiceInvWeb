@@ -6,7 +6,7 @@ import GetUrl from "../../GetUrl"
 import { BracketSet } from "./BracketSet"
 import { GenerateBracketTree, getMaxDepth, treeToArray } from './Auxillery/tree'
 import { BracketSetEditor } from "./BracketSetEditor"
-import useAuth from '../../hooks/userAuth'
+import useAuth from '../../hooks/useAuth'
 
 export const GenerateBracket = ({type, numPlayers, format, gameTag}) => {
 

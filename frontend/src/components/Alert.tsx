@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import useAuth from "../hooks/userAuth";
+import useAuth from "../hooks/useAuth";
 import useAlert from "../hooks/useAlert"
 import '../style/alert.css'
 

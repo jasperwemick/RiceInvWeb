@@ -1,76 +1,73 @@
-export const NavItems = [
+export interface NavbarItem {
+    class : string;
+    pathTo : string;
+    text : string;
+    dropdownItems? : NavbarItem[];
+}
+
+
+export const NavbarItems : NavbarItem[] = [
     {
         class: 'nav-button',
-        path: `/`,
+        pathTo: `/`,
         text: 'Home',
-        dropdown: false,
-        dropItems: []
     },
     {
         class: 'nav-button',
-        path: '/score',
+        pathTo: '/score',
         text: 'Score',
-        dropdown: false,
-        dropItems: []
     },
     {
         class: 'nav-button',
-        path: '/schedule',
+        pathTo: '/schedule',
         text: 'Schedule',
-        dropdown: false,
-        dropItems: []
     },
     {
         class: 'nav-button',
-        path: '/brawl',
+        pathTo: '/brawl',
         text: 'Brawlhalla',
-        dropdown: false,
-        dropItems: []
     },
     {
         class: 'nav-button',
-        path: '/league',
+        pathTo: '/league',
         text: 'League of Legends',
-        dropdown: false,
-        dropItems: []
     },
     {
         class: 'nav-button',
-        path: '/blast',
+        pathTo: '/blast',
         text: 'Bull**** Blast',
-        dropdown: true,
-        dropItems: [
+        dropdownItems: [
             {
                 class: 'nav-drop-button',
-                path: '/blast/jeopardy',
+                pathTo: '/blast/jeopardy',
                 text: 'Jeopardy',
             },
             {
                 class: 'nav-drop-button',
-                path: '/blast/amongus',
+                pathTo: '/blast/amongus',
                 text: 'Among Us',
             },
         ]
     }
 ]
 
-export const LogItems = [
+export const LogItems : NavbarItem[] = [
     {
         class: 'nav-button',
-        path: '/login',
+        pathTo: '/login',
         text: 'Login'
     },
     {
         class: 'nav-button',
-        path: '/logout',
+        pathTo: '/logout',
         text: 'Logout'
     }
 ]
 
-export const AccountItems = [
+export const AccountItems : NavbarItem[] = [
     {
         class: 'nav-button',
-        path: '/account',
+        pathTo: '/account',
         text: 'Account'
     }
 ]

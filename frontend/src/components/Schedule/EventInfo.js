@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import { EventEditor } from "./EventEditor";
-import useAuth from "../../hooks/userAuth";
+import useAuth from "../../hooks/useAuth";
 import { EventSchedule } from "./EventSchedule";
 import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
 import EventContext from "./context/EventContextProvider";

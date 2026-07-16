@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import './style/account.css'
 import './style/login.css'
-import useAuth from "../hooks/userAuth";
+import useAuth from "../hooks/useAuth";
 import { useLocation, useNavigate } from "react-router-dom";
 import GetUrl from "../GetUrl";
 

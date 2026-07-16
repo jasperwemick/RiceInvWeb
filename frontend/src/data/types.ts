@@ -12,6 +12,12 @@ export interface GamerProfile {
     profileId : string;
 }
 
+export interface User {
+    username : string;
+    roles : string[];
+    profileId : string;
+}
+
 export enum colorsEnum {
     singles,
     duos,

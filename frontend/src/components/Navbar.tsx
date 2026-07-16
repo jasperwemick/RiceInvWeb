@@ -1,23 +1,26 @@
-import { NavItems, LogItems, AccountItems } from "./navbarItems"
+import { NavbarItems, LogItems, AccountItems, NavbarItem } from "./navbarItems"
 import React, { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
 import "./style/navbar.css"
-import useAuth from "../hooks/userAuth";
+import useAuth from "../hooks/useAuth";
 import GetUrl from "../GetUrl";
+import { Link } from "wouter";
 
+interface NavItemProps {
+    item : NavbarItem;
+}
 
-const NavItem = (props) => {
+function NavItem({ item } : NavItemProps) {
 
     const [dropdown, setDropdown] = useState(false);
 
     return (
-        <li key={props.item.text} className={`${props.item.class}`} onMouseLeave={() => {setDropdown(false)}}>
-            <Link to={props.item.path} className={`nav-button-link`} onMouseOver={() => {setDropdown(true)}}>{props.item.text}</Link>
-            <ul className={`nav-dropdown ${(dropdown && props.item.dropdown) ? '' : 'hidden'}`}>
-                {props.item.dropItems.map((drop, index) => {
+        <li key={item.text} className={`${item.class}`} onMouseLeave={() => {setDropdown(false)}}>
+            <Link to={item.pathTo} className={`nav-button-link`} onMouseOver={() => {setDropdown(true)}}>{item.text}</Link>
+            <ul className={`nav-dropdown ${(dropdown && item.dropdownItems) ? '' : 'hidden'}`}>
+                {item.dropdownItems?.map((drop, index) => {
                     return (
                         <li key={index} className={drop.class}>
-                            <Link to={drop.path}>{drop.text}</Link>
+                            <Link to={drop.pathTo}>{drop.text}</Link>
                         </li>
                     )
                 })}
@@ -40,10 +43,10 @@ export default function Navbar() {
                 })
                 const actualData = await responeAuth.json();
                 console.log(actualData.message)
-                const roles = actualData?.roles;
                 const user = actualData?.user;
+                const roles = actualData?.roles;
                 const profile = actualData?.profile;
-                setAuth({ user, roles, profile });
+                setAuth({ username : user, roles : roles, profileId : profile });
             }
             catch(e) {
                 const message = `Failed to Validate: ${e}`;
@@ -56,7 +59,7 @@ export default function Navbar() {
         return;
     }, [setAuth]);
 
-    const listItems = (obj) => {
+    const listItems = (obj : NavbarItem[]) => {
         return obj.map((item, index) => {
             return (
                 <NavItem
@@ -67,10 +70,10 @@ export default function Navbar() {
         })
     }
 
-    const item = (obj) => {
+    const item = (obj : NavbarItem) => {
         return (
             <li className={obj.class}>
-                <Link to={obj.path} className={`nav-button-link`}>{obj.text}</Link>
+                <Link to={obj.pathTo} className={`nav-button-link`}>{obj.text}</Link>
             </li>
         )
     }
@@ -78,9 +81,9 @@ export default function Navbar() {
     return (
         <nav className="navbar">
             <ul className="nav-items">
-                {listItems(NavItems)}
-                {auth?.user ? item(AccountItems[0]) : null}
-                {auth?.user ? item(LogItems[1]): item(LogItems[0]) }
+                {listItems(NavbarItems)}
+                {auth?.username ? item(AccountItems[0]) : null}
+                {auth?.username ? item(LogItems[1]): item(LogItems[0]) }
             </ul>
         </nav>
     )

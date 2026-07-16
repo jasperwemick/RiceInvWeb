@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import useAuth from "../../hooks/userAuth";
+import useAuth from "../../hooks/useAuth";
 import GetUrl from "../../GetUrl";
 import { TimeEntry } from "./TimeEntry";
 import { TimeInterval } from "./TimeInterval";

@@ -1,13 +1,12 @@
 import { useEffect } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import useAuth from "../hooks/userAuth";
+import useAuth from "../hooks/useAuth";
 import GetUrl from "../GetUrl";
+import { useLocation } from "wouter";
 
 export default function Logout() {
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || '/';
+    const [location, navigate] = useLocation();
+
     const { setAuth } = useAuth();
 
     useEffect(() => {
@@ -16,8 +15,8 @@ export default function Logout() {
                 credentials: "include",
             })
             await response.json();
-            setAuth({})
-            navigate(from, {replace: true});
+            setAuth(null)
+            navigate("/", {replace: true});
         }
 
         log();

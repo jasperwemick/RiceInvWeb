@@ -1,8 +1,10 @@
-import { useNavigate, useLocation } from "react-router-dom";
-import useAuth from "../hooks/userAuth";
+import useAuth from "../hooks/useAuth";
 import { useRef, useState, useEffect } from 'react';
 import GetUrl from "../GetUrl";
-import './style/login.css'
+import { useLocation } from "wouter";
+import './style/login.css';
+import apiFetch from "../fetch";
+import { User } from "../data/types";
 
 export const Login = () => {
 
@@ -11,23 +13,21 @@ export const Login = () => {
     const [errMessage, setErrMessage] = useState("");
 
     const { setAuth } = useAuth();
+ 
+    const [location, navigate] = useLocation();
 
-    const navigate = useNavigate();
-    const location = useLocation();
-    const from = location.state?.from?.pathname || '/';
-
-    const userRef = useRef();
-    const errRef = useRef();
+    const userRef = useRef<HTMLInputElement>(null);
+    const errRef = useRef<HTMLParagraphElement>(null);
 
     useEffect(() => {
-        userRef.current.focus();
+        userRef.current?.focus();
     }, [])
 
     useEffect(() => {
         setErrMessage('');
     }, [user, pass])
 
-    const onSubmit = async (e) => {
+    const onSubmit = async (e : React.FormEvent) => {
         e.preventDefault();
 
         const loginData = new FormData();
@@ -42,31 +42,28 @@ export const Login = () => {
             });
             const data = await response.json();  
             console.log(data.message);
-            const responeAgain = await fetch(`${GetUrl}/auth/user`, {
-                credentials: 'include'
-            })
-            const actualData = await responeAgain.json();
-            if (actualData.user) {
-                const validUser = actualData?.user;
+            const actualData = await apiFetch<User>(`${GetUrl}/auth/user`, { credentials: 'include' })
+            if (actualData.username) {
+                const validUser = actualData?.username;
                 const roles = actualData?.roles;
-                const profile = actualData?.profile;
-                setAuth({ user: validUser, roles, profile });
+                const profile = actualData?.profileId;
+                setAuth({ username: validUser, roles: roles, profileId: profile });
 
-                navigate(from, { replace: true});
+                navigate('/', { replace: true});
             }
 
             setUser('');
             setPass('');
             
         }
-        catch(e) {
-            if (!e?.response) {
-                setErrMessage('No Server Response', e);
+        catch(e : unknown) {
+            if (e instanceof Error) {
+                setErrMessage(`Bad Login Credentials ${e.message}`);
             }
             else {
-                setErrMessage('Bad Login Credentials', e);
+                setErrMessage(`No Server Response, ${String(e)}`);
             }
-            errRef.current.focus();
+            errRef.current?.focus();
         }
     }
 
