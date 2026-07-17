@@ -1,5 +1,6 @@
 import Set from '../models/setModel';
 import { Request, Response } from "express";
+import { setsSchema } from '../types/validation';
 
 export const getBracketSets = async (req : Request, res : Response) => {
     const tag = req.params.tag
@@ -60,13 +61,18 @@ export const upsertOneBracketSet = async (req : Request, res : Response) => {
     }
 }
 
+
 export const upsertManyBracketSets = async (req : Request, res : Response) => {
     const tag = req.params.tag
-
     const options = {upsert: true, new: true, setDefaultsOnInsert: true};
-    console.log(req.body)
+
     try {
-        req.body.forEach( async (set) => {
+        const parsedBody = setsSchema.safeParse(req.body);
+        if (!parsedBody.success) {
+            return res.status(400).json({ error: parsedBody.error.flatten() });
+        }
+        
+        parsedBody.data.forEach( async (set) => {
             try {
                 if (set) {
                     await Set.findOne({gameTag: tag, setID: set.setID}).then(

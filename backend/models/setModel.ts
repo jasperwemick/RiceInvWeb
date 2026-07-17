@@ -1,8 +1,21 @@
-import mongoose from "mongoose";
+import mongoose, { Document } from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const setSchema = new Schema({
+export interface setDoc extends Document {
+    setID : number;
+    gameTag : string;
+    upperSeedProfiles : mongoose.Schema.Types.ObjectId[];
+    upperSeedWins : number;
+    lowerSeedProfiles : mongoose.Schema.Types.ObjectId[];
+    lowerSeedWins : number;
+    bestOf : number;
+    parents : string[];
+    lowerSetID : number;
+    nextSetID : number;
+}
+
+const setSchema = new Schema<setDoc>({
     setID: {
         type: Number,
         required: true
