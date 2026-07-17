@@ -1,0 +1,9 @@
+{
+    "extends": "@tsconfig/node22/tsconfig.json",
+
+    "compilerOptions": {
+        "preserveConstEnums": true
+    },
+    "include": ["server.ts", "controllers/*", "middleware/*", "models/*", "routers/*", "types/*"],
+    "exclude": ["node_modules", "build", "**/*.spec.ts"]
+}

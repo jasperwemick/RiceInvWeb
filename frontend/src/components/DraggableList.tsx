@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, Dispatch, SetStateAction, ReactNode } from "react";
 import './Profile/style/profile.css'
-import { useOverflowDimensions } from "../hooks/UseOverflowDimensions";
+import { useOverflowDimensions } from "../hooks/useOverflowDimensions";
 
 interface DraggableListProps {
     setScrollLength : Dispatch<SetStateAction<number>>;
