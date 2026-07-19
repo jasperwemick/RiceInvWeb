@@ -2,20 +2,18 @@ import mongoose, { Document } from "mongoose";
 
 const Schema = mongoose.Schema;
 
-export interface setDoc extends Document {
+export interface SetDoc extends Document {
     setID : number;
     gameTag : string;
-    upperSeedProfiles : mongoose.Schema.Types.ObjectId[];
-    upperSeedWins : number;
-    lowerSeedProfiles : mongoose.Schema.Types.ObjectId[];
-    lowerSeedWins : number;
+    matches : mongoose.Schema.Types.ObjectId[];
     bestOf : number;
+    bracket : boolean;
     parents : string[];
     lowerSetID : number;
     nextSetID : number;
 }
 
-const setSchema = new Schema<setDoc>({
+const setSchema = new Schema<SetDoc>({
     setID: {
         type: Number,
         required: true
@@ -24,27 +22,18 @@ const setSchema = new Schema<setDoc>({
         type: String,
         required: true
     },
-    upperSeedProfiles: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Profile',
+    matches : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref: 'Match',
         required: true
     }],
-    upperSeedWins: {
-        type: Number,
-        required: true,
-    },
-    lowerSeedProfiles: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Profile',
-        required: true
-    }],
-    lowerSeedWins: {
-        type: Number,
-        required: true,
-    },
     bestOf: {
         type: Number,
         required: true,
+    },
+    bracket : {
+        type : Boolean,
+        required : true,
     },
     parents: [{
         type: String
@@ -58,9 +47,5 @@ const setSchema = new Schema<setDoc>({
 
 }, { timestamps: false });
 
-
-setSchema.post('findOneAndUpdate', async function(doc, next) {
-
-});
 
 export default mongoose.model('Set', setSchema)

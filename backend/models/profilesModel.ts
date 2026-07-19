@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 interface ProfileDoc extends Document{
     name : string;
     user : string;
-    gamertag : string;
+    aliases : string[];
     description : string;
     imageName : string;
     imageUrl : string;
@@ -20,10 +20,10 @@ const ProfileSchema = new Schema<ProfileDoc>({
         type: String,
         required: true
     },
-    gamertag: {
+    aliases: [{
         type: String,
         required: true
-    },
+    }],
     description: {
         type: String,
         required: true

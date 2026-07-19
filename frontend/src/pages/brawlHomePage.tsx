@@ -30,9 +30,9 @@ export default function BrawlHomePage() {
                         return 1;
                     }
                     return 0;
-                } 
+                };
                 
-                const brawl = await apiFetch(`${GetUrl}/api/profiles/brawl`)
+                const brawl = await apiFetch<>(`${GetUrl}/api/profiles/brawl`)
                 
                 const onevone = brawl.map((item) => {
                     const { playerID, onesPlacing } = item;

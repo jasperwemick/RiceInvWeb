@@ -1,35 +1,28 @@
-import React from "react";
+import { SetSchema } from "../../data/types"
 
-
-export const GroupSet = (props) => {
-    // const [group, setGroup] = useState(false)
-
-    // const toggle = () => {
-    // }
+export function GroupSet({ set }) {
 
     return (
         <tr className="group-row">
-            <td>{props.set.winnerStats.names.join('/')}</td>
-            <td>{props.set.winnerStats.matchesWon} - {props.set.loserStats.matchesWon}</td>
-            <td>{props.set.loserStats.names.join('/')}</td>
+            <td>{set.winnerStats.names.join('/')}</td>
+            <td>{set.winnerStats.matchesWon} - {set.loserStats.matchesWon}</td>
+            <td>{set.loserStats.names.join('/')}</td>
         </tr>
     )
 };
 
-export const GroupTable = (props) => {
+export const GroupTable = ({ groupName, listFunc }) => {
     return (
         <div>
-            <span>{props.groupName}</span>
+            <span>{groupName}</span>
             <table className="group-table">
-                <tbody>{props.listFunc}</tbody>
+                <tbody>{listFunc}</tbody>
             </table>
         </div>
     )
 }
 
-export const BracketSet = (props) => {
-
-    // clean this later
+export const BracketSet = ({ set }) => {
     const organize = (wStats, lStats) => {
 
         const valueW = wStats.prevSet ? wStats.prevSet.setNumber : -1;
@@ -54,7 +47,7 @@ export const BracketSet = (props) => {
     }
     return (
         <div className="matchup-block">
-            {organize(props.set.winnerStats, props.set.loserStats)}
+            {organize(set.winnerStats, set.loserStats)}
         </div>
     )
 }

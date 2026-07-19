@@ -6,7 +6,7 @@ export const getBracketSets = async (req : Request, res : Response) => {
     const tag = req.params.tag
 
     try {
-        const sets = await Set.find({gameTag: tag}).populate('upperSeedProfiles').populate('lowerSeedProfiles').exec()
+        const sets = await Set.find({gameTag: tag}).populate('matches').populate('lowerSeedProfiles').exec()
         res.json(sets)
     }
     catch(e) {

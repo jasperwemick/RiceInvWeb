@@ -18,30 +18,20 @@ export interface User {
     profileId : string;
 }
 
-export enum colorsEnum {
-    singles,
-    duos,
-    triples,
-    five,
-    other
-}
-
 export interface Game {
     _id : string;
     name : string;
-
 }
 
 export interface GameMode {
     _id : string;
     gameId : string;
-    mode : colorsEnum;
+    mode : 'singles' | 'duos' | 'triples' | 'five' | 'other';
 }
-
 
 export interface GameStats {
     player : string;
-    gameModeId : string;
+    gameMode : GameMode;
     matchWins : number;
     matchLoses : number;
     setWins : number;
@@ -49,4 +39,19 @@ export interface GameStats {
     placing : number;
     rating : () => number;
     final : () => number;
+}
+
+export interface SetSchema {
+    setID : number;
+    gameTag : string;
+    upperSeedIds : number[];
+    upperSeedProfiles : Profile[];
+    upperSeedWins : number;
+    lowerSeedIds : number[];
+    lowerSeedProfiles : Profile[];
+    lowerSeedWins : number;
+    bestOf : number;
+    parents : string[];
+    lowerSetID : number;
+    nextSetID : number;
 }

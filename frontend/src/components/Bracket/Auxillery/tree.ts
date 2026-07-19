@@ -1,5 +1,13 @@
-const BracketNode = (val, lev, par, buddy) => {
+interface BracketNode {
+    value : number;
+    level : number;
+    parent : BracketNode | null;
+    left : BracketNode | null;
+    right : BracketNode | null;
+    buddy : BracketNode | null;
+}
 
+function CreateBracketNode(val : number, lev : number, par : BracketNode | null, buddy : BracketNode | null): BracketNode {
     return {
         value: val, 
         level: lev, 
@@ -10,8 +18,7 @@ const BracketNode = (val, lev, par, buddy) => {
     }
 }
 
-export const GenerateBracketTree = (type, numPlayers, format) => {
-
+export function GenerateBracketTree(type : string, numPlayers : number, format : string) {
     // format === 'full'
     let numUpperSets = numPlayers - 1 
     let numLowerSets = (type === 'Double') ? ((numPlayers - 1)) : 0
@@ -22,31 +29,35 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
 
     const numSets = numUpperSets + numLowerSets
 
-    const nearestPowerOf2 = (n) => {
+    const nearestPowerOf2 = (n : number) => {
         return 1 << 31 - Math.clz32(n);
     }
 
-    const insertNode = (temp, key, fullBound, tech, data) => {
+    const insertNode = (temp : BracketNode, key : number, fullBound : number, tech : string, data : BracketNode[]) => {
 
-        let q = [];
+        let q : BracketNode[] = [];
         q.push(temp);
 
         while (q.length > 0) {
 
-            temp = q.shift();
+            let front : BracketNode | undefined = q.shift();
+            if (!front) { break; }
+            temp = front
 
             if (temp.left == null) {
-                
-                temp.left = BracketNode(key, temp.level + 1, temp, data ? data.shift() : null);
-                
+                let newBuddy : BracketNode | undefined = data.shift()
+                temp.left = CreateBracketNode(key, temp.level + 1, temp, newBuddy ? newBuddy : null);
                 break;
+
             } else {
                 // Look through the level of temp to find other tree sibling which lack a left child to maintain balance
                 if (q.find(({ level, left }) => level === temp.level && left === null)) {
                     // The idea here is to shuffle the queue forwards until reaching a midpoint in the bracket level to achieve balance
                     const levels = q.filter(({ level }) => level === temp.level)
                     for (let i = 0; i < Math.floor(levels.length / 2); i++) {
-                        q.push(q.shift());
+                        let pushItem : BracketNode | undefined = q.shift();
+                        if (!pushItem) { break; }
+                        q.push(pushItem);
                     }
                     q.push(temp)
                     continue
@@ -61,7 +72,8 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
             }
             else {
                 if (temp.right == null) {
-                    temp.right = BracketNode(key, temp.level + 1, temp, data ? data.shift() : null);
+                    let newBuddy : BracketNode | undefined = data.shift()
+                    temp.right = CreateBracketNode(key, temp.level + 1, temp, newBuddy ? newBuddy : null);
                     break;
                 } else {
                     q.push(temp.right);
@@ -70,13 +82,11 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
         }
     }
 
-    const getOpenNodes = (temp) => {
+    const getOpenNodes = (temp : BracketNode) => {
 
         // THIS DOES NOT WORK IF BRACKET DEPTH IS GREATER THAN 10, LAZY SOLUTION FOR NOW
-        var openNodes = Array(10).fill().map(()=>Array())
-
-        console.log(openNodes)
-
+        var openNodes : BracketNode[][] = Array.from({ length: 10 }, () => Array());
+        
         let origin = {...temp}
 
         if (temp) {
@@ -86,7 +96,10 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
     
             while (q.length > 0) {
     
-                temp = q.shift();
+                let front : BracketNode | undefined = q.shift();
+                if (!front) { break; }
+                temp = front
+
                 if (temp.right !== null) {
                     q.push(temp.right);
                 } 
@@ -103,7 +116,9 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
 
             while (q.length > 0) {
 
-                temp = q.shift();
+                let front : BracketNode | undefined = q.shift();
+                if (!front) { break; }
+                temp = front
 
                 if (temp.left !== null) {
                     q.push(temp.left)
@@ -124,27 +139,27 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
 
     if (!numLowerSets) {
 
-        var upperFinals = BracketNode(0, 0, null, null)
+        var upperFinals = CreateBracketNode(0, 0, null, null)
         
         for (let i = 1; i < numUpperSets; i++) {
-            insertNode(upperFinals, i, nearestPowerOf2(numPlayers) - 1, 'U', null)
+            insertNode(upperFinals, i, nearestPowerOf2(numPlayers) - 1, 'U', [])
         }
         return upperFinals
     }
     else {
 
-        let bracketReset = BracketNode(2, -1, null, null)
+        let bracketReset = CreateBracketNode(2, -1, null, null)
 
-        let grandFinals = BracketNode(0, 0, bracketReset, bracketReset)
+        let grandFinals = CreateBracketNode(0, 0, bracketReset, bracketReset)
 
         bracketReset.right = grandFinals
 
-        const rightNode = BracketNode(numUpperSets + 2, 1, grandFinals, null) //Lower Final
+        const rightNode = CreateBracketNode(numUpperSets + 2, 1, grandFinals, null) //Lower Final
         grandFinals.right = rightNode
 
         // Lower Bracket
         for (let i = numUpperSets + 3; i <= numSets; i++) {
-            insertNode(grandFinals.right, i, nearestPowerOf2(numPlayers) * 2, 'L', null)
+            insertNode(grandFinals.right, i, nearestPowerOf2(numPlayers) * 2, 'L', [])
         }
 
         // Gets an ordered list of lower bracket set nodes that are open to upper bracket contenders to fall to
@@ -152,20 +167,22 @@ export const GenerateBracketTree = (type, numPlayers, format) => {
         data.forEach((openNode) => {
             console.log(openNode)
         })
-        grandFinals.left = BracketNode(1, 2, grandFinals, data.shift())
+        let dataFront : BracketNode | undefined = data.shift();
+        if (dataFront) {
+            grandFinals.left = CreateBracketNode(1, 2, grandFinals, dataFront)
 
-        // Upper Bracket
-        for (let i = 3; i <= numUpperSets + 1; i++) {
-            insertNode(grandFinals.left, i, nearestPowerOf2(numPlayers), 'U', data)
+            // Upper Bracket
+            for (let i = 3; i <= numUpperSets + 1; i++) {
+                insertNode(grandFinals.left, i, nearestPowerOf2(numPlayers), 'U', data)
+            }
         }
-
 
         console.log(grandFinals)
         return grandFinals
     }
 }
 
-const traverse = (node) => {
+function traverse(node : BracketNode | null): void {
     if (node) {
         console.log(`${node.value} : ${node.level}`)
         traverse(node.left)
@@ -173,7 +190,7 @@ const traverse = (node) => {
     }
 }
 
-export const getMaxDepth = (node) => {
+export function getMaxDepth(node : BracketNode | null): number {
     if (node == null)
         return 0;
     else {
@@ -187,9 +204,9 @@ export const getMaxDepth = (node) => {
     }
 }
 
-export const treeToArray = (node, maxDepth) => {
+export const treeToArray = (node : BracketNode, maxDepth : number) => {
 
-    let treeMap = Array(maxDepth + 1).fill().map(() => [].fill())
+    var treeMap : BracketNode[][] = Array.from({ length : maxDepth + 1 }, () => []);
 
     if (node && maxDepth > 1) {
         var q = [];
@@ -198,7 +215,9 @@ export const treeToArray = (node, maxDepth) => {
 
         while (q.length > 0) {
 
-            const temp = q.shift();
+            let front : BracketNode | undefined = q.shift();
+            if (!front) { break; }
+            const temp : BracketNode = front
 
             if (temp.left !== null) {
                 q.push(temp.left);
