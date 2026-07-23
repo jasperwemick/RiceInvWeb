@@ -3,12 +3,12 @@ import { MatchDoc } from "./matchModel";
 
 const Schema = mongoose.Schema;
 
-interface matchValorantDoc extends MatchDoc {
+interface MatchValorantDoc extends MatchDoc {
     map : 'Split' | 'Bind' | 'Haven' | 'Ascent' | 'Pearl' | 'Sunset' | 'Lotus' | 'Corrode' | 'Icebox' | 'Fracture' | 'Abyss' | 'Breeze' | 'Summit'
     version : string
 }
 
-const matchValorantSchema = new Schema<matchValorantDoc>({
+const matchValorantSchema = new Schema<MatchValorantDoc>({
     map: {
         type: String,
         required: true
@@ -18,4 +18,4 @@ const matchValorantSchema = new Schema<matchValorantDoc>({
     }
 }, { timestamps: false });
 
-export default mongoose.model('ValorantMatch', matchValorantSchema)
+export default mongoose.model<MatchValorantDoc>('ValorantMatch', matchValorantSchema)

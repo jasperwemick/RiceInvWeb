@@ -41,16 +41,11 @@ export interface GameStats {
     final : () => number;
 }
 
-export interface SetSchema {
-    setID : number;
-    gameTag : string;
-    upperSeedIds : number[];
-    upperSeedProfiles : Profile[];
-    upperSeedWins : number;
-    lowerSeedIds : number[];
-    lowerSeedProfiles : Profile[];
-    lowerSeedWins : number;
+export interface TournamentSet {
+    setId : number;
+    tournament : string;
     bestOf : number;
+    bracket : boolean;
     parents : string[];
     lowerSetID : number;
     nextSetID : number;

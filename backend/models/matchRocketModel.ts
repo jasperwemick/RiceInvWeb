@@ -3,15 +3,15 @@ import { MatchDoc } from "./matchModel";
 
 const Schema = mongoose.Schema;
 
-interface matchRocketDoc extends MatchDoc {
+interface MatchRocketDoc extends MatchDoc {
     map : string;
 }
 
-const matchRocketSchema = new Schema<matchRocketDoc>({
+const matchRocketSchema = new Schema<MatchRocketDoc>({
     map: {
         type: String,
         required: true
     }
 }, { timestamps: false });
 
-export default mongoose.model('RocketMatch', matchRocketSchema)
+export default mongoose.model<MatchRocketDoc>('RocketMatch', matchRocketSchema)

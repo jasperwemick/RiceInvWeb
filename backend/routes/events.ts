@@ -1,4 +1,4 @@
-const express = require('express')
+import express from 'express';
 import { Verify, VerifyRole } from '../middleware/verify';
 
 // const multer = require('multer')

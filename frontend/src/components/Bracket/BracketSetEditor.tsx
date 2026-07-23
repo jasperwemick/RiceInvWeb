@@ -3,7 +3,11 @@ import GetUrl from "../../GetUrl"
 import { ProfileList } from "../Profile/ProfileList"
 import { SelectableProfile } from "../Profile/SelectableProfile"
 
-export const BracketSetEditor = ({editorData, setEditorData, toggleEditor, setToggleEditor, allSets}) => {
+interface BracketSetEditorProps {
+
+}
+
+export const BracketSetEditor = ({editorData, setEditorData, toggleEditor, setToggleEditor, allSets} : BracketSetEditorProps) => {
 
     const [seedSelect, setSeedSelect] = useState('upper')
     const scrollRef = useRef(null);
@@ -39,7 +43,7 @@ export const BracketSetEditor = ({editorData, setEditorData, toggleEditor, setTo
         })
     }
 
-    const onSubmit = (e) => {
+    const onSubmit = (e : React.FormEvent) => {
 
         e.preventDefault()
 
@@ -62,7 +66,7 @@ export const BracketSetEditor = ({editorData, setEditorData, toggleEditor, setTo
 
         }
 
-        const progressBracket = (seed) => {
+        const progressBracket = (seed : string) => {
 
             let nextSetData = null
             const nextSetNode = allSets.find(({ value }) => value === editorData.nextSetID)

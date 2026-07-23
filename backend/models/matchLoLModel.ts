@@ -14,4 +14,4 @@ const matchLoLSchema = new Schema<MatchLoLDoc>({
     }
 }, { timestamps: false })
 
-export default mongoose.model('LeagueMatch', matchLoLSchema)
+export default mongoose.model<MatchLoLDoc>('LoLMatch', matchLoLSchema)

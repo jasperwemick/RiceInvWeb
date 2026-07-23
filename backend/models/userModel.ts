@@ -13,6 +13,7 @@ export interface UserDoc extends Document {
     roles : string[];
     active : boolean;
     profile : mongoose.Schema.Types.ObjectId;
+    generateAccessJWT() : string;
 }
 
 const userSchema = new Schema<UserDoc>({
@@ -35,8 +36,7 @@ const userSchema = new Schema<UserDoc>({
     profile: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Profile',
-    },
-
+    }
 });
 
 userSchema.pre("save", function (next){
@@ -78,7 +78,7 @@ userSchema.pre('findOneAndUpdate', async function (next){
     });
 });
 
-userSchema.methods.generateAccessJWT = function () {
+userSchema.methods.generateAccessJWT = function (this : UserDoc) : string {
     let payload = {
         id: this._id
     };

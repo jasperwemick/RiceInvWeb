@@ -1,4 +1,4 @@
-interface BracketNode {
+export interface BracketNode {
     value : number;
     level : number;
     parent : BracketNode | null;

@@ -2,22 +2,22 @@ import { configDotenv } from "dotenv";
 
 configDotenv()
 
-const express = require('express')
-const bcrypt = require('bcrypt')
+import express, { CookieOptions, Request, Response } from "express";
+import bcrypt from "bcrypt";
 
 const router = express.Router()
-const multer = require('multer')
 
-const User = require('../models/userModel')
-const Blacklist = require('../models/blacklistModel')
+import multer from "multer";
+import User, { UserDoc } from '../models/userModel';
+import Blacklist from '../models/blacklistModel';
 
 const storage = multer.memoryStorage()
 const upload = multer({ storage: storage})
 
-const { Verify, VerifyRole } = require('../middleware/verify')
+import { Verify, VerifyRole } from '../middleware/verify'
 
 router.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Credentials', true);
+    res.setHeader('Access-Control-Allow-Credentials', 'true');
     res.setHeader('Access-Control-Allow-Headers', ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'].join(', '));
     res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
     res.setHeader('Access-Control-Allow-Method', ['POST', 'GET', 'DELETE', 'OPTIONS'].join(', '));
@@ -27,7 +27,7 @@ router.use(function(req, res, next) {
 router.post("/login", upload.none(), async (req, res) => {
     const { username } = req.body;
     try {
-        const user = await User.findOne({ username }).select('+password');
+        const user = await User.findOne<UserDoc>({ username }).select('+password');
         if (!user) {
             res.status(401).json({
                 status: 'failed',
@@ -50,11 +50,11 @@ router.post("/login", upload.none(), async (req, res) => {
             return;
         }
 
-        let options = {
+        let options : CookieOptions = {
             maxAge: 300 * 60 * 1000,
             httpOnly: true,
             secure: true,
-            sameSite: "None",
+            sameSite: "none",
         }
         const token = user.generateAccessJWT();
         res.cookie("accessToken", token, options);
@@ -74,13 +74,13 @@ router.post("/login", upload.none(), async (req, res) => {
     res.end();
 });
 
-router.get('/user', Verify, (req, res) => {
+router.get('/user', Verify, (req : Request, res : Response) => {
     res.status(200).json({
         status: 'success',
         message: 'Session Verified',
-        roles: req.user.roles,
-        user: req.user.username,
-        profile: req.user.profile
+        roles: req.user?.roles,
+        user: req.user?.username,
+        profile: req.user?.profile
     })
 })
 
@@ -109,11 +109,11 @@ router.get('/logout', async (req, res) => {
 
         await post.save();
 
-        let options = {
+        let options : CookieOptions = {
             path: '/',
             httpOnly: true,
             secure: true,
-            sameSite: "None",
+            sameSite: "none",
         }
         res.clearCookie("accessToken", options)
         res.status(200).json({
@@ -196,7 +196,6 @@ router.put("/password/reset", upload.none(), Verify, async (req, res) => {
         
         res.status(200).json({
             status: 'success',
-            data: result,
             message: 'Password Update Successful'
         });
     }

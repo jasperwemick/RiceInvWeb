@@ -13,7 +13,6 @@ export const getUserMonthTimeEntries = async (req : Request, res : Response) => 
     catch(e) {
         console.log('Error at GET /time/:user/:year/:month')
     }
-
 }
 
 export const getMonthTimeEntriesWithBorderEntries = async (req : Request, res : Response) => {
@@ -40,7 +39,6 @@ export const getMonthTimeEntriesWithBorderEntries = async (req : Request, res : 
     catch(e) {
         console.log('Error at GET /time/:user/:year/:month')
     }
-
 }
 
 export const getUserTimeDateEntry = async (req : Request, res : Response) => {

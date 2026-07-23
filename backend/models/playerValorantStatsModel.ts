@@ -66,4 +66,4 @@ const playerValorantStatsSchema = new Schema<PlayerValorantStatsDoc>({
 
 playerValorantStatsSchema.add(playerStatsSchema);
 
-export default mongoose.model('PlayerValorantStats', playerValorantStatsSchema)
+export default mongoose.model<PlayerValorantStatsDoc>('PlayerValorantStats', playerValorantStatsSchema)

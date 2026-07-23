@@ -6,16 +6,17 @@ import cookieParser from "cookie-parser";
 import { configDotenv } from "dotenv";
 
 import authRoutes from "./routes/auth";
-const profileRoutes = require('./routes/profiles')
-const gameRoutes = require('./routes/games')
-const eventRoutes = require('./routes/events')
+import profileRoutes from './routes/profiles';
+import gameRoutes from './routes/tournaments';
+import eventRoutes from './routes/events';
+import tournamentRoutes from './routes/tournaments';
 
 configDotenv()
 
 // express app 
 const app = express();
 
-if (process.env.NODE_ENV === "development"){
+if (process.env.NODE_ENV === "development") {
     app.use(
         cors({
             origin: "http://localhost:3000",
@@ -24,10 +25,10 @@ if (process.env.NODE_ENV === "development"){
     );
 }
 
-if (process.env.NODE_ENV === "production"){
+if (process.env.NODE_ENV === "production") {
     app.use(
         cors({
-            origin: "https://rice.riceinvitational.org",
+            origin: "https://www.riceinvitational.org",
             credentials: true,
         })
     );
@@ -49,6 +50,7 @@ app.use('/auth', authRoutes)
 app.use('/api/profiles', profileRoutes)
 app.use('/api/games', gameRoutes)
 app.use('/api/events', eventRoutes)
+app.use('/api/tournament', tournamentRoutes)
 
 const httpServer = createServer(app);
 

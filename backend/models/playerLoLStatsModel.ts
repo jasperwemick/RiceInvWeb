@@ -54,4 +54,4 @@ const playerLoLStatsSchema = new Schema<PlayerLoLStatsDoc>({
 
 playerLoLStatsSchema.add(playerStatsSchema);
 
-export default mongoose.model('PlayerLoLStats', playerLoLStatsSchema)
+export default mongoose.model<PlayerLoLStatsDoc>('PlayerLoLStats', playerLoLStatsSchema)

@@ -3,9 +3,8 @@ import mongoose, { Document } from "mongoose";
 const Schema = mongoose.Schema;
 
 export interface SetDoc extends Document {
-    setID : number;
-    gameTag : string;
-    matches : mongoose.Schema.Types.ObjectId[];
+    setId : number;
+    tournament : mongoose.Schema.Types.ObjectId;
     bestOf : number;
     bracket : boolean;
     parents : string[];
@@ -14,19 +13,15 @@ export interface SetDoc extends Document {
 }
 
 const setSchema = new Schema<SetDoc>({
-    setID: {
+    setId: {
         type: Number,
         required: true
     },
-    gameTag: {
-        type: String,
-        required: true
-    },
-    matches : [{
+    tournament: {
         type : mongoose.Schema.Types.ObjectId,
-        ref: 'Match',
-        required: true
-    }],
+        ref : "Tournament",
+        required : true
+    },
     bestOf: {
         type: Number,
         required: true,
@@ -48,4 +43,4 @@ const setSchema = new Schema<SetDoc>({
 }, { timestamps: false });
 
 
-export default mongoose.model('Set', setSchema)
+export default mongoose.model<SetDoc>('Set', setSchema)

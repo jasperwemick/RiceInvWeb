@@ -27,4 +27,4 @@ const playerBrawlStatsSchema = new Schema<PlayerBrawlStatsDoc>({
 
 playerBrawlStatsSchema.add(playerStatsSchema);
 
-export default mongoose.model('PlayerBrawlStats', playerBrawlStatsSchema)
+export default mongoose.model<PlayerBrawlStatsDoc>('PlayerBrawlStats', playerBrawlStatsSchema)

@@ -1,30 +1,34 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, PopulatedDoc } from "mongoose";
+import { SetDoc } from "./setModel";
+import { GameModeDoc } from "./gameModeModel";
+import { ProfileDoc } from "./profileModel";
 
 const Schema = mongoose.Schema;
 
 export interface TournamentDoc extends Document {
-    tournamentId : number;
-    gameMode : mongoose.Schema.Types.ObjectId;
-    sets : mongoose.Schema.Types.ObjectId[];
+    name : string;
+    gameMode : PopulatedDoc<GameModeDoc>;
+    players : PopulatedDoc<ProfileDoc>[];
 }
 
 const tournamentSchema = new Schema<TournamentDoc>({
-    tournamentId : {
-        type: Number,
-        required: true
+    name : {
+        type : String,
+        required : true
     },
     gameMode : {
-        type: mongoose.Schema.Types.ObjectId,
+        type : mongoose.Schema.Types.ObjectId,
         ref : 'GameMode',
         required: true
     },
-    sets : [{
+    players : [{
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'Set',
+        ref : 'Profile',
         required : true
     }]
+
 
 }, { timestamps: false });
 
 
-export default mongoose.model('tournament', tournamentSchema)
+export default mongoose.model<TournamentDoc>('Tournament', tournamentSchema)

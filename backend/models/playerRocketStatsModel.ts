@@ -32,4 +32,4 @@ const playerRocketStatsSchema = new Schema<PlayerRocketStatsDoc>({
 
 playerRocketStatsSchema.add(playerStatsSchema);
 
-export default mongoose.model('PlayerRocketStats', playerRocketStatsSchema)
+export default mongoose.model<PlayerRocketStatsDoc>('PlayerRocketStats', playerRocketStatsSchema)
