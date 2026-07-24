@@ -1,13 +1,13 @@
 import mongoose, { Document, PopulatedDoc } from "mongoose";
 import { SetDoc } from "./setModel";
-import { GameModeDoc } from "./gameModeModel";
 import { ProfileDoc } from "./profileModel";
+import { GameDoc } from "./gameModel";
 
 const Schema = mongoose.Schema;
 
 export interface TournamentDoc extends Document {
     name : string;
-    gameMode : PopulatedDoc<GameModeDoc>;
+    gameMode : mongoose.Schema.Types.ObjectId;
     players : PopulatedDoc<ProfileDoc>[];
 }
 
@@ -18,7 +18,6 @@ const tournamentSchema = new Schema<TournamentDoc>({
     },
     gameMode : {
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'GameMode',
         required: true
     },
     players : [{

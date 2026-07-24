@@ -4,10 +4,12 @@ const Schema = mongoose.Schema;
 
 interface GameProfileBase {
     game : string;
+    gameModes : Types.DocumentArray<GameModeBase & Document>;
 }
 
 interface GameModeBase {
     mode : string;
+    gameModeId : mongoose.Schema.Types.ObjectId;
     rank : number;
 }
 
@@ -41,9 +43,9 @@ const profileBrawlSchema = new Schema<GameProfileBrawl>({
     favoriteLegend : {
         type : String
     },
-    gameModes : {
+    gameModes : [{
         mode : { type : String, required : true }
-    }
+    }]
 })
 
 const gameModesBrawlPath = profileBrawlSchema.path('gameModes') as mongoose.Schema.Types.DocumentArray;
@@ -207,7 +209,7 @@ const profileSchema = new Schema<ProfileDoc>({
     }]
 }, { timestamps: false });
 
-const gameProfilesPath = profileSchema.path('gameProfiles') as mongoose.Schema.Types.DocumentArray
+const gameProfilesPath = profileSchema.path('gameProfiles') as mongoose.Schema.Types.DocumentArray;
 gameProfilesPath.discriminator('Brawl', profileBrawlSchema);
 gameProfilesPath.discriminator('LoL', profileLoLSchema);
 gameProfilesPath.discriminator('Valorant', profileValorantSchema);

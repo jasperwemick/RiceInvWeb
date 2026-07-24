@@ -6,25 +6,6 @@ const objectIdSchema = z.string().refine(
     { message: "Invalid ObjectId" }
 )
 
-export const setSchema = z.object({
-    setID : z.number(),
-    gameTag : z.string(),
-    upperSeedProfiles : z.array(objectIdSchema).min(1),
-    upperSeedWins : z.number(),
-    lowerSeedProfiles : z.array(objectIdSchema).min(1),
-    lowerSeedWins : z.number(),
-    bestOf : z.number(),
-    parents : z.array(z.string()),
-    lowerSetID : z.number(),
-    nextSetID : z.number(),
-    upperSeedIDs : z.array(z.number()),
-    lowerSeedIDs : z.array(z.number()),
-})
-
-export const setsSchema = z.array(setSchema).min(1)
-
-export type setsBody = z.infer<typeof setSchema>
-
 const statBaseSchema = z.object({
     profile : objectIdSchema,
     team : z.enum(['A', 'B'])
@@ -137,36 +118,95 @@ export const newTournamentSchema = z.object({
 
 export type newTournamentBody = z.infer<typeof newTournamentSchema>
 
-// --- Game mode variants (League example) ---
+// ---------------------- Profiles ----------------------
 
-const summonersRiftModeSchema = z.object({
+const profileGameModeBaseSchema = z.object({
+    gameModeId : objectIdSchema,
+    rank : z.number()
+})
+
+// ---------------------- Brawl ----------------------
+
+
+const brawl1v1ModeSchema = profileGameModeBaseSchema.extend({
+    mode : z.literal('1v1')
+})
+
+const brawl2v2ModeSchema = profileGameModeBaseSchema.extend({
+    mode : z.literal('2v2')
+})
+
+const brawlGameModeSchema = z.discriminatedUnion('mode', [
+    brawl1v1ModeSchema,
+    brawl2v2ModeSchema
+]);
+
+const brawlProfileSchema = z.object({
+    game : z.literal('Brawl'),
+    gameModes : z.array(brawlGameModeSchema)
+})
+
+// ---------------------- LoL ----------------------
+
+const riftModeSchema = profileGameModeBaseSchema.extend({
     mode: z.literal('Rift'),
 });
 
-const aramModeSchema = z.object({
+const aramModeSchema = profileGameModeBaseSchema.extend({
     mode: z.literal('ARAM'),
 });
 
 const leagueGameModeSchema = z.discriminatedUnion('mode', [
-    summonersRiftModeSchema,
+    riftModeSchema,
     aramModeSchema,
 ]);
-
-// --- Game profile variants ---
 
 const leagueProfileSchema = z.object({
     game: z.literal('LoL'),
     gameModes: z.array(leagueGameModeSchema).default([]),
 });
 
-// add other games similarly, e.g. valorantProfileSchema
+// ---------------------- Valorant ----------------------
+
+const val5v5ModeSchema = profileGameModeBaseSchema.extend({
+    mode : z.literal('5v5')
+})
+
+const valorantGameModeSchema = z.discriminatedUnion('mode', [
+    val5v5ModeSchema
+])
+
+const valorantProfileSchema = z.object({
+    game : z.literal('Valorant'),
+    gameModes : z.array(valorantGameModeSchema).default([])
+})
+
+// ---------------------- Rocket ----------------------
+
+const rocket1v1ModeSchema = profileGameModeBaseSchema.extend({
+    mode : z.literal('1v1')
+})
+
+const rocket3v3ModeSchema = profileGameModeBaseSchema.extend({
+    mode : z.literal('3v3')
+})
+
+const rocketGameModeSchema = z.discriminatedUnion('mode', [
+    rocket1v1ModeSchema,
+    rocket3v3ModeSchema
+])
+
+const rocketProfileSchema = z.object({
+    game : z.literal('Rocket'),
+    gameModes : z.array(rocketGameModeSchema)
+})
 
 export const gameProfileSchema = z.discriminatedUnion('game', [
+    brawlProfileSchema,
     leagueProfileSchema,
-    // valorantProfileSchema,
+    valorantProfileSchema,
+    rocketProfileSchema
 ]);
-
-// --- Top-level create profile schema ---
 
 export const createProfileSchema = z.object({
     name: z.string().min(1),
@@ -174,6 +214,24 @@ export const createProfileSchema = z.object({
     aliases : z.array(z.string()),
     description : z.string(),
     imageName: z.string().optional(),
+});
+
+export const profileSchema = z.object({
+    name: z.string().min(1),
+    user : z.string().min(1),
+    aliases : z.array(z.string()),
+    description : z.string(),
+    imageName : z.string().optional(),
+    imageUrl : z.string().optional(),
+    gameProfiles : z.array(gameProfileSchema)
+});
+
+export const profilesSchema = z.array(profileSchema);
+
+// ---------------------- Games ----------------------
+
+export const gameModeSchema = z.object({
+    
 });
 
 type CreateProfileBody = z.infer<typeof createProfileSchema>;

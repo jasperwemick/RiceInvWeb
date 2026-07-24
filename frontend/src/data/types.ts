@@ -50,3 +50,9 @@ export interface TournamentSet {
     lowerSetID : number;
     nextSetID : number;
 }
+
+export interface Tournament {
+    name : string;
+    gameMode : string;
+    players : PopulatedDoc<ProfileDoc>[];
+}

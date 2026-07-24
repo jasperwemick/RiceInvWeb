@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import Tournament from "../models/tournamentModel";
+import Tournament, { TournamentDoc } from "../models/tournamentModel";
 import Set from "../models/setModel";
 
 import BrawlMatch from "../models/matchBrawlModel";
@@ -13,11 +13,11 @@ import ValorantStats from "../models/matchValorantModel";
 import RocketStats from "../models/matchRocketModel";
 
 import Game from "../models/gameModel";
-import GameMode from "../models/gameModeModel";
 
 import { SetDoc } from "../models/setModel";
 import mongoose from "mongoose";
-import { newTournamentSchema } from "../types/validation";
+import { newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
+import pl from "zod/v4/locales/pl.js";
 
 export const getTournament = async (req : Request, res : Response) => {
     const id = req.params.id;
@@ -32,16 +32,15 @@ export const getTournament = async (req : Request, res : Response) => {
 }
 
 export const getTournamentsByGameId = async (req : Request, res : Response) => {
-    const gameId = req.params.id;
+    const gameId = req.params.gid;
 
     try {
-        const gameModes = await GameMode.distinct('_id', { game : gameId }).exec();
-        const tournaments = await Tournament.find({ gameMode : gameModes }).exec();
-
+        const gameModes = await Game.distinct('gameModes._id', { _id : gameId })
+        const tournaments = await Tournament.find({ gameMode : gameModes });
         res.json(tournaments);
     }
     catch(e) {
-        console.log('Error at GET /tournament/gamemode/game/:id')
+        console.log('Error at GET /tournament/gamemode/game/:gid')
     }
 }
 
@@ -49,9 +48,8 @@ export const getTournamentsByGameName = async (req : Request, res : Response) =>
     const gameName = req.params.name;
 
     try {
-        const gameId = await Game.findOne({ name : gameName }).select('_id').lean().exec();
-        const gameModes = await GameMode.find({ game : gameId }).exec();
-        const tournaments = await Tournament.find({ gameMode : gameModes }).exec();
+        const gameModes = await Game.distinct('gameModes._id', { name : gameName })
+        const tournaments = await Tournament.find({ gameMode : gameModes });
 
         res.json(tournaments);
     }
@@ -80,11 +78,11 @@ export const getAllTournamentSets = async (req : Request, res : Response) => {
 export const getAllPlayerTournaments = async (req : Request, res : Response) => {
     const pid = req.params.pid;
     try {
-        const tournaments = await Tournament.find({ players : pid })
+        const tournaments = await Tournament.find<TournamentDoc[]>({ players : pid })
         res.json(tournaments);
     }
     catch(e) {
-        console.log('Error at GET /tournament/player/:pid', e)
+        console.log('Error at GET /tournament/profile/:pid', e)
         if (e instanceof Error) {
             res.json({
                 data : [],
@@ -148,6 +146,42 @@ export const getPlayerTournamentSets = async (req : Request, res : Response) => 
     }
     catch(e) {
         console.log('Error at GET /tournament/:tid/player/:pid/sets', e)
+        if (e instanceof Error) {
+            res.json({
+                data : [],
+                message : e.message
+            })
+        }
+    }
+}
+
+export const getTournamentPlayerGameProfiles = async (req : Request, res : Response) => {
+    const tid = req.params.tid;
+
+    try {
+        const tournament = await Tournament.findById<TournamentDoc>(tid).populate('players').exec();
+        if (!tournament) {
+            throw {
+                message : 'Tournament with id' + tid + 'does not exist'
+            }
+        }
+        const { gameMode, players } = tournament;
+        const parsed = profilesSchema.safeParse(players);
+        const gameProfiles = parsed.data?.map((profile) => {
+            return profile.gameProfiles.map((gameProfile) => {
+                const matchingMode = gameProfile.gameModes.find((x) => x.gameModeId === gameMode.toString())
+                if (!matchingMode) {
+                    return undefined
+                }
+                return { ...matchingMode, game : gameProfile.game, player : profile.name }
+
+            });
+        });
+
+        res.json(gameProfiles);
+    }
+    catch(e) {
+        console.log('Error at GET /tournament/:tid/profile', e)
         if (e instanceof Error) {
             res.json({
                 data : [],
