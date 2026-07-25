@@ -75,8 +75,40 @@ export const getProfileById = async (req : Request, res : Response) => {
     }
 }
 
-export const getGameModeProfile = async (req : Request, res : Response) => {
-    
+export const getGameProfiles = async (req : Request, res : Response) => {
+    const gameName = req.params.game;
+    try {
+        const gameProfiles = await Profile.aggregate([
+            // 1. Early filter — only profiles that have a league entry at all (uses your index, cheap)
+            { $match: { 'gameProfiles.name': gameName } },
+
+            // 2. Unwind explodes gameProfiles into one document per array element
+            { $unwind: '$gameProfiles' },
+
+            // 3. Re-filter after unwind — now each doc is ONE gameProfile entry, keep only 'league' ones
+            { $match: { 'gameProfiles.name': gameName } },
+
+            // 4. Flatten: merge base profile fields with the (now singular) gameProfiles fields
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: [
+                            { 
+                                _id: '$_id', 
+                                name: '$name',
+                            },
+                            '$gameProfiles'
+                        ]
+                    }
+                }
+            }
+        ]);
+        res.json(gameProfiles);
+    }
+    catch(e) {
+        console.log("Error at GET /profile/game-profile/:gid");
+        res.status(500).json({ message : 'Failed to obtain Game Profiles' });
+    }
 }
 
 export const createNewProfile = async (req : Request, res : Response) => {

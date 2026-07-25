@@ -4,6 +4,7 @@ import { PlayerStatsDoc, playerStatsSchema } from "./playerStatsModel";
 const Schema = mongoose.Schema;
 
 interface PlayerLoLStatsDoc extends PlayerStatsDoc {
+    game : 'LoL';
     role : 'Top' | 'Mid' | 'ADC' | 'Support' | 'Jungle';
     kills : number;
     deaths : number;

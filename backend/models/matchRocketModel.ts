@@ -4,6 +4,7 @@ import { MatchDoc } from "./matchModel";
 const Schema = mongoose.Schema;
 
 interface MatchRocketDoc extends MatchDoc {
+    game : 'Rocket';
     map : string;
 }
 

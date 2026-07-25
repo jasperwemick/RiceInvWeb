@@ -99,10 +99,11 @@ const newMatchSchema = z.discriminatedUnion('format', [
     matchRocketSchema
 ])
 
-const newSetsSchema = z.object({
+export const newSetSchema = z.object({
     setId : z.number().min(0),
     bestOf : z.number().min(1),
     bracket : z.boolean(),
+    teams : z.array(objectIdSchema),
     parents : z.array(z.string()),
     lowerSetID : z.number(),
     nextSetID : z.number(),
@@ -113,7 +114,7 @@ export const newTournamentSchema = z.object({
     name : z.string().min(1),
     gameMode : objectIdSchema,
     players : z.array(objectIdSchema).min(2),
-    sets : z.array(newSetsSchema).min(1)
+    sets : z.array(newSetSchema).min(1)
 })
 
 export type newTournamentBody = z.infer<typeof newTournamentSchema>

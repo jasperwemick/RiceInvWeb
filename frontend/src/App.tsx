@@ -10,7 +10,7 @@ import LeagueProfilePage from "./pages/leagueProfilePage";
 import LeaguePage from "./pages/leagueHomePage";
 import LeagueGamePage from "./pages/leagueGamePage";
 import BrawlProfilePage from "./pages/brawlProfilePage";
-import BrawlPage from "./pages/brawlHomePage";
+import BrawlPage from "./pages/rankingsPage/RankingsPage;
 import BrawlOnesPage from "./pages/brawlOnesPage";
 import BrawlTwosPage from "./pages/brawlTwosPage";
 import Layout from "./components/Layout";

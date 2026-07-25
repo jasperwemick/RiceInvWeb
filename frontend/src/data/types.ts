@@ -1,10 +1,12 @@
 export interface GameModeProfile {
     _id : string;
+    mode : string;
     rank : number;
 }
 
 export interface GameProfile {
     _id : string;
+    gameId : string;
     gameModeProfiles : GameModeProfile[];
 }
 
@@ -18,21 +20,33 @@ export interface Profile {
     gameProfiles : GameProfile[];
 }
 
+export interface FlatGameProfile { 
+    _id : string;
+    playerName : string;
+    gameName : 'brawl' | 'LoL' | 'Valorant' | 'Rocket';
+    gameModes : GameModeProfile[]
+}
+
+export interface FlatBrawlGameProfile extends FlatGameProfile {
+
+}
+
 export interface User {
     username : string;
     roles : string[];
     profileId : string;
 }
 
-export interface Game {
-    _id : string;
-    name : string;
-}
-
 export interface GameMode {
     _id : string;
     gameId : string;
     mode : 'singles' | 'duos' | 'triples' | 'five' | 'other';
+}
+
+export interface Game {
+    _id : string;
+    name : string;
+    gameModes : GameMode[];
 }
 
 export interface GameStats {

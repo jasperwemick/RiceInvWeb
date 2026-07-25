@@ -4,8 +4,9 @@ import { MatchDoc } from "./matchModel";
 const Schema = mongoose.Schema;
 
 interface MatchValorantDoc extends MatchDoc {
-    map : 'Split' | 'Bind' | 'Haven' | 'Ascent' | 'Pearl' | 'Sunset' | 'Lotus' | 'Corrode' | 'Icebox' | 'Fracture' | 'Abyss' | 'Breeze' | 'Summit'
-    version : string
+    game : 'Valorant';
+    map : 'Split' | 'Bind' | 'Haven' | 'Ascent' | 'Pearl' | 'Sunset' | 'Lotus' | 'Corrode' | 'Icebox' | 'Fracture' | 'Abyss' | 'Breeze' | 'Summit';
+    version : string;
 }
 
 const matchValorantSchema = new Schema<MatchValorantDoc>({

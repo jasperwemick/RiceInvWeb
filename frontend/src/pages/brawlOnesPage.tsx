@@ -86,16 +86,16 @@ export default function BrawlOnesPage() {
         // return;
     }, []);
 
-    function mapList(state, Component, a, b) {
-        return state.slice(a, b).map((set) => {
-            return (
-                <Component
-                    set={set}
-                    key={set._id}
-                />
-            );
-        });
-    }
+    // function mapList(state, Component, a, b) {
+    //     return state.slice(a, b).map((set) => {
+    //         return (
+    //             <Component
+    //                 set={set}
+    //                 key={set._id}
+    //             />
+    //         );
+    //     });
+    // }
 
     return (
         <div>

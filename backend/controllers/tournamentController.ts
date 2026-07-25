@@ -16,7 +16,7 @@ import Game from "../models/gameModel";
 
 import { SetDoc } from "../models/setModel";
 import mongoose from "mongoose";
-import { newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
+import { newSetSchema, newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
 import pl from "zod/v4/locales/pl.js";
 import Team, { TeamDoc } from "../models/teamModel";
 import Match from "../models/matchModel";
@@ -238,4 +238,23 @@ export const createTournament = async (req : Request, res : Response) => {
     finally {
         session.endSession();
     }
+}
+
+export const createTournamentSet = async (req : Request, res : Response) => {
+    const body = newSetSchema.safeParse(req.body);
+
+    if (!body.success) {
+        return res.status(400).json({ message: body.error.message });
+    }
+    try {
+        const { matches, ...setData } = body.data;
+        Set.create({
+            ...setData
+        })
+    }
+    catch(e) {
+        console.log("Error at POST /tournament/set: ", e);
+        res.status(500).json({ error: "Failed to create tournament set" });
+    }
+
 }

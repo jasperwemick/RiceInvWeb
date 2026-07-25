@@ -4,27 +4,31 @@ const Schema = mongoose.Schema;
 
 interface GameProfileBase {
     game : string;
-    gameModes : Types.DocumentArray<GameModeBase & Document>;
+    gameId : mongoose.Schema.Types.ObjectId;
+    gameModes : Types.DocumentArray<GameModeProfileBase & Document>;
 }
 
-interface GameModeBase {
+export interface GameModeProfileBase {
     mode : string;
     gameModeId : mongoose.Schema.Types.ObjectId;
     rank : number;
+    rating : number;
+    ricePoints : number;
 }
 
 // -------------------- Brawlhalla --------------------
 
-interface GameModeBrawl1v1 extends GameModeBase {
-    mode : 'Brawl1v1'
+interface GameModeBrawl1v1 extends GameModeProfileBase {
+    mode : '1v1'
 }
 
 const gameModeBrawl1v1Schema = new Schema<GameModeBrawl1v1>({
 
 }, { timestamps : false });
 
-interface GameModeBrawl2v2 extends GameModeBase {
-    mode : 'Brawl2v2'
+
+interface GameModeBrawl2v2 extends GameModeProfileBase {
+    mode : '2v2'
 }
 
 const gameModeBrawl2v2Schema = new Schema<GameModeBrawl2v2>({
@@ -34,7 +38,7 @@ const gameModeBrawl2v2Schema = new Schema<GameModeBrawl2v2>({
 type GameModeBrawl = GameModeBrawl1v1 | GameModeBrawl2v2
 
 interface GameProfileBrawl extends GameProfileBase {
-    game : 'Brawl'; 
+    game : 'Brawl';
     favoriteLegend : string;
     gameModes : Types.DocumentArray<GameModeBrawl & Document>;
 }
@@ -55,7 +59,7 @@ gameModesBrawlPath.discriminator('Brawl2v2', gameModeBrawl2v2Schema);
 
 // -------------------- League Of Legends --------------------
 
-interface GameModeRift extends GameModeBase {
+interface GameModeRift extends GameModeProfileBase {
     mode : 'Rift';
 }
 
@@ -63,7 +67,7 @@ const gameModeRiftSchema = new Schema<GameModeRift>({
 
 }, { timestamps : false });
 
-interface GameModeARAM extends GameModeBase {
+interface GameModeARAM extends GameModeProfileBase {
     mode : 'ARAM';
 }
 
@@ -94,8 +98,8 @@ gameModesLoLPath.discriminator('ARAM', gameModeAramSchema);
 
 // -------------------- Valorant --------------------
 
-interface GameModeVal5v5 extends GameModeBase {
-    mode : 'ValorantBase';
+interface GameModeVal5v5 extends GameModeProfileBase {
+    mode : '5v5Full';
 }
 
 const gameModeVal5v5Schema = new Schema<GameModeVal5v5>({
@@ -128,7 +132,7 @@ gameModesValorantPath.discriminator('Val5v5', gameModeVal5v5Schema);
 
 // -------------------- Rocket League --------------------
 
-interface GameModeRocket1v1 extends GameModeBase {
+interface GameModeRocket1v1 extends GameModeProfileBase {
     mode : '1v1';
 }
 
@@ -136,7 +140,7 @@ const gameModeRocket1v1Schema = new Schema<GameModeRocket1v1>({
 
 }, { timestamps : false });
 
-interface GameModeRocket3v3 extends GameModeBase {
+interface GameModeRocket3v3 extends GameModeProfileBase {
     mode : '3v3';
 }
 

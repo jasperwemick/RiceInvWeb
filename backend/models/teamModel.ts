@@ -7,6 +7,7 @@ export interface TeamDoc extends Document {
     name : String;
     tournament : mongoose.Schema.Types.ObjectId;
     members : PopulatedDoc<ProfileDoc>;
+    placing : number
 }
 
 const teamSchema = new Schema<TeamDoc>({
@@ -23,7 +24,10 @@ const teamSchema = new Schema<TeamDoc>({
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Profile',
         required : true
-    }]
+    }],
+    placing : {
+        type : Number
+    }
 
 }, { timestamps: false });
 

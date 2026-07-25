@@ -1,26 +1,18 @@
 import React, { useState, useEffect } from "react";
-import { useParams, useNavigate } from "react-router";
+import { useParams, useLocation } from "wouter";
 import GetUrl from "../GetUrl";
  
 export default function Edit() {
 
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
-    const [brawlPoints, setBrawlPoints] = useState(0)
-    const [leaguePoints, setLeaguePoints] = useState(0)
-    const [valPoints, setValPoints] = useState(0)
-    const [bullPoints, setBullPoints] = useState(0)
-    const [rocketPoints, setRocketPoints] = useState(0)
-    const [mysteryPoints, setMysteryPoints] = useState(0)
-    const [counterPoints, setCounterPoints] = useState(0)
-    const [bonusPoints, setBonusPoints] = useState(0)
 
     const [gamertag, setGamertag] = useState("")
 
     const [url, setUrl] = useState("")
 
     const params = useParams();
-    const navigate = useNavigate();
+    const [location, useNavigate] = useLocation();
  
     useEffect(() => {
         async function fetchData() {
@@ -35,14 +27,6 @@ export default function Edit() {
                 setDescription(profile.description);
                 setGamertag(profile.gamertag)
                 setUrl(profile.imageUrl)
-                setBrawlPoints(profile.brawlPoints);
-                setLeaguePoints(profile.leaguePoints);
-                setValPoints(profile.valPoints);
-                setBullPoints(profile.bullPoints);
-                setRocketPoints(profile.rocketPoints);
-                setMysteryPoints(profile.mysteryPoints);
-                setCounterPoints(profile.counterPoints);
-                setBonusPoints(profile.bonusPoints);
 
             }
             catch(err) {
@@ -69,15 +53,6 @@ export default function Edit() {
         profileData.append("name", name);
         profileData.append("description", description);
         profileData.append("gamertag", gamertag)
-        profileData.append("ricePoints", sum)
-        profileData.append("brawlPoints", brawlPoints)
-        profileData.append("leaguePoints", leaguePoints)
-        profileData.append("valPoints", valPoints)
-        profileData.append("bullPoints", bullPoints)
-        profileData.append("rocketPoints", rocketPoints)
-        profileData.append("mysteryPoints", mysteryPoints)
-        profileData.append("counterPoints", counterPoints)
-        profileData.append("bonusPoints", bonusPoints)
         try {
             await fetch(`${GetUrl}/api/profiles/default/${id}`, {
                 method: "PATCH",
