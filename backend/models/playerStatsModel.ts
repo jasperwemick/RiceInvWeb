@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 export interface PlayerStatsDoc extends Document {
     profile : mongoose.Schema.Types.ObjectId;
     match : mongoose.Schema.Types.ObjectId;
-    team : 'A' | 'B';
+    // team : mongoose.Schema.Types.ObjectId;
 }
 
 export const playerStatsSchema = new Schema({
@@ -16,14 +16,14 @@ export const playerStatsSchema = new Schema({
     },
     match : {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'Profile',
+        ref: 'Match',
         required: true
     },
-    team: {
-        type: String,
-        required: true,
-        default : 'A'
-    },
+    // team: {
+    //     type: mongoose.Schema.Types.ObjectId,
+    //     ref: 'Team',
+    //     required: true,
+    // },
 })
 
 export default mongoose.model<PlayerStatsDoc>('PlayerStats', playerStatsSchema)

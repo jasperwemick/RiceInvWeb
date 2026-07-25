@@ -3,11 +3,12 @@ import BracketSet from "./BracketSet"
 import Xarrow from "react-xarrows"
 import useAuth from "../../hooks/useAuth"
 import { BracketNode } from "./Auxillery/tree"
+import { TournamentSet } from "../../data/types"
 
 interface BracketBuilderProps {
     nodeArr : BracketNode[][];
     tag : string;
-    sets : 
+    sets : TournamentSet[];
 }
 
 export default function BracketBuilder({ nodeArr, tag, sets } : BracketBuilderProps) {
@@ -78,7 +79,7 @@ export default function BracketBuilder({ nodeArr, tag, sets } : BracketBuilderPr
                                 //     }
                                 // }
                             }}>
-                                <BracketSet setData={sets.find(({ setID }) => setID === node.value)}/>
+                                <BracketSet setData={sets.find(({ setId }) => setId === node.value)}/>
                             </div>
                             {node.parent ? <Xarrow start={`${tag}-bracket-set-${node.value}`} end={`${tag}-bracket-set-${node.parent.value}`} headSize={0}/> : null}
                         </React.Fragment>

@@ -15,24 +15,18 @@ export default function BrawlHomePage() {
 
     const { profiles } = useProfiles()
 
-    useProfiles()
-
     useEffect(() => {
 
         const getPlacings = async () => {
 
             try {
                 function ascendingOrder(a, b) {
-                    if (a.placing < b.placing) {
-                        return -1;
-                    }
                     if (a.placing > b.placing) {
                         return 1;
                     }
-                    return 0;
                 };
                 
-                const brawl = await apiFetch<>(`${GetUrl}/api/profiles/brawl`)
+                const brawl = await apiFetch<>(`${GetUrl}/api/profiles/brawl`);
                 
                 const onevone = brawl.map((item) => {
                     const { playerID, onesPlacing } = item;

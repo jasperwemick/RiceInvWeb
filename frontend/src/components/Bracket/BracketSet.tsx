@@ -1,40 +1,50 @@
-import React, { useEffect, useState } from "react"
-import { SetSchema } from "../../data/types"
+import { useEffect, useState } from "react"
+import { TournamentSet } from "../../data/types";
 
-export default function BracketSet({ setData } : { setData : SetSchema }) {
 
-    const [localData, setLocalData] = useState<SetSchema>({
-        setID: 0,
-        gameTag: "",
-        upperSeedIds: [],
-        upperSeedProfiles: [],
-        upperSeedWins: 0,
-        lowerSeedIds: [],
-        lowerSeedProfiles: [],
-        lowerSeedWins: 0,
-        bestOf: 0,
-        parents: [],    //Rename this, preceeding sets
-        lowerSetID: -1,
-        nextSetID: -1
+function MapSetInfo({ teamRecords, setData } : { teamRecords : Record<string, number>, setData : TournamentSet }) {
+    return Object.entries(teamRecords).map(([teamName, count]) => ({ teamName, count })).sort((a, b) => b.count - a.count).map((record) => {
+        return (
+            <div style={record.count > Math.floor(setData.bestOf / 2) ? {backgroundColor: "gray"} : undefined}>
+                <p style={{fontSize: '0.75vw'}}>{record.teamName}</p><p>{record.count}</p>
+            </div>
+        )
     })
+}
+
+
+export default function BracketSet({ setData } : { setData : TournamentSet | undefined }) {
+
+    const [localData, setLocalData] = useState<TournamentSet | null>(null)
+    const [teamRecords, setTeamRecords] = useState<Record<string, number>>({});
 
     useEffect(() => {
 
         if (setData) {
-            setLocalData({...setData})
+            const matches = setData.matches;
+
+            const wins = matches.reduce((accum, match) => {
+                accum[match.winningTeam.name] = (accum[match.winningTeam.name] ?? 0) + 1;
+                return accum;
+            }, {} as Record<string, number>)
+
+            setTeamRecords(wins);
         }
-        
+
     }, [setData])
     
+    if (localData) {
+        return (
+            <div className="bracket-set-box open-bracket-slot"> 
+                <MapSetInfo teamRecords={teamRecords} setData={localData}/>
+            </div>
+        );
+    }
+    else {
+        return (
+            <div className="bracket-set-box open-bracket-slot"></div>
+        );
+    }
 
-    return (
-        <div className="bracket-set-box open-bracket-slot">
-            <div style={localData.lowerSeedWins > Math.floor(localData.bestOf / 2) ? {backgroundColor: "gray"} : undefined}>
-                <p style={{fontSize: '0.75vw'}}>{localData.upperSeedProfiles.map(x => x.name).join('/')}</p><p>{localData.upperSeedWins}</p>
-            </div>
-            <div style={localData.upperSeedWins > Math.floor(localData.bestOf / 2) ? {backgroundColor: "gray"} : undefined}>
-                <p style={{fontSize: '0.75vw'}}>{localData.lowerSeedProfiles.map(x => x.name).join('/')}</p><p>{localData.lowerSeedWins}</p>
-            </div>
-        </div>
-    );
+
 }

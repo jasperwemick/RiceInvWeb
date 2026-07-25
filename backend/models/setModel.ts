@@ -1,4 +1,6 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, PopulatedDoc } from "mongoose";
+import { TeamDoc } from "./teamModel";
+import { MatchDoc } from "./matchModel";
 
 const Schema = mongoose.Schema;
 
@@ -7,9 +9,11 @@ export interface SetDoc extends Document {
     tournament : mongoose.Schema.Types.ObjectId;
     bestOf : number;
     bracket : boolean;
+    teams : PopulatedDoc<TeamDoc>;
     parents : string[];
     lowerSetID : number;
     nextSetID : number;
+    matches : MatchDoc[];
 }
 
 const setSchema = new Schema<SetDoc>({
@@ -19,7 +23,7 @@ const setSchema = new Schema<SetDoc>({
     },
     tournament: {
         type : mongoose.Schema.Types.ObjectId,
-        ref : "Tournament",
+        ref : 'Tournament',
         required : true
     },
     bestOf: {
@@ -30,6 +34,11 @@ const setSchema = new Schema<SetDoc>({
         type : Boolean,
         required : true,
     },
+    teams : [{
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Team',
+        required : true
+    }],
     parents: [{
         type: String
     }],
@@ -42,5 +51,13 @@ const setSchema = new Schema<SetDoc>({
 
 }, { timestamps: false });
 
+setSchema.virtual('matches', {
+    ref : 'Match',
+    localField : '_id',
+    foreignField : 'set'
+});
+
+setSchema.set('toObject', { virtuals : true });
+setSchema.set('toJSON', { virtuals : true });
 
 export default mongoose.model<SetDoc>('Set', setSchema)

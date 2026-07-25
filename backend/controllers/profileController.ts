@@ -1,5 +1,5 @@
 import express, { Request, Response } from "express";
-import Profile from "../models/profileModel";
+import Profile, { ProfileDoc } from "../models/profileModel";
 import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
@@ -21,7 +21,7 @@ const s3 = new S3Client({
 
 export const getAllProfiles = async (req : Request, res : Response) => {
     try {
-        const profiles = await Profile.find()
+        const profiles = await Profile.find<ProfileDoc>()
 
         for (let profile of profiles) {
             const params = {
@@ -43,7 +43,7 @@ export const getAllProfiles = async (req : Request, res : Response) => {
 
 export const getAllProfilesNoImage = async (req : Request, res : Response) => {
     try {
-        const profiles = await Profile.find()
+        const profiles = await Profile.find<ProfileDoc>()
         res.json(profiles)
     }
     catch(e) {
@@ -54,7 +54,7 @@ export const getAllProfilesNoImage = async (req : Request, res : Response) => {
 export const getProfileById = async (req : Request, res : Response) => {
     const id = req.params.id;
     try {
-        const profile = await Profile.findById(id);
+        const profile = await Profile.findById<ProfileDoc>(id);
         if (!profile) {
             throw new Error("Failed to get profile");
         }
@@ -73,6 +73,10 @@ export const getProfileById = async (req : Request, res : Response) => {
     catch(e) {
         console.log("Error at GET /default/:id ", e)
     }
+}
+
+export const getGameModeProfile = async (req : Request, res : Response) => {
+    
 }
 
 export const createNewProfile = async (req : Request, res : Response) => {
@@ -117,7 +121,7 @@ export const createNewGameProfile = async (req : Request, res : Response) => {
         return res.status(400).json({ message: parsed.error.message });
     }
     try {
-        const profile = await Profile.findById(pid);
+        const profile = await Profile.findById<ProfileDoc>(pid);
 
         if (!profile) {
             return res.status(404).json({ message : 'Profile not found' });

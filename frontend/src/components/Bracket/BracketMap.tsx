@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { treeToArray } from "./Auxillery/tree"
+import { BracketNode, treeToArray } from "./Auxillery/tree"
 import GetUrl from "../../GetUrl"
 import React from "react"
 import Xarrow from "react-xarrows"
@@ -9,13 +9,14 @@ import apiFetch from "../../fetch"
 import { TournamentSet } from "../../data/types"
 
 interface BracketMapProps {
-    tag : string
+    tid : string;
+    tag : string;
+    highTree : BracketNode | null;
+    lowTree : BracketNode | null;
+    maxDepth : number;
 }
 
-export default function BracketMap({ tag } : BracketMapProps) {
-
-    const upperBracketArray = treeToArray(highTree, maxDepth)
-    const lowerBracketArray = treeToArray(lowTree, maxDepth)
+export default function BracketMap({ tid, tag, highTree, lowTree, maxDepth } : BracketMapProps) {
 
     const [toggleEditor , setToggleEditor] = useState(false)
 
@@ -23,23 +24,16 @@ export default function BracketMap({ tag } : BracketMapProps) {
 
     const [sets, setSets] = useState<TournamentSet[]>([])
 
+    const upperBracketArray = highTree ? treeToArray(highTree, maxDepth) : []
+    const lowerBracketArray = lowTree ? treeToArray(lowTree, maxDepth) : []
+
     useEffect(() => {
 
         const getSetData = async () => {
 
             try {
-                
-                let jsetData = await apiFetch<TournamentSet[]>(`${GetUrl}/api/tournament/${tid}/set`);
-
-                setSets(() => {
-                    return jsetData.map((set) => {
-                        return {
-                            ...set,
-                            upperSeedIDs: set.upperSeedProfiles.map(x => x._id),
-                            lowerSeedIDs: set.lowerSeedProfiles.map(x => x._id)
-                        }
-                    })
-                })
+                const jsetData = await apiFetch<TournamentSet[]>(`${GetUrl}/api/tournament/${tid}/set`);
+                setSets(jsetData)
             }
             catch(e) {
                 console.log('Failed to fetch: ', e)

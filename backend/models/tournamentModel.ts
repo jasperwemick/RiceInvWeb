@@ -25,8 +25,6 @@ const tournamentSchema = new Schema<TournamentDoc>({
         ref : 'Profile',
         required : true
     }]
-
-
 }, { timestamps: false });
 
 

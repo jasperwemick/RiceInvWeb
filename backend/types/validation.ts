@@ -217,6 +217,7 @@ export const createProfileSchema = z.object({
 });
 
 export const profileSchema = z.object({
+    _id : objectIdSchema,
     name: z.string().min(1),
     user : z.string().min(1),
     aliases : z.array(z.string()),

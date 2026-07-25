@@ -1,3 +1,13 @@
+export interface GameModeProfile {
+    _id : string;
+    rank : number;
+}
+
+export interface GameProfile {
+    _id : string;
+    gameModeProfiles : GameModeProfile[];
+}
+
 export interface Profile {
     _id : string;
     name : string;
@@ -5,11 +15,7 @@ export interface Profile {
     imageName : string;
     imageURL : string;
     aliases : string[];
-}
-
-export interface GamerProfile {
-    _id : string;
-    profileId : string;
+    gameProfiles : GameProfile[];
 }
 
 export interface User {
@@ -41,18 +47,34 @@ export interface GameStats {
     final : () => number;
 }
 
-export interface TournamentSet {
-    setId : number;
-    tournament : string;
-    bestOf : number;
-    bracket : boolean;
-    parents : string[];
-    lowerSetID : number;
-    nextSetID : number;
-}
-
 export interface Tournament {
     name : string;
     gameMode : string;
-    players : PopulatedDoc<ProfileDoc>[];
+    players : string[] | Profile[];
 }
+
+export interface Team {
+    name : string;
+    tournament : string | Tournament;
+    members : string[] | Profile[]
+}
+
+export interface TournamentMatch {
+    matchNumber : number;
+    matchSet : string;
+    winningTeam : Team;
+    duration : number;
+}
+
+export interface TournamentSet {
+    setId : number;
+    tournament : string | Tournament;
+    bestOf : number;
+    bracket : boolean;
+    teams : Team[];
+    parents : string[];
+    lowerSetID : number;
+    nextSetID : number;
+    matches : TournamentMatch[];
+}
+

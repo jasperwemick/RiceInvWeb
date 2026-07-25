@@ -4,7 +4,8 @@ const Schema = mongoose.Schema;
 
 export interface MatchDoc extends Document {
     matchNumber : Number;
-    teamAWin : boolean;
+    matchSet : mongoose.Schema.Types.ObjectId;
+    winningTeam : mongoose.Schema.Types.ObjectId;
     duration : Number;
 }
 
@@ -14,10 +15,15 @@ const matchSchema = new Schema<MatchDoc>({
         required : true,
         default : 1
     },
-    teamAWin : { // Lower seed defeats upper seed
-        type : Boolean,
-        required : true,
-        default : true
+    matchSet : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Set',
+        required : true
+    },
+    winningTeam : {
+        type : mongoose.Schema.Types.ObjectId,
+        ref : 'Team',
+        required : true
     },
     duration : {
         type : Number

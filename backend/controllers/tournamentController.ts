@@ -18,6 +18,8 @@ import { SetDoc } from "../models/setModel";
 import mongoose from "mongoose";
 import { newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
 import pl from "zod/v4/locales/pl.js";
+import Team, { TeamDoc } from "../models/teamModel";
+import Match from "../models/matchModel";
 
 export const getTournament = async (req : Request, res : Response) => {
     const id = req.params.id;
@@ -61,7 +63,7 @@ export const getTournamentsByGameName = async (req : Request, res : Response) =>
 export const getAllTournamentSets = async (req : Request, res : Response) => {
     const tid = req.params.tid;
     try {
-        const sets = await Set.find({tournament : tid}).exec();
+        const sets = await Set.find<SetDoc>({ tournament : tid }).populate('teams').populate('matches').exec();
         res.json(sets);
     }
     catch(e) {
@@ -99,50 +101,9 @@ export const getPlayerTournamentSets = async (req : Request, res : Response) => 
     const pid = req.params.pid;
 
     try {
-        const sets = await Set.aggregate<PlayerSetsResult>([
-            // 1. Narrow to the specific tournament
-            { $match: { _id: tid } },
-
-            // 2. Join in this Set's Matches — simple localField/foreignField, no pipeline needed
-            {
-                $lookup: {
-                    from: 'matches',
-                    localField: '_id',
-                    foreignField: 'set',
-                    as: 'matches'
-                }
-            },
-
-            // 3. Join in PlayerStats for those matches, filtered to our specific profile
-            //    (still needs a pipeline since we're filtering by a variable, not just joining)
-            {
-                $lookup: {
-                    from: 'playerstats',
-                    let: { matchIds: '$matches._id' },
-                    pipeline: [
-                        {
-                            $match: {
-                                $expr: {
-                                    $and: [
-                                        { $in: ['$match', '$$matchIds'] },
-                                        { $eq: ['$profile', pid] }
-                                    ]
-                                }
-                            }
-                        }
-                    ],
-                    as: 'matchingPlayerStats'
-                }
-            },
-
-            // 4. Only keep Sets where we found a matching PlayerStats row
-            { $match: { 'matchingPlayerStats.0': { $exists: true } } },
-
-            // 5. Drop intermediate join fields
-            { $project: { matches: 0, matchingPlayerStats: 0 } }
-        ]);
-
-        return sets;
+        const tournamentPlayerTeam = Team.findOne<TeamDoc>({ tournament : tid, members : pid });
+        const sets = Set.find({ teams : tournamentPlayerTeam });
+        res.json(sets);
     }
     catch(e) {
         console.log('Error at GET /tournament/:tid/player/:pid/sets', e)
@@ -173,7 +134,7 @@ export const getTournamentPlayerGameProfiles = async (req : Request, res : Respo
                 if (!matchingMode) {
                     return undefined
                 }
-                return { ...matchingMode, game : gameProfile.game, player : profile.name }
+                return { ...matchingMode, game : gameProfile.game, player : profile.name, profileId : profile._id }
 
             });
         });
