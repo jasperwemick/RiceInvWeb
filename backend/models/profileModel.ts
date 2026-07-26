@@ -2,11 +2,22 @@ import mongoose, { Document, Types } from "mongoose";
 
 const Schema = mongoose.Schema;
 
-interface GameProfileBase {
+export interface GameProfileBase {
     game : string;
     gameId : mongoose.Schema.Types.ObjectId;
     gameModes : Types.DocumentArray<GameModeProfileBase & Document>;
 }
+
+const gameProfileBaseSchema = new Schema<GameProfileBase>({
+    game : {
+        Type : String,
+        required : true
+    },
+    gameId : {
+        Type : mongoose.Schema.Types.ObjectId,
+        required : true
+    },
+}, { timestamps : false })
 
 export interface GameModeProfileBase {
     mode : string;
@@ -16,6 +27,26 @@ export interface GameModeProfileBase {
     ricePoints : number;
 }
 
+const gameModeProfileBaseSchema = new Schema<GameModeProfileBase>({
+    mode : {
+        Type : String,
+        required : true
+    },
+    gameModeId : {
+        Type : mongoose.Schema.Types.ObjectId,
+        required : true
+    },
+    rank : {
+        Type : Number
+    },
+    rating : {
+        Type : Number
+    },
+    ricePoints : {
+        Type : Number
+    }
+}, { timestamps : false });
+
 // -------------------- Brawlhalla --------------------
 
 interface GameModeBrawl1v1 extends GameModeProfileBase {
@@ -24,8 +55,7 @@ interface GameModeBrawl1v1 extends GameModeProfileBase {
 
 const gameModeBrawl1v1Schema = new Schema<GameModeBrawl1v1>({
 
-}, { timestamps : false });
-
+}, { timestamps : false }).add(gameModeProfileBaseSchema);
 
 interface GameModeBrawl2v2 extends GameModeProfileBase {
     mode : '2v2'
@@ -33,7 +63,7 @@ interface GameModeBrawl2v2 extends GameModeProfileBase {
 
 const gameModeBrawl2v2Schema = new Schema<GameModeBrawl2v2>({
 
-}, { timestamps : false });
+}, { timestamps : false }).add(gameModeProfileBaseSchema);
 
 type GameModeBrawl = GameModeBrawl1v1 | GameModeBrawl2v2
 
@@ -50,7 +80,7 @@ const profileBrawlSchema = new Schema<GameProfileBrawl>({
     gameModes : [{
         mode : { type : String, required : true }
     }]
-})
+}, { timestamps : false }).add(gameProfileBaseSchema);
 
 const gameModesBrawlPath = profileBrawlSchema.path('gameModes') as mongoose.Schema.Types.DocumentArray;
 gameModesBrawlPath.discriminator('Brawl1v1', gameModeBrawl1v1Schema);
@@ -65,7 +95,7 @@ interface GameModeRift extends GameModeProfileBase {
 
 const gameModeRiftSchema = new Schema<GameModeRift>({
 
-}, { timestamps : false });
+}, { timestamps : false }).add(gameModeProfileBaseSchema);
 
 interface GameModeARAM extends GameModeProfileBase {
     mode : 'ARAM';
@@ -73,7 +103,7 @@ interface GameModeARAM extends GameModeProfileBase {
 
 const gameModeAramSchema = new Schema<GameModeARAM>({
 
-}, { timestamps : false });
+}, { timestamps : false }).add(gameModeProfileBaseSchema);
 
 type GameModeLoL = GameModeRift | GameModeARAM
 
@@ -90,7 +120,7 @@ const profileLoLSchema = new Schema<GameProfileLoL>({
     gameModes : [{
         mode : { type : String, required : true }
     }]
-}, { timestamps : false });
+}, { timestamps : false }).add(gameProfileBaseSchema);;
 
 const gameModesLoLPath = profileLoLSchema.path('gameModes') as mongoose.Schema.Types.DocumentArray
 gameModesLoLPath.discriminator('Rift', gameModeRiftSchema);
@@ -104,7 +134,7 @@ interface GameModeVal5v5 extends GameModeProfileBase {
 
 const gameModeVal5v5Schema = new Schema<GameModeVal5v5>({
 
-}, { timestamps : false });
+}, { timestamps : false }).add(gameModeProfileBaseSchema);
 
 type GameModeValorant = GameModeVal5v5
 
@@ -125,7 +155,7 @@ const profileValorantSchema = new Schema<GameProfileValorant>({
     gameModes : [{
         mode : { type : String, required : true }
     }]
-}, { timestamps : false });
+}, { timestamps : false }).add(gameProfileBaseSchema);
 
 const gameModesValorantPath = profileValorantSchema.path('gameModes') as mongoose.Schema.Types.DocumentArray
 gameModesValorantPath.discriminator('Val5v5', gameModeVal5v5Schema);
@@ -138,7 +168,7 @@ interface GameModeRocket1v1 extends GameModeProfileBase {
 
 const gameModeRocket1v1Schema = new Schema<GameModeRocket1v1>({
 
-}, { timestamps : false });
+}, { timestamps : false }).add(gameModeProfileBaseSchema);
 
 interface GameModeRocket3v3 extends GameModeProfileBase {
     mode : '3v3';
@@ -146,7 +176,7 @@ interface GameModeRocket3v3 extends GameModeProfileBase {
 
 const gameModeRocket3v3Schema = new Schema<GameModeRocket3v3>({
 
-}, { timestamps : false });
+}, { timestamps : false }).add(gameModeProfileBaseSchema);
 
 type GameModeRocket = GameModeRocket1v1 | GameModeRocket3v3
 
@@ -163,7 +193,7 @@ const profileRocketSchema = new Schema<GameProfileRocket>({
     gameModes : [{
         mode : { type : String, required : true }
     }]
-}, { timestamps : false });
+}, { timestamps : false }).add(gameProfileBaseSchema);
 
 const gameModesRocketPath = profileRocketSchema.path('gameModes') as mongoose.Schema.Types.DocumentArray
 gameModesRocketPath.discriminator('1v1', gameModeRocket1v1Schema);

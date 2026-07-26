@@ -13,3 +13,11 @@ export const getGameByName = async (req : Request, res : Response) => {
         console.log('Error at GET /game/:name')
     }
 }
+
+export const createGame = async (req : Request, res : Response) => {
+
+}
+
+export const createGameMode = async (req : Request, res : Response) => {
+    
+}
