@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react'
-import SchedulePopUpToggleContext from './context/SchedulePopUpToggleProvider'
-import EventContext from './context/EventContextProvider'
+import useRiceEvent from './hooks/useRiceEvent'
+import useSchedulePopUp from './hooks/useSchedulePopUp'
 
-export const DayOverview = ({date}) => {
+export const DayOverview = ({date} : { date : Date }) => {
 
-    const { selectedDayEvents, setCurrentEvent } = useContext(EventContext)
+    const { selectedDayEvents, setCurrentEvent } = useRiceEvent()
     
-    const { toggleEventInfo, setToggleEventInfo, toggleDayOverview, setToggleDayOverview } = useContext(SchedulePopUpToggleContext)
+    const { toggleEventInfo, setToggleEventInfo, toggleDayOverview, setToggleDayOverview } = useSchedulePopUp();
 
     const mapEvents = () => {
         return (
@@ -31,7 +31,7 @@ export const DayOverview = ({date}) => {
     }
 
     return (
-        <div className={`time-entry-window`} style={toggleDayOverview ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
+        <div className={`time-entry-window`} style={toggleDayOverview ? undefined : {visibility: 'hidden', pointerEvents: 'none'}}>
             <div>
                 <p>{`Events: `}</p>
                 <ul className='calendar-event-list'>{mapEvents()}</ul>

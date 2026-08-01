@@ -39,46 +39,61 @@ const userSchema = new Schema<UserDoc>({
     }
 });
 
-userSchema.pre("save", function (next){
-    const user = this;
+userSchema.pre('save', function (next){
 
-    if (user.isModified('password')) {
-        return next();
-    }
-    genSalt(10, (err, salt) => {
-        if (err) return next(err);
+    try {
+        const user = this;
 
-        hash(user.password, salt, (err, hash) => {
+        if (user.isModified('password')) {
+            return next();
+        }
+        genSalt(10, (err, salt) => {
             if (err) return next(err);
 
-            user.password = hash;
-            next();
+            hash(user.password, salt, (err, hash) => {
+                if (err) return next(err);
+
+                user.password = hash;
+                next();
+            });
         });
-    });
+    }
+    catch(e) {
+
+    }
 });
 
 userSchema.pre('findOneAndUpdate', async function (next){
-    const user = await this.model.findOne(this.getQuery())
 
-    console.log('asjdflkajdfskl')
-    console.log(user)//stankfish123
+    try {
+        const user = await this.model.findOne(this.getQuery())
 
-    if (user.isModified('password')) {
-        return next();
-    }
+        console.log('asjdflkajdfskl')
+        console.log(user)//stankfish123
 
-    genSalt(10, (err, salt) => {
-        if (err) return next(err);
+        if (user.isModified('password')) {
+            return next();
+        }
 
-        hash(user.password, salt, (err, hash) => {
+        genSalt(10, (err, salt) => {
             if (err) return next(err);
-            user.password = hash;
-            next();
+
+            hash(user.password, salt, (err, hash) => {
+                if (err) return next(err);
+                user.password = hash;
+                next();
+            });
         });
-    });
+    }
+    catch(e) {
+
+    }
 });
 
 userSchema.methods.generateAccessJWT = function (this : UserDoc) : string {
+    try { }
+    catch(e) {}
+
     let payload = {
         id: this._id
     };

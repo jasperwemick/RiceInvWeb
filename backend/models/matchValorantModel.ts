@@ -3,9 +3,10 @@ import { MatchDoc } from "./matchModel";
 
 const Schema = mongoose.Schema;
 
-interface MatchValorantDoc extends MatchDoc {
+export interface MatchValorantDoc extends MatchDoc {
     game : 'Valorant';
     map : 'Split' | 'Bind' | 'Haven' | 'Ascent' | 'Pearl' | 'Sunset' | 'Lotus' | 'Corrode' | 'Icebox' | 'Fracture' | 'Abyss' | 'Breeze' | 'Summit';
+    rounds : number;
     version : string;
 }
 
@@ -14,9 +15,13 @@ const matchValorantSchema = new Schema<MatchValorantDoc>({
         type: String,
         required: true
     },
+    rounds : {
+        type : Number,
+        required : true
+    },
     version: {
         type: String
     }
 }, { timestamps: false });
 
-export default mongoose.model<MatchValorantDoc>('ValorantMatch', matchValorantSchema)
+export default mongoose.model<MatchValorantDoc>('MatchValorant', matchValorantSchema)

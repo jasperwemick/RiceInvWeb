@@ -3,10 +3,10 @@ import { Profile } from "../../data/types"
 
 interface ProfileListItemProps {
     profile : Profile;
-    width : number;
-    height : number;
-    clickAction : () => void;
-    styleOptions : CSSProperties | undefined
+    width? : number;
+    height? : number;
+    clickAction? : () => void;
+    styleOptions? : CSSProperties | undefined
 }
 
 export default function ProfileListItem({profile, width=200, height=200, clickAction=(() => {}), styleOptions=undefined} : ProfileListItemProps) {

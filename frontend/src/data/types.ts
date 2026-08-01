@@ -92,3 +92,43 @@ export interface TournamentSet {
     matches : TournamentMatch[];
 }
 
+interface TimeRange {
+    year : number;
+    month : number;
+    day : number;
+    time : boolean;
+}
+
+export interface RiceEvent {
+    _id: string;
+    name: string;
+    description: string;
+    year: number;
+    month: number;
+    day: number;
+    group: string;
+    duration: number;
+    timeRanges: TimeRange[];
+    participants: Profile[];
+    ready: boolean;
+    finished: boolean;
+}
+
+export interface TimeEntry {
+    user : string;
+    profileId : string;
+    year : number;
+    month : number;
+    day : number;
+    timeRange : boolean[];
+}
+
+export interface CalendarDay {
+    dayNum : number;
+    currentMonth : boolean;
+    date : Date;
+    month : number;
+    number : number;
+    selected : boolean;
+    year : number;
+}

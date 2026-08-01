@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
 import GetUrl from "../../GetUrl"
 import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
-import EventContext from "./context/EventContextProvider";
+import EventContext from "./context/RiceEventContextProvider";
 import useAuth from "../../hooks/useAuth";
 
 

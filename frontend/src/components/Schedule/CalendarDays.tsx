@@ -1,35 +1,44 @@
-import React, { createRef, useCallback, useContext, useEffect, useRef, useState } from 'react'
+import React, { createRef, Dispatch, RefObject, SetStateAction, useCallback, useContext, useEffect, useRef, useState } from 'react'
 import useAuth from '../../hooks/useAuth'
 import GetUrl from '../../GetUrl'
 // import useAlert from '../../hooks/useAlert'
 // import { DayOverview } from './DayOverview'
 import SchedulePopUpToggleContext from './context/SchedulePopUpToggleProvider'
-import EventContext from './context/EventContextProvider'
+import EventContext from './context/RiceEventContextProvider'
+import { CalendarDay, RiceEvent } from '../../data/types'
+import useRiceEvent from './hooks/useRiceEvent'
+import useSchedulePopUp from './hooks/useSchedulePopUp'
 
 const useGetRef = () => {
-    const refs = useRef({})
+    const refs = useRef<Record<number, RefObject<HTMLDivElement>>>({})
     return useCallback(
-        (idx) => (refs.current[idx] ??= createRef()),
+        (idx : number) => (refs.current[idx] ??= createRef()),
         [refs]
     )
 }
 
-export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
+interface CalendarDaysProps {
+    currentDay : Date;
+    changeCurrentDay : (day : CalendarDay) => void;
+    setEntryDate : Dispatch<SetStateAction<Date>>;
+}
+
+export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate} : CalendarDaysProps) => {
 
     const { auth }  = useAuth()
 
     // const { setAlert } = useAlert() // RENDERING PROBLEM
 
     const getRef = useGetRef()
-    const selectionRef = useRef(null)
+    const selectionRef = useRef<HTMLDivElement>(null)
 
-    function downHandler({key}) {
+    function downHandler({ key } : { key : string }) {
         if (key === 'Shift') {
             setShiftHeld(true);
         }
     }
 
-    function upHandler({key}) {
+    function upHandler({ key } : { key : string }) {
         if (key === 'Shift') {
             setShiftHeld(false);
         }
@@ -40,9 +49,9 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
         toggleDayOverview, setToggleDayOverview, 
         monthlyTimeEntries, setMonthlyTimeEntries, 
         toggleTimeOverview, setToggleTimeOverview 
-    } = useContext(SchedulePopUpToggleContext)
+    } = useSchedulePopUp()
 
-    const { events, setSelectedDayEvents } = useContext(EventContext)
+    const { events, setSelectedDayEvents } = useRiceEvent();
 
     const [selectionBox, setSelectionBox] = useState({
         originalWidth: 0,
@@ -51,8 +60,8 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
         height: 1
     })
 
-    const [currentDays, setCurrentDays] = useState([])
-    const [shiftHeld, setShiftHeld] = useState(false);
+    const [currentDays, setCurrentDays] = useState<CalendarDay[]>([])
+    const [shiftHeld, setShiftHeld] = useState<boolean>(false);
 
     const today = new Date()
 
@@ -67,11 +76,11 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
     
     useEffect(() => {
 
-        if (auth.user) {
+        if (auth) {
 
             const getMonthTimes = async () => {
 
-                const res = await fetch(`${GetUrl}/api/events/time/${auth.user}/${currentDay.getFullYear()}/${'0' + String(currentDay.getMonth() + 1)}/borders`)
+                const res = await fetch(`${GetUrl}/api/events/time/${auth.username}/${currentDay.getFullYear()}/${'0' + String(currentDay.getMonth() + 1)}/borders`)
                 let entries = await res.json()
 
                 setMonthlyTimeEntries(entries)
@@ -80,7 +89,7 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
             getMonthTimes()
         }
 
-    }, [auth.user, currentDay, toggleTimeEntry])
+    }, [auth, currentDay, toggleTimeEntry])
 
     useEffect(() => {
         let firstDayOfMonth = new Date(currentDay.getFullYear(), currentDay.getMonth(), 1);
@@ -99,7 +108,7 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
                 firstDayOfMonth.setDate(firstDayOfMonth.getDate() + 1);
             }
     
-            const calendarDay = {
+            const calendarDay : CalendarDay = {
                 dayNum: dayNum,
                 currentMonth: (firstDayOfMonth.getMonth() === currentDay.getMonth()),
                 date: (new Date(firstDayOfMonth)),
@@ -115,11 +124,11 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
         setCurrentDays(temp)
     }, [currentDay])
 
-    const handleGridboxClick = (e) => {
+    const handleGridboxClick = (e : React.ChangeEvent) => {
         
     }
 
-    const handleCalendarDayClick = (calDay, dayEventList) => {
+    const handleCalendarDayClick = (calDay : CalendarDay, dayEventList : RiceEvent[]) => {
         if (calDay.date.getDate() === currentDay.getDate() && calDay.date.getMonth() === currentDay.getMonth()) {
             setEntryDate(calDay.date)
             setSelectedDayEvents(dayEventList); 
@@ -127,7 +136,11 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
         }
 
         // Move selection box
-        const bounds = getRef(calDay.dayNum).current.getBoundingClientRect()
+        const bounds = getRef(calDay.dayNum).current?.getBoundingClientRect();
+
+        if (!selectionRef.current || !bounds) {
+            return;
+        }
 
         if (shiftHeld && selectionBox.originalWidth !== 0) {
             let width = Number(selectionRef.current.style.width.slice(0, -2))
@@ -196,23 +209,22 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
                     className={`calendar-day ${calDay.currentMonth ? "current" : ""} ${calDay.selected ? " selected" : ""}`}
                     key={index}
                     onClick={() => handleCalendarDayClick(calDay, dayEventList)}
-                    style={ timeEntryProvided ? {backgroundColor: 'green'} : null }
-                    ref={getRef(index)}
-                    >        
+                    style={ timeEntryProvided ? {backgroundColor: 'green'} : undefined }
+                    ref={getRef(index)}>        
                         <p className='no-select-text'>{calDay.number}</p>
                         <div style={{display:'flex', flexDirection: 'column'}}>
                             <button 
                             className='toggle-time-entry-button no-select-text'
                             style={
                                 (
-                                    auth.user && 
+                                    auth?.username && 
                                     twoMonthRange
                                 ) ? 
-                                null : 
+                                undefined : 
                                 {visibility: 'hidden', pointerEvents: 'none'}
                             } 
                             onClick={
-                                (auth.user && calDay.month === today.getMonth()) ? 
+                                (auth?.username && calDay.month === today.getMonth()) ? 
                                 (e) => {
                                     setToggleTimeEntry(true)
                                     setEntryDate(calDay.date)
@@ -228,8 +240,8 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
                             <button
                             className={`toggle-time-entry-button no-select-text`}
                             style={
-                                (auth.user && (auth.roles ? auth.roles.includes('Admin') : false) && twoMonthRange) ?
-                                null :
+                                (auth?.username && (auth.roles ? auth.roles.includes('Admin') : false) && twoMonthRange) ?
+                                undefined :
                                 {visibility: 'hidden', pointerEvents: 'none'}
                             }
                             onClick={
@@ -238,8 +250,7 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate}) => {
                                     setEntryDate(calDay.date)
                                     e.stopPropagation()
                                 }
-                            }
-                            >
+                            }>
                             {`Overview`}
                             </button>
                         </div>

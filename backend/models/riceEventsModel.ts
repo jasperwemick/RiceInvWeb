@@ -19,7 +19,7 @@ export interface RiceEventDoc extends Document {
     group : string;
     duration : number;
     timeRanges : TimeRange[];
-    participants : mongoose.Schema.Types.ObjectId[]
+    participants : mongoose.Types.ObjectId[]
     ready : boolean;
     finished : boolean;
 }

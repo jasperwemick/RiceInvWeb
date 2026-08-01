@@ -1,7 +1,10 @@
-import React, { useEffect, useState } from 'react'
+import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { CalendarDays } from './CalendarDays'
+import { CalendarDay } from '../../data/types'
 
-export const Calendar = ({setEntryDate}) => {
+
+
+export const Calendar = ({setEntryDate} : {setEntryDate : Dispatch<SetStateAction<Date>>}) => {
 
     const weekdays = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
     const months = ['January', 'February', 'March', 'April', 'May', 'June',
@@ -9,7 +12,7 @@ export const Calendar = ({setEntryDate}) => {
 
     const [currentDay, setCurrentDay] = useState(new Date())
 
-    const changeCurrentDay = (day) => {
+    const changeCurrentDay = (day : CalendarDay) => {
         setCurrentDay(new Date(day.year, day.month, day.number))
     }
 

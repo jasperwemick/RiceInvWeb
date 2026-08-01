@@ -6,7 +6,6 @@ export interface MatchDoc extends Document {
     matchNumber : Number;
     matchSet : mongoose.Schema.Types.ObjectId;
     winningTeam : mongoose.Schema.Types.ObjectId;
-    duration : Number;
 }
 
 const matchSchema = new Schema<MatchDoc>({
@@ -24,9 +23,6 @@ const matchSchema = new Schema<MatchDoc>({
         type : mongoose.Schema.Types.ObjectId,
         ref : 'Team',
         required : true
-    },
-    duration : {
-        type : Number
     }
 
 }, { timestamps: false });

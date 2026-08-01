@@ -1,14 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useLocation } from "wouter";
 import GetUrl from "../GetUrl";
+import apiFetch from "../fetch";
+import { Profile } from "../data/types";
  
 export default function Edit() {
 
     const [name, setName] = useState("")
     const [description, setDescription] = useState("")
-
-    const [gamertag, setGamertag] = useState("")
-
     const [url, setUrl] = useState("")
 
     const params = useParams();
@@ -16,17 +15,15 @@ export default function Edit() {
  
     useEffect(() => {
         async function fetchData() {
-            const id = params.id.toString();
+            const id = params.id;
             try {
-                const profiles = await fetch(`${GetUrl}/api/profiles/default/${id}`);
-                const profile = await profiles.json();
+                const profile = await apiFetch<Profile>(`${GetUrl}/api/profiles/default/${id}`)
 
                 console.log(profile)
 
                 setName(profile.name);
                 setDescription(profile.description);
-                setGamertag(profile.gamertag)
-                setUrl(profile.imageUrl)
+                setUrl(profile.imageURL)
 
             }
             catch(err) {
@@ -40,19 +37,16 @@ export default function Edit() {
         fetchData();
 
         return;
-    }, [params.id, navigate]);
+    }, [params.id, location]);
  
-    async function onSubmit(e) {
+    async function onSubmit(e : React.FormEvent) {
         e.preventDefault();
 
-        const id = params.id.toString();
-        
-        let sum = Number(brawlPoints + leaguePoints + valPoints + bullPoints + rocketPoints + mysteryPoints + counterPoints + Number(bonusPoints));
-        
+        const id = params.id;
+                
         const profileData = new FormData();
         profileData.append("name", name);
         profileData.append("description", description);
-        profileData.append("gamertag", gamertag)
         try {
             await fetch(`${GetUrl}/api/profiles/default/${id}`, {
                 method: "PATCH",
@@ -66,13 +60,13 @@ export default function Edit() {
             return;
         }
         
-        navigate("/");
+        useNavigate("/");
     }
 
-    async function updateImage(e) {
+    async function updateImage(e : React.ChangeEvent<HTMLInputElement>) {
         e.preventDefault();
 
-        const id = params.id.toString();
+        const id = params.id;
 
         try {
             // Remove old image from database
@@ -81,6 +75,9 @@ export default function Edit() {
                 credentials: "include"
             });
 
+            if (!e.target.files) {
+                throw new Error("No files");
+            }
             // Add new image to database
             const fileData = new FormData();
             fileData.append("image", e.target.files[0]);
@@ -109,19 +106,19 @@ export default function Edit() {
         }
     }
 
-    function validateNumber(e, setter) {
-        if (e.target.value.includes('-')) {
-            if (e.target.value[0] !== '-') {
-                e.preventDefault();
-                return;
-            }
-        }
-        else if (! /^[0-9]+$/.test(e.target.value) && e.target.value.length > 0) {
-            e.preventDefault();
-            return;
-        }
-        setter(Number(e.target.value));
-    }
+    // function validateNumber(e, setter) {
+    //     if (e.target.value.includes('-')) {
+    //         if (e.target.value[0] !== '-') {
+    //             e.preventDefault();
+    //             return;
+    //         }
+    //     }
+    //     else if (! /^[0-9]+$/.test(e.target.value) && e.target.value.length > 0) {
+    //         e.preventDefault();
+    //         return;
+    //     }
+    //     setter(Number(e.target.value));
+    // }
  
     return (
     <div>
@@ -138,48 +135,11 @@ export default function Edit() {
             type="text"
             />
             <input
-            value={gamertag}
-            onChange={e => setGamertag(e.target.value)}
-            type="text"
-            />
-            <input
             onChange={e => updateImage(e)}
             type="file"
             accept="image/*"
             />
             <img src={url} alt=""></img>
-            <input
-            value={brawlPoints}
-            onChange={e => validateNumber(e, setBrawlPoints)}
-            type="text" />
-            <input
-            value={leaguePoints}
-            onChange={e => validateNumber(e, setLeaguePoints)}
-            type="text" />
-            <input
-            value={valPoints}
-            onChange={e => validateNumber(e, setValPoints)}
-            type="text" />
-            <input
-            value={bullPoints}
-            onChange={e => validateNumber(e, setBullPoints)}
-            type="text" />
-            <input
-            value={rocketPoints}
-            onChange={e => validateNumber(e, setRocketPoints)}
-            type="text" />
-            <input
-            value={mysteryPoints}
-            onChange={e => validateNumber(e, setMysteryPoints)}
-            type="text" />
-            <input
-            value={counterPoints}
-            onChange={e => validateNumber(e, setCounterPoints)}
-            type="text" />
-            <input
-            value={bonusPoints}
-            onChange={e => validateNumber(e, setBonusPoints)}
-            type="text" />
             <input
             value="Update Profile"
             type="submit"

@@ -14,4 +14,4 @@ const matchBrawlSchema = new Schema<matchBrawlDoc>({
     }
 }, { timestamps: false });
 
-export default mongoose.model<matchBrawlDoc>('BrawlMatch', matchBrawlSchema)
+export default mongoose.model<matchBrawlDoc>('MatchBrawl', matchBrawlSchema)

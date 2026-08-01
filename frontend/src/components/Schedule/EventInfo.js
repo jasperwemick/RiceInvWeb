@@ -3,7 +3,7 @@ import { EventEditor } from "./EventEditor";
 import useAuth from "../../hooks/useAuth";
 import { EventSchedule } from "./EventSchedule";
 import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
-import EventContext from "./context/EventContextProvider";
+import EventContext from "./context/RiceEventContextProvider";
 import { ProfileList } from "../Profile/ProfileList";
 
 export const EventInfo = ({}) => {

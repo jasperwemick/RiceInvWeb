@@ -3,7 +3,7 @@ import { MatchDoc } from "./matchModel";
 
 const Schema = mongoose.Schema;
 
-interface MatchLoLDoc extends MatchDoc {
+export interface MatchLoLDoc extends MatchDoc {
     time : number;
 }
 
@@ -14,4 +14,4 @@ const matchLoLSchema = new Schema<MatchLoLDoc>({
     }
 }, { timestamps: false })
 
-export default mongoose.model<MatchLoLDoc>('LoLMatch', matchLoLSchema)
+export default mongoose.model<MatchLoLDoc>('MatchLoL', matchLoLSchema)

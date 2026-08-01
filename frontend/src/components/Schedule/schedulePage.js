@@ -5,7 +5,7 @@ import { EventPool } from "./EventPool";
 import { EventInfo } from "./EventInfo";
 
 import { SchedulePopUpToggleProvider } from "./context/SchedulePopUpToggleProvider";
-import { EventContextProvider } from "./context/EventContextProvider";
+import { EventContextProvider } from "./context/RiceEventContextProvider";
 import { DayOverview } from "./DayOverview";
 
 import './style/schedule.css'

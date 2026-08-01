@@ -15,4 +15,4 @@ const matchRocketSchema = new Schema<MatchRocketDoc>({
     }
 }, { timestamps: false });
 
-export default mongoose.model<MatchRocketDoc>('RocketMatch', matchRocketSchema)
+export default mongoose.model<MatchRocketDoc>('MatchRocket', matchRocketSchema)
