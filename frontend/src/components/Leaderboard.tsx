@@ -12,7 +12,7 @@ function LeaderboardRow({ profile } : LearderboardRowProps) {
     return (
         <tr className="leaderboard-row">
             <td><Link to={`/${profile._id}`}>{profile.name}</Link></td>
-            <td><span>{profile.ricePoints}</span></td>
+            {/* <td><span>{profile.ricePoints}</span></td>
             <td><Link to={`/brawl/${profile._id}`}>{profile.brawlPoints}</Link></td>
             <td><Link to={`/league/${profile._id}`}>{profile.leaguePoints}</Link></td>
             <td><span>{profile.valPoints}</span></td>
@@ -20,7 +20,7 @@ function LeaderboardRow({ profile } : LearderboardRowProps) {
             <td><span>{profile.rocketPoints}</span></td>
             <td><span>{profile.mysteryPoints}</span></td>
             <td><span>{profile.counterPoints}</span></td>
-            <td><span>{profile.bonusPoints}</span></td>
+            <td><span>{profile.bonusPoints}</span></td> */}
         </tr>
     )
 };
@@ -31,27 +31,27 @@ export default function Leaderboard() {
 
     useProfiles()
  
-    function scoresList() {
+    // function scoresList() {
 
-        function descendingOrder(a, b) {
-            if (a.ricePoints > b.ricePoints) {
-                return -1;
-            }
-            if (a.ricePoints < b.ricePoints) {
-                return 1;
-            }
-            return 0;
-        } 
+    //     function descendingOrder(a : , b) {
+    //         if (a.ricePoints > b.ricePoints) {
+    //             return -1;
+    //         }
+    //         if (a.ricePoints < b.ricePoints) {
+    //             return 1;
+    //         }
+    //         return 0;
+    //     } 
 
-        return profiles.sort(descendingOrder).map((profile) => {
-            return (
-                <LeaderboardRow
-                    profile={profile}
-                    key={profile._id}
-                />
-            );
-        });
-    }
+    //     return profiles.sort(descendingOrder).map((profile) => {
+    //         return (
+    //             <LeaderboardRow
+    //                 profile={profile}
+    //                 key={profile._id}
+    //             />
+    //         );
+    //     });
+    // }
 
     return (
         <section className="leaderboard">
@@ -70,7 +70,7 @@ export default function Leaderboard() {
                         <th><span>Bonus/Punishment</span></th>
                     </tr>
                 </thead>
-                <tbody>{scoresList()}</tbody>
+                {/* <tbody>{scoresList()}</tbody> */}
             </table>
         </section>
     )

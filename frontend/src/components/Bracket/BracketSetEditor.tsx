@@ -1,10 +1,13 @@
-import React, { useEffect, useState, useRef } from "react"
+import React, { useEffect, useState, useRef, Dispatch, SetStateAction } from "react"
 import GetUrl from "../../GetUrl"
-import { ProfileList } from "../Profile/ProfileList"
-import { SelectableProfile } from "../Profile/SelectableProfile"
+import { TournamentSet } from "../../data/types"
 
 interface BracketSetEditorProps {
-
+    editorData : TournamentSet;
+    setEditorData : Dispatch<SetStateAction<TournamentSet>>;
+    toggleEditor : boolean;
+    setToggleEditor : Dispatch<SetStateAction<boolean>>;
+    allSets : TournamentSet[];
 }
 
 export const BracketSetEditor = ({editorData, setEditorData, toggleEditor, setToggleEditor, allSets} : BracketSetEditorProps) => {
@@ -14,188 +17,185 @@ export const BracketSetEditor = ({editorData, setEditorData, toggleEditor, setTo
 
     const seedRef = useRef(null)
 
-    const setEditorSeeds = (arr) => {
-        // replace using ref
+    // const setEditorSeeds = (arr) => {
+    //     // replace using ref
 
-        if (seedSelect === 'upper') {
-            setEditorData({...editorData, upperSeedIDs: arr})
-        }
-        else {
-            setEditorData({...editorData, lowerSeedIDs: arr})
-        }
+    //     if (seedSelect === 'upper') {
+    //         setEditorData({...editorData, upperSeedIDs: arr})
+    //     }
+    //     else {
+    //         setEditorData({...editorData, lowerSeedIDs: arr})
+    //     }
         
-    }
+    // }
 
     const resetEditor = () => {
         setEditorData({
-            setID: 0,
-            gameTag: "",
-            upperSeedIDs: [],
-            upperSeedProfiles: [],
-            upperSeedWins: '',
-            lowerSeedIDs: [],
-            lowerSeedProfiles: [],
-            lowerSeedWins: '',
-            bestOf: '',
-            parents: [],
-            lowerSetID: -1,
-            nextSetID: -1
+            setId : 0,
+            tournament : '',
+            bestOf : 3,
+            bracket : false,
+            teams : [],
+            parents : [],
+            lowerSetID : -1,
+            nextSetID : -1,
+            matches : []
         })
     }
 
     const onSubmit = (e : React.FormEvent) => {
 
-        e.preventDefault()
+        // e.preventDefault()
 
-        setToggleEditor(false)
+        // setToggleEditor(false)
 
-        const updateSetData = async () => {
+        // const updateSetData = async () => {
 
-            try {
-                await fetch(`${GetUrl}/api/games/set/${editorData.gameTag}/${editorData.setID}`, {
-                    method: "PUT",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify(editorData)
-                })
-            }
-            catch(e) {
-                console.log('Failed to fetch at PUT /api/games/set/:tag/:num: ', e)
-            }
+        //     try {
+        //         await fetch(`${GetUrl}/api/games/set/${editorData.gameTag}/${editorData.setID}`, {
+        //             method: "PUT",
+        //             headers: {
+        //                 "Content-Type": "application/json",
+        //             },
+        //             body: JSON.stringify(editorData)
+        //         })
+        //     }
+        //     catch(e) {
+        //         console.log('Failed to fetch at PUT /api/games/set/:tag/:num: ', e)
+        //     }
 
-        }
+        // }
 
-        const progressBracket = (seed : string) => {
+    //     const progressBracket = (seed : string) => {
 
-            let nextSetData = null
-            const nextSetNode = allSets.find(({ value }) => value === editorData.nextSetID)
+    //         let nextSetData = null
+    //         const nextSetNode = allSets.find(({ value }) => value === editorData.nextSetID)
 
-            if (nextSetNode) {
+    //         if (nextSetNode) {
 
-                const winners = seed === 'U' ? editorData.upperSeedIDs : editorData.lowerSeedIDs
-                const nextHasTwoParents = nextSetNode.left != null && nextSetNode.right != null
+    //             const winners = seed === 'U' ? editorData.upperSeedIDs : editorData.lowerSeedIDs
+    //             const nextHasTwoParents = nextSetNode.left != null && nextSetNode.right != null
 
-                console.log(nextHasTwoParents)
-                console.log(nextSetNode.right)
+    //             console.log(nextHasTwoParents)
+    //             console.log(nextSetNode.right)
     
-                nextSetData = {
-                    setID: editorData.nextSetID,
-                    gameTag: editorData.gameTag,
-                    upperSeedIDs: ((nextSetNode.left ? nextSetNode.left.value === editorData.setID : null) && nextHasTwoParents) ? winners : [],
-                    upperSeedWins: 0,
-                    lowerSeedIDs: ((nextSetNode.right ? nextSetNode.right.value === editorData.setID : null) || !nextHasTwoParents) ? winners : [],
-                    lowerSeedWins: 0,
-                    bestOf: editorData.bestOf,
-                    parents: [
-                        nextSetNode.left ? nextSetNode.left.value : null, 
-                        nextSetNode.right ? nextSetNode.right.value : null
-                    ],
-                    lowerSetID: nextSetNode.buddy ? nextSetNode.buddy.value : -1,
-                    nextSetID: nextSetNode.parent ? nextSetNode.parent.value : -1
-                }
-            }
+    //             nextSetData = {
+    //                 setID: editorData.nextSetID,
+    //                 gameTag: editorData.gameTag,
+    //                 upperSeedIDs: ((nextSetNode.left ? nextSetNode.left.value === editorData.setID : null) && nextHasTwoParents) ? winners : [],
+    //                 upperSeedWins: 0,
+    //                 lowerSeedIDs: ((nextSetNode.right ? nextSetNode.right.value === editorData.setID : null) || !nextHasTwoParents) ? winners : [],
+    //                 lowerSeedWins: 0,
+    //                 bestOf: editorData.bestOf,
+    //                 parents: [
+    //                     nextSetNode.left ? nextSetNode.left.value : null, 
+    //                     nextSetNode.right ? nextSetNode.right.value : null
+    //                 ],
+    //                 lowerSetID: nextSetNode.buddy ? nextSetNode.buddy.value : -1,
+    //                 nextSetID: nextSetNode.parent ? nextSetNode.parent.value : -1
+    //             }
+    //         }
 
-            let lowerSetData = null
-            const lowerSetNode = allSets.find(({ value }) => value === editorData.lowerSetID)
+    //         let lowerSetData = null
+    //         const lowerSetNode = allSets.find(({ value }) => value === editorData.lowerSetID)
             
-            if (lowerSetNode) {
+    //         if (lowerSetNode) {
 
-                const losers = seed === 'U' ? editorData.lowerSeedIDs : editorData.upperSeedIDs
-                const lowerHasNoParents = lowerSetNode.left == null && lowerSetNode.right == null
+    //             const losers = seed === 'U' ? editorData.lowerSeedIDs : editorData.upperSeedIDs
+    //             const lowerHasNoParents = lowerSetNode.left == null && lowerSetNode.right == null
    
-                const getlinkedUpperSets = () => {
-                    const ret = allSets.filter((x) => x.buddy ? x.buddy.value === editorData.lowerSetID : false).sort((a, b) => a.value - b.value)
-                    console.log(ret)
-                    return ret
-                }
+    //             const getlinkedUpperSets = () => {
+    //                 const ret = allSets.filter((x) => x.buddy ? x.buddy.value === editorData.lowerSetID : false).sort((a, b) => a.value - b.value)
+    //                 console.log(ret)
+    //                 return ret
+    //             }
 
-                lowerSetData = {
-                    setID: editorData.lowerSetID,
-                    gameTag: editorData.gameTag,
-                    upperSeedIDs: lowerHasNoParents ? (editorData.setID === getlinkedUpperSets()[0].value ? losers : []) : losers,
-                    upperSeedWins: 0,
-                    lowerSeedIDs: lowerHasNoParents ? (editorData.setID === getlinkedUpperSets()[1].value ? losers : []) : [],
-                    lowerSeedWins: 0,
-                    bestOf: editorData.bestOf,
-                    parents: [
-                        lowerSetNode.left ? lowerSetNode.left.value : null, 
-                        lowerSetNode.right ? lowerSetNode.right.value : null
-                    ],
-                    lowerSetID: -1,
-                    nextSetID: lowerSetNode.parent ? lowerSetNode.parent.value : -1
-                }
-            }
+    //             lowerSetData = {
+    //                 setID: editorData.lowerSetID,
+    //                 gameTag: editorData.gameTag,
+    //                 upperSeedIDs: lowerHasNoParents ? (editorData.setID === getlinkedUpperSets()[0].value ? losers : []) : losers,
+    //                 upperSeedWins: 0,
+    //                 lowerSeedIDs: lowerHasNoParents ? (editorData.setID === getlinkedUpperSets()[1].value ? losers : []) : [],
+    //                 lowerSeedWins: 0,
+    //                 bestOf: editorData.bestOf,
+    //                 parents: [
+    //                     lowerSetNode.left ? lowerSetNode.left.value : null, 
+    //                     lowerSetNode.right ? lowerSetNode.right.value : null
+    //                 ],
+    //                 lowerSetID: -1,
+    //                 nextSetID: lowerSetNode.parent ? lowerSetNode.parent.value : -1
+    //             }
+    //         }
 
-            const submitExtensionSets = async () => {
-                try {
-                    await fetch(`${GetUrl}/api/games/set/${editorData.gameTag}`, {
-                        method: "PUT",
-                        headers: {
-                            "Content-Type": "application/json",
-                        },
-                        body: JSON.stringify([nextSetData, lowerSetData])
-                    })
-                }
-                catch(e) {
-                    console.log('Failed to fetch at PUT /api/games/set/:tag: ', e)
-                }
-            }
+    //         const submitExtensionSets = async () => {
+    //             try {
+    //                 await fetch(`${GetUrl}/api/games/set/${editorData.gameTag}`, {
+    //                     method: "PUT",
+    //                     headers: {
+    //                         "Content-Type": "application/json",
+    //                     },
+    //                     body: JSON.stringify([nextSetData, lowerSetData])
+    //                 })
+    //             }
+    //             catch(e) {
+    //                 console.log('Failed to fetch at PUT /api/games/set/:tag: ', e)
+    //             }
+    //         }
 
-            if (nextSetData && lowerSetData) {
-                if (nextSetData.setID === lowerSetData.setID) {
-                    nextSetData.upperSeedIDs = nextSetData.upperSeedIDs.concat(lowerSetData.upperSeedIDs)
-                    nextSetData.lowerSeedIDs = nextSetData.lowerSeedIDs.concat(lowerSetData.lowerSeedIDs)
-                    lowerSetData = null
-                }
-            }
+    //         if (nextSetData && lowerSetData) {
+    //             if (nextSetData.setID === lowerSetData.setID) {
+    //                 nextSetData.upperSeedIDs = nextSetData.upperSeedIDs.concat(lowerSetData.upperSeedIDs)
+    //                 nextSetData.lowerSeedIDs = nextSetData.lowerSeedIDs.concat(lowerSetData.lowerSeedIDs)
+    //                 lowerSetData = null
+    //             }
+    //         }
 
 
-            submitExtensionSets()
+    //         submitExtensionSets()
 
-        }
+    //     }
 
-        updateSetData()
-        if (editorData.upperSeedWins > editorData.bestOf / 2) {
-            progressBracket('U')
-        }
-        else if (editorData.lowerSeedWins > editorData.bestOf / 2) {
-            progressBracket('L')
-        }
-        resetEditor()
-    }
+    //     updateSetData()
+    //     if (editorData.upperSeedWins > editorData.bestOf / 2) {
+    //         progressBracket('U')
+    //     }
+    //     else if (editorData.lowerSeedWins > editorData.bestOf / 2) {
+    //         progressBracket('L')
+    //     }
+    //     resetEditor()
+    // }
 
-    const shift = (offset) => {
-        scrollRef.current.scrollLeft += offset;
-    }
+    // const shift = (offset) => {
+    //     scrollRef.current.scrollLeft += offset;
+    // }
 
-    const onDelete = () => {
+    // const onDelete = () => {
 
-        setToggleEditor(false)
+    //     setToggleEditor(false)
 
-        const deleteSetData = async () => {
+    //     const deleteSetData = async () => {
 
-            try {
-                await fetch(`${GetUrl}/api/games/set/${editorData.gameTag}/${editorData.setID}`, {
-                    method: "DELETE",
-                    headers: {
-                        "Content-Type": "application/json",
-                    }
-                })
-            }
-            catch(e) {
-                console.log('Failed to fetch at PUT /api/games/set/:tag/:num: ', e)
-            }
+    //         try {
+    //             await fetch(`${GetUrl}/api/games/set/${editorData.gameTag}/${editorData.setID}`, {
+    //                 method: "DELETE",
+    //                 headers: {
+    //                     "Content-Type": "application/json",
+    //                 }
+    //             })
+    //         }
+    //         catch(e) {
+    //             console.log('Failed to fetch at PUT /api/games/set/:tag/:num: ', e)
+    //         }
 
-        }
+    //     }
 
-        deleteSetData()
-        resetEditor()
+    //     deleteSetData()
+    //     resetEditor()
     }
 
     return (
         <div style={{zIndex:20}}>
-            <div 
+            {/* <div 
                 className="bracket-insertion-pop" 
                 style={toggleEditor ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
                     <ProfileList 
@@ -241,7 +241,7 @@ export const BracketSetEditor = ({editorData, setEditorData, toggleEditor, setTo
                 }}/>
                 <button style={{width: 60, height: 60, backgroundColor: 'red'}} onClick={() => onDelete()}/>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 }

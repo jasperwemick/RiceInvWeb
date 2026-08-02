@@ -92,11 +92,11 @@ export interface TournamentSet {
     matches : TournamentMatch[];
 }
 
-interface TimeRange {
+export interface TimeRange {
     year : number;
     month : number;
     day : number;
-    time : boolean;
+    range : boolean[];
 }
 
 export interface RiceEvent {
@@ -131,4 +131,14 @@ export interface CalendarDay {
     number : number;
     selected : boolean;
     year : number;
+}
+
+export interface TimeIntervalData {
+    strength : number;
+    players : string[];
+}
+
+export interface TimeEntryConfig {
+    opacity : number;
+    rangeType : 'AM' | 'PM' | 'BOTH';
 }

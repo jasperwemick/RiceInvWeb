@@ -7,7 +7,7 @@ interface TimeRange {
     year : number;
     month : number;
     day : number;
-    time : boolean;
+    range : boolean[];
 }
 
 export interface RiceEventDoc extends Document {
@@ -63,7 +63,7 @@ const riceEventSchema = new Schema<RiceEventDoc>({
             type: Number,
             required: true
         },
-        timeRange: [{
+        range: [{
             type: Boolean,
             required: true
         }],

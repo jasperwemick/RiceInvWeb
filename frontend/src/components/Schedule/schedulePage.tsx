@@ -1,8 +1,8 @@
 import React, { useState, useEffect, createContext, useContext } from "react";
 import { Calendar } from "./Calendar";
-import { TimeEditor } from "./TimeEditor";
-import { EventPool } from "./EventPool";
-import { EventInfo } from "./EventInfo";
+import TimeEditor from "./TimeEditor";
+import EventPool from "./EventPool";
+import EventInfo from "./EventInfo";
 
 import { SchedulePopUpToggleProvider } from "./context/SchedulePopUpToggleProvider";
 import { EventContextProvider } from "./context/RiceEventContextProvider";
@@ -12,9 +12,9 @@ import './style/schedule.css'
 import { TimeOverview } from "./TimeOverview";
 
 
-export default function SchedulePage({}) {
+export default function SchedulePage() {
 
-    const [entryDate, setEntryDate] = useState(new Date())
+    const [entryDate, setEntryDate] = useState<Date>(new Date())
 
     return (
             <div>

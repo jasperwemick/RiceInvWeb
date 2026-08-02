@@ -1,16 +1,24 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Dispatch, SetStateAction } from "react";
 
 import { TimeEntry } from "./TimeEntry"
 import GetUrl from "../../GetUrl";
+import { RiceEvent, TimeRange } from "../../data/types";
 
-export const EventSchedule = ({eventData, setEventData, toggleEventInfo, setToggleEventInfo}) => {
+interface EventScheduleProps {
+    eventData : RiceEvent;
+    setEventData : Dispatch<SetStateAction<RiceEvent | null>>;
+    toggleEventInfo : boolean;
+    setToggleEventInfo : Dispatch<SetStateAction<boolean>>;
+}
+
+export const EventSchedule = ({eventData, setEventData, toggleEventInfo, setToggleEventInfo} : EventScheduleProps) => {
 
     const [selectedRange, setSelectedRange] = useState(-1)
 
-    const submitToCalendar = (range) => {
-        setEventData({...eventData, month: range.month, day: range.day, year: range.year})
+    const submitToCalendar = (tr : TimeRange) => {
+        setEventData({...eventData, month: tr.month, day: tr.day, year: tr.year})
 
-        const submission = {...eventData, month: range.month, day: range.day, year: range.year}
+        const submission = {...eventData, month: tr.month, day: tr.day, year: tr.year}
 
         const upsertEventData = async () => {
 
@@ -38,9 +46,9 @@ export const EventSchedule = ({eventData, setEventData, toggleEventInfo, setTogg
 
         const requiredIntervalNum = eventData.duration * 2
 
-        let startTimeIndices = []
+        let startTimeIndices : number[] = []
         if (selectedRange !== -1) {
-            eventData.timeRanges[selectedRange].timeRange.forEach((interval, index, arr) => {
+            eventData.timeRanges[selectedRange].range.forEach((interval, index, arr) => {
 
                 let currentInterval = interval
                 let consecutives = 0
@@ -57,7 +65,7 @@ export const EventSchedule = ({eventData, setEventData, toggleEventInfo, setTogg
             })
         }
 
-        const indexToTime = (index) => {
+        const indexToTime = (index : number) => {
             let hour = String(Math.floor(index / 2) % 12)
             hour = hour.length === 1 ? '0' + hour : '' + hour 
             hour = hour === '00' ? '12' : hour
@@ -106,16 +114,16 @@ export const EventSchedule = ({eventData, setEventData, toggleEventInfo, setTogg
             <div style={{display: 'flex', alignItems: 'center', scale: '80%'}}>
                 <button style={{width: 30, height: 30}}>{`<`}</button>
                 <div className="event-time-entries-container">
-                    {eventData.timeRanges.map((range, index) => {
+                    {eventData.timeRanges.map((tr, index) => {
                         return (
                             <div 
                             key={index} 
-                            onClick={() => {submitToCalendar(range)}} 
+                            onClick={() => {submitToCalendar(tr)}} 
                             onMouseEnter={() => setSelectedRange(index)} 
                             onMouseLeave={() => setSelectedRange(-1)}
                             >
-                                <p className="no-select-text">{`Date: ${range.month}/${range.day}/${range.year}`}</p>
-                                <TimeEntry timeInvervalData={range.timeRange} setTimeIntervalData={null}/>
+                                <p className="no-select-text">{`Date: ${tr.month}/${tr.day}/${tr.year}`}</p>
+                                <TimeEntry timeInvervalData={tr.range} setTimeIntervalData={null}/>
                             </div>
                         )
                     })}

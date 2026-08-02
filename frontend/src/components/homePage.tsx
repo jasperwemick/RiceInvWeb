@@ -1,7 +1,7 @@
 import React from "react";
-import { ProfileList } from "./Profile/ProfileList"; 
 import { NavigationProfile } from "./Profile/NavigationProfile";
 import './style/home.css'
+import ProfileList from "./Profile/ProfileList";
 
 export default function Home() {
 

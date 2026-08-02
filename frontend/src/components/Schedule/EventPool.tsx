@@ -1,58 +1,65 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
+import React, { useState, useEffect, useRef, useContext, Dispatch, SetStateAction } from "react";
 import GetUrl from "../../GetUrl"
 import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
 import EventContext from "./context/RiceEventContextProvider";
 import useAuth from "../../hooks/useAuth";
+import { RiceEvent, User } from "../../data/types";
+import useRiceEvent from "./hooks/useRiceEvent";
+import useSchedulePopUp from "./hooks/useSchedulePopUp";
+import apiFetch from "../../fetch";
 
+interface EventItem {
+    event : RiceEvent | null;
+    toggleEventInfo : boolean;
+    setToggleEventInfo : Dispatch<SetStateAction<boolean>>;
+    setCurrentEvent : Dispatch<SetStateAction<RiceEvent | null>>;
+    clearEvent : () => void;
+    auth : User | null;
+}
 
-const EventItem = ({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent, clearEvent, auth}) => {
+function EventItem({event, toggleEventInfo, setToggleEventInfo, setCurrentEvent, clearEvent, auth} : EventItem) {
     return (
         <li 
         onClick={() => {
             setToggleEventInfo(!toggleEventInfo);
             event ? setCurrentEvent({...event}) : clearEvent();
         }}
-        style={event ? (event.ready ? {backgroundColor: "forestgreen"} : null) : 
-            ((auth.user && (auth.roles ? auth.roles.includes('Admin') : false)) ? 
-                null : {pointerEvents: 'none', visibility: 'hidden'})}>
+        style={event ? (event.ready ? {backgroundColor: "forestgreen"} : undefined) : 
+            ((auth?.username && (auth.roles ? auth.roles.includes('Admin') : false)) ? 
+                undefined : {pointerEvents: 'none', visibility: 'hidden'})}>
             {event ? event.name : 'Add Event'}
         </li>
     )
 }
 
 // Pool of unresolved events
-export const EventPool = ({}) => {
+export default function EventPool() {
 
-    const { toggleEventInfo, setToggleEventInfo } = useContext(SchedulePopUpToggleContext)
-
-    const { setCurrentEvent, events, setEvents, clearEvent } = useContext(EventContext)
-
+    const { toggleEventInfo, setToggleEventInfo } = useSchedulePopUp();
+    const { setCurrentEvent, events, setEvents, clearEvent } = useRiceEvent()
     const { auth }  = useAuth()
 
-    const [categories, setCategories] = useState([])
-
-    const [selectedCategory, setSelectedCategory] = useState('')
-
-    const [eventPool, setEventPool] = useState([])
+    const [categories, setCategories] = useState<string[]>([])
+    const [selectedCategory, setSelectedCategory] = useState<string>('')
+    const [eventPool, setEventPool] = useState<RiceEvent[]>([])
 
     useEffect(() => {
 
         const getEvents = async () => {
 
             try {
-                const response = await fetch(`${GetUrl}/api/events/ev?finished=false`)
-                const jsponse = await response.json()
-                setEvents(jsponse)
-                setEventPool(jsponse)
+                const unfinishedEvents = await apiFetch<RiceEvent[]>(`${GetUrl}/api/events/ev?finished=false`);
 
-                setCategories([...new Set(jsponse.map(x => x.group))])
+                setEvents(unfinishedEvents);
+                setEventPool(unfinishedEvents);
+                setCategories([...new Set(unfinishedEvents.map(x => x.group))]);
             }
             catch(e) {
-                console.log("no")
+                console.log('Failed to fetch events');
             }
         }
 
-        getEvents()
+        getEvents();
     }, [toggleEventInfo])
 
     const mapEvents = () => {
@@ -85,7 +92,7 @@ export const EventPool = ({}) => {
                     }
                 }}
                 key={index}
-                style={selectedCategory === cat ? {backgroundColor: "#a6a6a6"} : null}>
+                style={selectedCategory === cat ? {backgroundColor: "#a6a6a6"} : undefined}>
                     {cat}
                 </li>
             )

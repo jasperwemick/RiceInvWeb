@@ -1,10 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { TimeInterval } from "./TimeInterval";
+import TimeInterval from "./TimeInterval";
 
 
-export const TimeEntry = ({ timeInvervalData, setTimeIntervalData }) => {
+interface TimeEntryProps {
+    timeIntervalData : boolean[];
+    setTimeIntervalData : React.Dispatch<React.SetStateAction<boolean[]>>;
+}
 
-    const [oldData, setOldData] = useState(Array(48).fill(false))
+export default function TimeEntry({ timeIntervalData, setTimeIntervalData } : TimeEntryProps) {
+
+    const [oldData, setOldData] = useState<boolean[]>(Array(48).fill(false))
 
     const [lockedClick, setLockedClick] = useState(false)
 
@@ -15,14 +20,14 @@ export const TimeEntry = ({ timeInvervalData, setTimeIntervalData }) => {
     useEffect(() => {
 
         if (lockedClick) {
-            setOldData(timeInvervalData)
+            setOldData(timeIntervalData)
         }
         
     },[lockedClick])
 
-    const toggleRange = (index) => {
+    const toggleRange = (index : number) => {
 
-        let newIntervalArr = [...timeInvervalData]
+        let newIntervalArr = [...timeIntervalData]
 
         if (!lockedClick) {
             if (newIntervalArr[index]) {
@@ -44,13 +49,13 @@ export const TimeEntry = ({ timeInvervalData, setTimeIntervalData }) => {
         setTimeIntervalData(newIntervalArr)
     }
 
-    const updateRange = (index) => {
+    const updateRange = (index : number) => {
         if (lockedClick) {
 
             let left = startInterval <= index ? startInterval : index
             let right = left === startInterval ? index : startInterval
 
-            setTimeIntervalData(timeInvervalData.map((interval, i) => {
+            setTimeIntervalData(timeIntervalData.map((interval : boolean, i : number) => {
                 if (i >= left && i <= right) {
                     return mode
                 }
@@ -63,13 +68,13 @@ export const TimeEntry = ({ timeInvervalData, setTimeIntervalData }) => {
     return (
         <div className={`time-entry-container`} >
             {
-                timeInvervalData.map((interval, index) => {
+                timeIntervalData.map((interval, index) => {
                     return (
                         <TimeInterval 
                             index={index} 
                             intervalData={interval}
-                            toggleRange={setTimeIntervalData ? toggleRange : null}
-                            updateRange={setTimeIntervalData ? updateRange : null}
+                            toggleRange={toggleRange}
+                            updateRange={updateRange}
                             key={index}/>
                     )
                 })

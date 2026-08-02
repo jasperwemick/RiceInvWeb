@@ -4,20 +4,12 @@ import { useLocation } from "wouter";
  
 export default function Add() {
 
-    const [name, setName] = useState("")
-    const [description, setDescription] = useState("")
-    const [file, setFile] = useState()
-    const [brawlPoints, setBrawlPoints] = useState(0)
-    const [leaguePoints, setLeaguePoints] = useState(0)
-    const [valPoints, setValPoints] = useState(0)
-    const [bullPoints, setBullPoints] = useState(0)
-    const [rocketPoints, setRocketPoints] = useState(0)
-    const [mysteryPoints, setMysteryPoints] = useState(0)
-    const [counterPoints, setCounterPoints] = useState(0)
-    const [bonusPoints, setBonusPoints] = useState(0)
+    const [name, setName] = useState<string>("")
+    const [description, setDescription] = useState<string>("")
+    const [file, setFile] = useState<File | null>()
 
-    const [gamertag, setGamertag] = useState("")
-    const [user, setUser] = useState("")
+    const [gamertag, setGamertag] = useState<string>("")
+    const [user, setUser] = useState<string>("")
 
     const [location, navigate] = useLocation();
     
@@ -25,22 +17,9 @@ export default function Add() {
     async function onSubmit(e : React.FormEvent) {
         e.preventDefault();
         try {
-
-            let sum = Number(brawlPoints + leaguePoints + valPoints + bullPoints + rocketPoints + mysteryPoints + counterPoints + Number(bonusPoints));
-
             const profileData = new FormData();
             profileData.append("name", name)
             profileData.append("description", description)
-            profileData.append("ricePoints", sum)
-            profileData.append("image", file)
-            profileData.append("brawlPoints", brawlPoints)
-            profileData.append("leaguePoints", leaguePoints)
-            profileData.append("valPoints", valPoints)
-            profileData.append("bullPoints", bullPoints)
-            profileData.append("rocketPoints", rocketPoints)
-            profileData.append("mysteryPoints", mysteryPoints)
-            profileData.append("counterPoints", counterPoints)
-            profileData.append("bonusPoints", bonusPoints)
             profileData.append("gamertag", gamertag)
             profileData.append("user", user)
 
@@ -99,41 +78,9 @@ export default function Add() {
             type="text"
             placeholder="User" />
             <input 
-            onChange={e => setFile(e.target.files[0])} 
+            onChange={e => setFile(e.target.files ? e.target.files[0] : null)} 
             type="file" 
             accept="image/*" />
-            <input
-            value={brawlPoints}
-            onChange={e => validateNumber(e, setBrawlPoints)}
-            type="text" />
-            <input
-            value={leaguePoints}
-            onChange={e => validateNumber(e, setLeaguePoints)}
-            type="text" />
-            <input
-            value={valPoints}
-            onChange={e => validateNumber(e, setValPoints)}
-            type="text" />
-            <input
-            value={bullPoints}
-            onChange={e => validateNumber(e, setBullPoints)}
-            type="text" />
-            <input
-            value={rocketPoints}
-            onChange={e => validateNumber(e, setRocketPoints)}
-            type="text" />
-            <input
-            value={mysteryPoints}
-            onChange={e => validateNumber(e, setMysteryPoints)}
-            type="text" />
-            <input
-            value={counterPoints}
-            onChange={e => validateNumber(e, setCounterPoints)}
-            type="text" />
-            <input
-            value={bonusPoints}
-            onChange={e => validateNumber(e, setBonusPoints)}
-            type="text" />
             <button type="submit">Submit</button>
         </form>
     </div>

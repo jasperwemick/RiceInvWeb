@@ -1,12 +1,21 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, Dispatch, SetStateAction } from "react";
 import GetUrl from "../../GetUrl";
-import { TimeInterval } from "./TimeInterval";
+import TimeInterval from "./TimeInterval";
 import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
+import { TimeEntry, TimeEntryConfig, TimeIntervalData } from "../../data/types";
+import useSchedulePopUp from "./hooks/useSchedulePopUp";
+import apiFetch from "../../fetch";
 
-const TimeEntryDisplay = ({intervalData, config, stateFunction}) => {
+interface TimeEntryDisplayProps {
+    intervalData : TimeIntervalData[];
+    config : TimeEntryConfig;
+    stateFunction : Dispatch<SetStateAction<number>>;
+}
+
+const TimeEntryDisplay = ({intervalData, config, stateFunction} : TimeEntryDisplayProps) => {
 
     return (
-        <div className={`time-entry-container`} style={config.show !== 'BOTH' ? {opacity: config.opacity, width: 140} : {opacity: config.opacity}}>
+        <div className={`time-entry-container`} style={config.rangeType !== 'BOTH' ? {opacity: config.opacity, width: 140} : {opacity: config.opacity}}>
             {
                 intervalData.map((interval, index) => {
                     return (
@@ -14,7 +23,7 @@ const TimeEntryDisplay = ({intervalData, config, stateFunction}) => {
                             index={index} 
                             intervalData={interval}
                             key={index}
-                            laterHalf={config.show === 'PM'}
+                            laterHalf={config.rangeType === 'PM'}
                             toggleRange={stateFunction}/>
                     )
                 })
@@ -23,38 +32,41 @@ const TimeEntryDisplay = ({intervalData, config, stateFunction}) => {
     )
 }
 
-export const TimeOverview = ({ date }) => {
+export const TimeOverview = ({ date } : { date : Date }) => {
 
-    const { toggleTimeOverview, setToggleTimeOverview } = useContext(SchedulePopUpToggleContext)
+    const { toggleTimeOverview, setToggleTimeOverview } = useSchedulePopUp()
 
-    const [prevPMIntervalData, setPrevPMIntervalData] = useState(Array(48).fill().map((_) => ({ strength: 0, players: [] })))
-    const [timeInvervalData, setTimeIntervalData] = useState(Array(48).fill().map((_) => ({ strength: 0, players: [] })))
-    const [nextAMIntervalData, setNextAMIntervalData] = useState(Array(48).fill().map((_) => ({ strength: 0, players: [] })))
+    const initEmptyRange = () : TimeIntervalData[] => {
+        return Array.from({ length : 48 }, () => ({ strength: 0, players: [] }))
+    }
+    
+    const [prevPMIntervalData, setPrevPMIntervalData] = useState<TimeIntervalData[]>(initEmptyRange())
+    const [timeInvervalData, setTimeIntervalData] = useState<TimeIntervalData[]>(initEmptyRange())
+    const [nextAMIntervalData, setNextAMIntervalData] = useState<TimeIntervalData[]>(initEmptyRange())
 
-    const [currentIndex, setCurrentIndex] = useState(-1)
-    const [entrants, setEntrants] = useState([])
+    const [currentIndex, setCurrentIndex] = useState<number>(-1)
+    const [entrants, setEntrants] = useState<string[]>([])
 
     const dateFormatted = date.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3/$1/$2')
 
     useEffect(() => {
 
         const getTimeEntries = async () => {
-            const res = await fetch(`${GetUrl}/api/events/time/all/${date.getFullYear()}/${'0' + String(date.getMonth() + 1)}/${date.getDate()}`)
-            const entries = await res.json()
+            const entries = await apiFetch<TimeEntry[]>(`${GetUrl}/api/events/time/all/${date.getFullYear()}/${'0' + String(date.getMonth() + 1)}/${date.getDate()}`);
 
             console.log(entries)
-            const todaysEntries = entries.filter((entry) => entry.day === date.getDate())
+            const todaysEntries = entries.filter((entry : TimeEntry) => entry.day === date.getDate())
 
             const numEntries = todaysEntries.length
 
-            let mergedEntries = Array(48).fill().map((_) => ({ strength: 0, players: [] }))
+            let mergedEntries = initEmptyRange();
 
             if (numEntries) {
                 let newArr = mergedEntries.map((interval, index) => {
 
                     let temp = { ...interval }
                     
-                    todaysEntries.forEach((entry) => {
+                    todaysEntries.forEach((entry : TimeEntry) => {
                         if (entry.timeRange[index]) {
                             temp.strength += 1
                             temp.players.push(entry.user)
@@ -97,18 +109,18 @@ export const TimeOverview = ({ date }) => {
     }
 
     return (
-        <div className={`time-entry-window`} style={toggleTimeOverview ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
+        <div className={`time-entry-window`} style={toggleTimeOverview ? undefined : {visibility: 'hidden', pointerEvents: 'none'}}>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <p>{`Previous Day`}</p>
-                <TimeEntryDisplay intervalData={prevPMIntervalData.slice(24)} config={{show: 'PM', opacity: 0.4}} stateFunction={setCurrentIndex}/>
+                <TimeEntryDisplay intervalData={prevPMIntervalData.slice(24)} config={{rangeType: 'PM', opacity: 0.4}} stateFunction={setCurrentIndex}/>
             </div>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <p>{`Selected Day: ${date.toLocaleDateString()}`}</p>
-                <TimeEntryDisplay intervalData={timeInvervalData} config={{show: 'BOTH', opacity: 1.0}} stateFunction={setCurrentIndex}/>
+                <TimeEntryDisplay intervalData={timeInvervalData} config={{rangeType: 'BOTH', opacity: 1.0}} stateFunction={setCurrentIndex}/>
             </div>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <p>{`Next Day`}</p>
-                <TimeEntryDisplay intervalData={nextAMIntervalData.slice(0, 24)} config={{show: 'AM', opacity: 0.4}} stateFunction={setCurrentIndex}/>
+                <TimeEntryDisplay intervalData={nextAMIntervalData.slice(0, 24)} config={{rangeType: 'AM', opacity: 0.4}} stateFunction={setCurrentIndex}/>
             </div>
             <div className={`time-entry-text`}>
                 <p>{`${currentIndex > 0 ? timeInvervalData[currentIndex].players.length : 0} / ${entrants.length} Available`}</p>
@@ -116,8 +128,8 @@ export const TimeOverview = ({ date }) => {
                 <button 
                 style={{width: 60, height: 60, position: 'relative'}}
                 onClick={() => {
-                    setToggleTimeOverview(false)
-                    setTimeIntervalData(Array(48).fill().map((_) => ({ strength: 0, players: [] })))
+                    setToggleTimeOverview(false);
+                    setTimeIntervalData(initEmptyRange());
                     }}>
                     {`Exit`}
                 </button>

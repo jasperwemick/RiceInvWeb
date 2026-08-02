@@ -1,25 +1,30 @@
-import React, { useState, useEffect, useRef, useContext } from "react";
-import { Profile } from "./Profile";
+import React, { useState, useEffect } from "react";
+import ProfileListItem from "./ProfileListItem";
 import './style/profile.css'
-import ProfileContext from "./context/ProfileContextProvider";
 import useProfiles from "./hooks/useProfiles";
-import { DraggableList } from "../DraggableList";
+import DraggableList from "../DraggableList";
+import { Profile } from "../../data/types";
 
+interface ProfileListProps<P extends object = {}> {
+    Wrapper? : ({profile} : {profile : Profile} & P) => React.JSX.Element;
+    WrapperProps? : P;
+    profileFilter? : string[];
+    profileContainer? : string;
+    isInfinite? : boolean;
+}
 
-export const ProfileList = ({
-    Wrapper=Profile, 
-    WrapperProps={width: 200, height: 200, clickAction: null, styleOptions: null}, 
-    profileFilter=[], 
-    profileContainer='profile-list-container',
-    isInfinite=false
-}) => {
+export default function ProfileList<P extends object = {}>({
+    Wrapper = ProfileListItem as unknown as (props: { profile: Profile } & P) => React.JSX.Element,
+    WrapperProps = {} as P,
+    profileFilter = [],
+    profileContainer = 'profile-list-container',
+    isInfinite = false
+} : ProfileListProps<P>) {
 
     const [scrollLength, setScrollLength] = useState(0)
     const [listLength, setListLength] = useState(0)
     const [profileTicks, setProfileTicks] = useState(0)
-    const { profiles } = useContext(ProfileContext)
-
-    useProfiles()
+    const { profiles } = useProfiles();
 
     useEffect(() => {
 

@@ -1,13 +1,21 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from "react";
 import GetUrl from "../../GetUrl"
 import '../../style/home.css'
-import { ProfileList } from "../Profile/ProfileList";
-import { SelectableProfile } from "../Profile/SelectableProfile";
+import ProfileList from "../Profile/ProfileList";
+import SelectableProfile, { SelectableProfileProps } from "../Profile/SelectableProfile";
+import { Profile, RiceEvent } from "../../data/types";
+
+interface EventEditorProps {
+    eventData : RiceEvent;
+    setEventData : Dispatch<SetStateAction<RiceEvent | null>>;
+    toggleEventInfo : boolean;
+    setToggleEventInfo : Dispatch<SetStateAction<boolean>>;
+}
 
 
-export function EventEditor({eventData, setEventData, toggleEventInfo, setToggleEventInfo}) {
+export function EventEditor({eventData, setEventData, toggleEventInfo, setToggleEventInfo} : EventEditorProps) {
 
-    const setEventParticipants = (arr) => {
+    const setEventParticipants = (arr : Profile[]) => {
         setEventData({...eventData, participants: arr})
     }
 
@@ -33,9 +41,9 @@ export function EventEditor({eventData, setEventData, toggleEventInfo, setToggle
 
 
     /**
-     * @param {Event} e - Submission onClick event
+     * @param {React.FormEvent} e - Submission onClick event
      */
-    function onSubmit(e) {
+    function onSubmit(e : React.FormEvent) {
         e.preventDefault();
 
         const upsertEventData = async () => {
@@ -62,15 +70,15 @@ export function EventEditor({eventData, setEventData, toggleEventInfo, setToggle
     return (
     <div>
         <h3>Add Event</h3>
-        <ProfileList 
-        shiftOffset={200}
-        Wrapper={SelectableProfile} 
-        WrapperProps={{
-            selectedList: eventData.participants, 
-            setSelectedList: setEventParticipants, 
-            refreshTrigger: [eventData._id]
-        }}
-        profileContainer="profile-list-container-small"
+        <ProfileList<SelectableProfileProps>
+            // shiftOffset={200}
+            Wrapper={SelectableProfile} 
+            WrapperProps={{
+                selectedList: eventData.participants, 
+                setSelectedList: setEventParticipants, 
+                refreshTrigger: [eventData._id]
+            }}
+            profileContainer="profile-list-container-small"
         />
         <form onSubmit={onSubmit}>
             <input 
@@ -90,7 +98,7 @@ export function EventEditor({eventData, setEventData, toggleEventInfo, setToggle
             placeholder="Game/Event Type" />
             <input
             value={eventData.duration || ''}
-            onChange={e => setEventData({...eventData, duration: e.target.value})}
+            onChange={e => setEventData({...eventData, duration: Number(e.target.value)})}
             type="text"
             placeholder="Duration (Hours)"/>
             <button type="submit">Submit</button>

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "../style/brawlPage.css"
-import { GroupSet, GroupTable} from "../components/Bracket/bracket.js"
 import GetUrl from "../GetUrl.js";
 import { GenerateBracket } from "../components/Bracket/GenerateBracket.js";
 

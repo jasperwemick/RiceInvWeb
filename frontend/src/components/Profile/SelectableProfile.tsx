@@ -2,20 +2,19 @@ import React, { useState, useEffect, useRef, Dispatch, SetStateAction } from "re
 import { Profile } from "../../data/types";
 import ProfileListItem from "./ProfileListItem";
 
-interface SelectableProfileProps {
-    profile : Profile;
-    setSelectedList : Dispatch<SetStateAction<string[]>>;
-    selectedList : string[];
+export interface SelectableProfileProps {
+    setSelectedList : (arr : Profile[]) => void;
+    selectedList : Profile[];
     refreshTrigger : any;
 }
 
-export const SelectableProfile = ({profile, setSelectedList, selectedList, refreshTrigger} : SelectableProfileProps) => {
+export default function SelectableProfile({profile, setSelectedList, selectedList, refreshTrigger} : { profile : Profile } & SelectableProfileProps) {
 
     const [selected, setSelected] = useState(false)
 
     useEffect(() => {
 
-        if (selectedList.find((p) => p === profile._id)) {
+        if (selectedList.find((p) => p._id === profile._id)) {
             setSelected(true)
         }
         else {
@@ -29,10 +28,10 @@ export const SelectableProfile = ({profile, setSelectedList, selectedList, refre
 
 
         if (newStatus) {
-            setSelectedList([...selectedList, profile._id])
+            setSelectedList([...selectedList, profile])
         }
         else {
-            setSelectedList(selectedList.filter((pid) => pid !== profile._id))
+            setSelectedList(selectedList.filter((p) => p._id !== profile._id))
         }
 
         setSelected(newStatus)

@@ -1,21 +1,33 @@
 import React, { useState, useEffect, useContext } from "react";
 import useAuth from "../../hooks/useAuth";
 import GetUrl from "../../GetUrl";
-import { TimeEntry } from "./TimeEntry";
-import { TimeInterval } from "./TimeInterval";
-import SchedulePopUpToggleContext from "./context/SchedulePopUpToggleProvider";
+import TimeEntry from "./TimeEntry";
+import TimeInterval from "./TimeInterval";
+import useSchedulePopUp from "./hooks/useSchedulePopUp";
+import { TimeEntryConfig } from "../../data/types";
 
-const TimeEntryDisplay = ({intervalData, config}) => {
+interface ThreeDayEntry {
+    prev : boolean[];
+    current : boolean[];
+    next : boolean[];
+}
+
+interface TimeEntryDisplayProps {
+    intervalData : boolean[];
+    config : TimeEntryConfig;
+}
+
+const TimeEntryDisplay = ({ intervalData, config } : TimeEntryDisplayProps) => {
     return (
-        <div className={`time-entry-container`} style={config.show !== 'BOTH' ? {opacity: config.opacity, width: 140} : {opacity: config.opacity}}>
+        <div className={`time-entry-container`} style={config.rangeType !== 'BOTH' ? {opacity: config.opacity, width: 140} : {opacity: config.opacity}}>
             {
-                intervalData.map((interval, index) => {
+                intervalData.map((interval, index : number) => {
                     return (
                         <TimeInterval 
                             index={index} 
                             intervalData={interval}
                             key={index}
-                            laterHalf={config.show === 'PM'}/>
+                            laterHalf={config.rangeType === 'PM'}/>
                     )
                 })
             }
@@ -23,14 +35,14 @@ const TimeEntryDisplay = ({intervalData, config}) => {
     )
 }
 
-export const TimeEditor = ({ date }) => {
+export default function TimeEditor({ date } : { date : Date }) {
 
-    const findEntry = (dayNum) => {
+    const findEntry = (dayNum : number) : boolean[] => {
         const entry = monthlyTimeEntries.find((x) => x.day === dayNum)
         return (entry ? entry.timeRange : Array(48).fill(false))
     }
 
-    const { toggleTimeEntry, setToggleTimeEntry, monthlyTimeEntries } = useContext(SchedulePopUpToggleContext)
+    const { toggleTimeEntry, setToggleTimeEntry, monthlyTimeEntries } = useSchedulePopUp()
 
     const [prevPMIntervalData, setPrevPMIntervalData] = useState(findEntry(date.getDate() - 1))
     const [timeInvervalData, setTimeIntervalData] = useState(findEntry(date.getDate()))
@@ -45,15 +57,19 @@ export const TimeEditor = ({ date }) => {
     const timezone = Intl.DateTimeFormat().resolvedOptions().timeZone
 
     // https://stackoverflow.com/questions/20712419/get-utc-offset-from-timezone-in-javascript
-    const getOffset = (timeZone) => {
-
+    const getOffset = (timeZone : string) => {
+        
         const timeZoneName = Intl.DateTimeFormat(
             "ia", 
             {
                 timeZoneName: "shortOffset",
                 timeZone,
             }
-        ).formatToParts().find((i) => i.type === "timeZoneName").value
+        ).formatToParts().find((i) => i.type === "timeZoneName")?.value
+
+        if (!timeZoneName) {
+            throw new Error('Cannot determine timezone');
+        }
         
         const offset = timeZoneName.slice(3)
         if (!offset) return 0;
@@ -90,7 +106,7 @@ export const TimeEditor = ({ date }) => {
 
     }, [])
 
-    const alignTime = (alignment, setAlignmentTo, entries) => {
+    const alignTime = (alignment : number, setAlignmentTo : number, entries : ThreeDayEntry) => {
         const shift = 2 * (alignment / 60)
 
         if (shift === 0) {
@@ -125,9 +141,13 @@ export const TimeEditor = ({ date }) => {
 
         const dateSplit = dateFormatted.split('/')
 
+        if (!auth) {
+            throw new Error('Illegal login');
+        }
+
         const submissionData = {
-            user: auth.user,
-            profileId: auth.profile ? auth.profile._id : '',
+            user: auth.username,
+            profileId: auth.profileId,
             year: dateSplit[0],
             month: dateSplit[1],
             day: dateSplit[2],
@@ -137,7 +157,7 @@ export const TimeEditor = ({ date }) => {
         const putTime = async () => {
 
             try {
-                await fetch(`${GetUrl}/api/events/time/${auth.user ? auth.user : `none`}/${dateFormatted}`, {
+                await fetch(`${GetUrl}/api/events/time/${auth.username}/${dateFormatted}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
@@ -157,18 +177,18 @@ export const TimeEditor = ({ date }) => {
     }
 
     return (
-        <div className={`time-entry-window`} style={toggleTimeEntry ? null : {visibility: 'hidden', pointerEvents: 'none'}}>
+        <div className={`time-entry-window`} style={toggleTimeEntry ? undefined : {visibility: 'hidden', pointerEvents: 'none'}}>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <p>{`Previous Day`}</p>
-                <TimeEntryDisplay intervalData={prevPMIntervalData.slice(24)} config={{show: 'PM', opacity: 0.4}}/>
+                <TimeEntryDisplay intervalData={prevPMIntervalData.slice(24)} config={{rangeType: 'PM', opacity: 0.4}}/>
             </div>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <p>{`Selected Day: ${date.toLocaleDateString()}`}</p>
-                <TimeEntry timeInvervalData={timeInvervalData} setTimeIntervalData={setTimeIntervalData}/>
+                <TimeEntry timeIntervalData={timeInvervalData} setTimeIntervalData={setTimeIntervalData}/>
             </div>
             <div style={{display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
                 <p>{`Next Day`}</p>
-                <TimeEntryDisplay intervalData={nextAMIntervalData.slice(0, 24)} config={{show: 'AM', opacity: 0.4}}/>
+                <TimeEntryDisplay intervalData={nextAMIntervalData.slice(0, 24)} config={{rangeType: 'AM', opacity: 0.4}}/>
             </div>
             <div className={`time-entry-text`}>
                 <p className="no-select-text">{`Your Timezone: ${Intl.DateTimeFormat().resolvedOptions().timeZone}`}</p>
@@ -184,8 +204,8 @@ export const TimeEditor = ({ date }) => {
                 style={eastAlignment === 0 ? {backgroundColor: 'forestgreen'} : {backgroundColor: 'darkred'}}>
                     {eastAlignment === 0 ? `Aligned with EST` : `Click to Align with EST`}
                 </p>
-                <p className="no-select-text">{` User: ${auth.profile ? auth.profile.name : ''} `}</p>
-                <button style={{width: 60, height: 60}} onClick={() => (auth.user && eastAlignment === 0) ? submitTime() : console.log('Time not EST')}>
+                <p className="no-select-text">{` User: ${auth?.username} `}</p>
+                <button style={{width: 60, height: 60}} onClick={() => (auth?.username && eastAlignment === 0) ? submitTime() : console.log('Time not EST')}>
                     {`Submit Time`}
                 </button>
                 <button 

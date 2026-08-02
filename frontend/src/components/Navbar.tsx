@@ -1,9 +1,9 @@
-import { NavbarItems, LogItems, AccountItems, NavbarItem } from "./navbarItems"
 import React, { useState, useEffect } from "react";
 import "./style/navbar.css"
 import useAuth from "../hooks/useAuth";
 import GetUrl from "../GetUrl";
 import { Link } from "wouter";
+import { AccountItems, LogItems, NavbarItem, NavbarItems } from "./NavbarItems";
 
 interface NavItemProps {
     item : NavbarItem;

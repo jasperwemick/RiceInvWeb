@@ -7,27 +7,22 @@ export default function Alert() {
 
     const { alert, setAlert } = useAlert()
 
-    const timerId = useRef(0);
-    const alertDuration = 3000
+    const timerId = useRef<ReturnType<typeof setTimeout>>();
+    const alertDuration = 3000;
 
     useEffect(() => {
-
         if (alert) {
-
             timerId.current = setTimeout(() => {
-
                 setAlert({
                     active: false,
                     message: ''
                 })
-    
-            }, alertDuration)
+            }, alertDuration);
 
             return () => {
                 clearTimeout(timerId.current)
             }
         }
-
     }, [alert])
 
     return (

@@ -10,7 +10,6 @@ import LeagueProfilePage from "./pages/leagueProfilePage";
 import LeaguePage from "./pages/leagueHomePage";
 import LeagueGamePage from "./pages/leagueGamePage";
 import BrawlProfilePage from "./pages/brawlProfilePage";
-import BrawlPage from "./pages/rankingsPage/RankingsPage;
 import BrawlOnesPage from "./pages/brawlOnesPage";
 import BrawlTwosPage from "./pages/brawlTwosPage";
 import Layout from "./components/Layout";
@@ -27,6 +26,7 @@ import { ProfileContextProvider } from "./components/Profile/context/ProfileCont
 import './style/global.css'
 import SchedulePage from "./components/Schedule/schedulePage";
 import { Account } from "./components/Account";
+import RankingsPage from "./pages/rankingsPage/RankingsPage";
  
 const App = () => {
   return (
@@ -50,7 +50,7 @@ const App = () => {
             <Route path="/league/games/:num" component={LeagueGamePage} /> {/* Game stats with listed individual player stats for a League of Legends game */}
 
             <Route path="/brawl/:id" component={BrawlProfilePage}/> {/* Brawlhalla focused profile page for player */}
-            <Route path="/brawl" component={BrawlPage}/> {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
+            <Route path="/brawl" component={RankingsPage}/> {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
             <Route path="/brawl/ones" component={BrawlOnesPage}/> {/* Brawlhalla ones games and stats */}
             <Route path="/brawl/twos" component={BrawlTwosPage}/> {/* Brawlhalla twos games and stats */}
 
@@ -60,13 +60,15 @@ const App = () => {
 
             {/* PROTECTED */}
             <Route>
-              <RequireAuth allowedRoles={['Visitor']}/>
-              <Route path="/account" component={Account} /> {/* Account info for user */}
+              <RequireAuth allowedRoles={['Visitor']}>
+                <Route path="/account" component={Account} /> {/* Account info for user */}
+              </RequireAuth>
             </Route>
             <Route>
-              <RequireAuth allowedRoles={['Admin']}/>
-              <Route path="/add" component={Add} /> {/* Allows for for new default profile additions */}
-              <Route path="/edit/:id" component={Edit} /> {/* Allows for updates to a player's default profile */}
+              <RequireAuth allowedRoles={['Admin']}>
+                <Route path="/add" component={Add} /> {/* Allows for for new default profile additions */}
+                <Route path="/edit/:id" component={Edit} /> {/* Allows for updates to a player's default profile */}
+              </RequireAuth>
             </Route>
           </Switch>
         </Layout>
