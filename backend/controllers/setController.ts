@@ -1,6 +1,5 @@
 import Set from '../models/setModel';
 import { Request, Response } from "express";
-import { setsSchema } from '../types/validation';
 
 export const createOneBracketSet = async (req : Request, res : Response) => {
     try {
@@ -41,54 +40,54 @@ export const upsertManyBracketSets = async (req : Request, res : Response) => {
     const options = {upsert: true, new: true, setDefaultsOnInsert: true};
 
     try {
-        const parsedBody = setsSchema.safeParse(req.body);
-        if (!parsedBody.success) {
-            return res.status(400).json({ error: parsedBody.error.flatten() });
-        }
+        // const parsedBody = setsSchema.safeParse(req.body);
+        // if (!parsedBody.success) {
+        //     return res.status(400).json({ error: parsedBody.error.flatten() });
+        // }
         
-        parsedBody.data.forEach( async (set) => {
-            try {
-                if (set) {
-                    await Set.findOne({gameTag: tag, setID: set.setID}).then(
-                        async (doc) => {
-                            // try {
-                            //     if (doc) {
-                            //         await Set.findOneAndUpdate(
-                            //             {gameTag: tag, setID: set.setID}, 
-                            //             {
-                            //                 ...set, 
-                            //                 upperSeedProfiles: (doc.upperSeedProfiles.length === 0 ? set.upperSeedIDs : doc.upperSeedProfiles), 
-                            //                 lowerSeedProfiles: (doc.lowerSeedProfiles.length === 0 ? set.lowerSeedIDs : doc.lowerSeedProfiles)
-                            //             }, 
-                            //             options
-                            //         )
-                            //     }
-                            //     else {
-                            //         await Set.findOneAndUpdate(
-                            //             {gameTag: tag, setID: set.setID}, 
-                            //             {
-                            //                 ...set, 
-                            //                 upperSeedProfiles: set.upperSeedIDs, 
-                            //                 lowerSeedProfiles: set.lowerSeedIDs
-                            //             }, 
-                            //             options
-                            //         )
-                            //     }
+        // parsedBody.data.forEach( async (set) => {
+        //     try {
+        //         if (set) {
+        //             await Set.findOne({gameTag: tag, setID: set.setID}).then(
+        //                 async (doc) => {
+        //                     // try {
+        //                     //     if (doc) {
+        //                     //         await Set.findOneAndUpdate(
+        //                     //             {gameTag: tag, setID: set.setID}, 
+        //                     //             {
+        //                     //                 ...set, 
+        //                     //                 upperSeedProfiles: (doc.upperSeedProfiles.length === 0 ? set.upperSeedIDs : doc.upperSeedProfiles), 
+        //                     //                 lowerSeedProfiles: (doc.lowerSeedProfiles.length === 0 ? set.lowerSeedIDs : doc.lowerSeedProfiles)
+        //                     //             }, 
+        //                     //             options
+        //                     //         )
+        //                     //     }
+        //                     //     else {
+        //                     //         await Set.findOneAndUpdate(
+        //                     //             {gameTag: tag, setID: set.setID}, 
+        //                     //             {
+        //                     //                 ...set, 
+        //                     //                 upperSeedProfiles: set.upperSeedIDs, 
+        //                     //                 lowerSeedProfiles: set.lowerSeedIDs
+        //                     //             }, 
+        //                     //             options
+        //                     //         )
+        //                     //     }
     
-                            // }
-                            // catch(e) {
-                            //     console.log('Error at Put, upsertManyBracketSets', e)
-                            // }
-                        }
-                    )
-                }
-            }
-            catch(e) {
-                console.log('Error at Put, upsertManyBracketSets', e)
-            }
-        });
+        //                     // }
+        //                     // catch(e) {
+        //                     //     console.log('Error at Put, upsertManyBracketSets', e)
+        //                     // }
+        //                 }
+        //             )
+        //         }
+        //     }
+        //     catch(e) {
+        //         console.log('Error at Put, upsertManyBracketSets', e)
+        //     }
+        // });
 
-        res.json()
+        // res.json()
     }
     catch(e) {
         console.log('Error at PUT /set/:tag/', e)
