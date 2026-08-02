@@ -1,5 +1,4 @@
 import React, { useState, useRef, type Dispatch, type SetStateAction } from "react"
-import GetUrl from "../../util/GetUrl"
 import type { TournamentSet } from "../../data/types";
 
 interface BracketSetEditorProps {

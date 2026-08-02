@@ -14,25 +14,16 @@ export const Verify = async (req : Request, res : Response, next : NextFunction)
     try {
         const accessToken = req.cookies.accessToken;
         if (!accessToken) {
-            throw {
-                status: 401,
-                message: 'Invalid Session'
-            }
+            throw new Error('Invalid Session');
         }
 
         const checkBlacklist = await Blacklist.findOne({token: accessToken})
-
         if (checkBlacklist) {
-            throw {
-                status: 401,
-                message: 'Session Expired'
-            }
+            throw new Error('Session Expired');
         }
 
         if (!process.env.SECRET_ACCESS_TOKEN) {
-            throw {
-                message : 'Missing secret token'
-            }
+            throw new Error('Missing Secret Token');
         }
     
         jwt.verify(accessToken, process.env.SECRET_ACCESS_TOKEN, async (err : VerifyErrors | null, decoded : string | JwtPayload | undefined) => {
@@ -57,20 +48,8 @@ export const Verify = async (req : Request, res : Response, next : NextFunction)
         })
     }
     catch(e : unknown) {
-        if (e instanceof Error) {
-            res.json({
-                data: [],
-                message: e.message
-            });
-        }
-        else {
-            res.status(500).json({
-                data: [],
-                message: 'Server Explosion'
-            });
-        }
+        next(e);
     }
-
 }
 
 export const VerifyRole = async (req : Request, res : Response, next : NextFunction) => {
@@ -92,17 +71,6 @@ export const VerifyRole = async (req : Request, res : Response, next : NextFunct
         next();
     }
     catch(e) {
-        if (e instanceof Error) {
-            res.json({
-                data: [],
-                message: e.message
-            });
-        }
-        else {
-            res.status(500).json({
-                data: [],
-                message: 'Server Explosion'
-            });
-        }
+        next(e);
     }
 }

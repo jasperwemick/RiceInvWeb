@@ -1,6 +1,5 @@
 import React from "react";
 import type { Dispatch, SetStateAction } from 'react';
-import GetUrl from "../../util/GetUrl"
 import '../../style/home.css'
 import ProfileList from "../Profile/ProfileList";
 import SelectableProfile, { type SelectableProfileProps } from "../Profile/SelectableProfile";
@@ -23,7 +22,7 @@ export function EventEditor({eventData, setEventData, toggleEventInfo, setToggle
     const onDelete = () => {
         const deleteEvent = async () => {
             try {
-                await fetch(`${GetUrl}/api/events/ev/${eventData._id}`, {
+                await fetch(`/api/events/ev/${eventData._id}`, {
                     method: "DELETE",
                     headers: {
                         "Content-Type": "application/json",
@@ -50,7 +49,7 @@ export function EventEditor({eventData, setEventData, toggleEventInfo, setToggle
         const upsertEventData = async () => {
 
             try {
-                await fetch(`${GetUrl}/api/events/ev/${eventData._id}`, {
+                await fetch(`/api/events/ev/${eventData._id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",

@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react"
 import { type BracketNode, treeToArray } from "./Auxillery/tree"
-import GetUrl from "../../util/GetUrl"
 import React from "react"
 import BracketBuilder from "./BracketBuilder"
 import apiFetch from "../../util/fetch"
@@ -30,7 +29,7 @@ export default function BracketMap({ tid, tag, highTree, lowTree, maxDepth } : B
         const getSetData = async () => {
 
             try {
-                const jsetData = await apiFetch<TournamentSet[]>(`${GetUrl}/api/tournament/${tid}/set`);
+                const jsetData = await apiFetch<TournamentSet[]>(`/api/tournament/${tid}/set`);
                 setSets(jsetData)
             }
             catch(e) {

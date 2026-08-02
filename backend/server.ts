@@ -1,4 +1,4 @@
-import express from "express";
+import express, { NextFunction, Request, Response } from "express";
 import mongoose from "mongoose";
 import { createServer } from "http";
 import cors from "cors";
@@ -10,20 +10,22 @@ import profileRoutes from './routes/profiles';
 import gameRoutes from './routes/tournaments';
 import eventRoutes from './routes/events';
 import tournamentRoutes from './routes/tournaments';
+import path from "path";
+import { error } from "console";
 
 configDotenv()
 
 // express app 
 const app = express();
 
-if (process.env.NODE_ENV === "development") {
-    app.use(
-        cors({
-            origin: "http://localhost:3000",
-            credentials: true,
-        })
-    );
-}
+// if (process.env.NODE_ENV === "development") {
+//     app.use(
+//         cors({
+//             origin: "http://localhost:5173",
+//             credentials: true,
+//         })
+//     );
+// }
 
 if (process.env.NODE_ENV === "production") {
     app.use(
@@ -51,6 +53,20 @@ app.use('/api/profiles', profileRoutes)
 app.use('/api/games', gameRoutes)
 app.use('/api/events', eventRoutes)
 app.use('/api/tournament', tournamentRoutes)
+
+// Serve frontend
+// if (process.env.NODE_ENV === "production") {
+//     const clientBuildPath = path.join(__dirname, '../client/dist');
+//     app.use(express.static(clientBuildPath));
+
+//     app.get('*', (req, res) => {
+//         res.sendFile(path.join(clientBuildPath, 'index.html'));
+//     });
+// }
+
+app.use((err : Error, req : Request, res : Response, next : NextFunction) => {
+    res.status(500).json({ error : err.message || "Server Explosion" });
+});
 
 const httpServer = createServer(app);
 

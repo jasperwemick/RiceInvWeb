@@ -1,6 +1,5 @@
 import { useEffect } from "react";
 import useAuth from "../hooks/useAuth";
-import GetUrl from "../util/GetUrl";
 import { useLocation } from "wouter";
 
 export default function Logout() {
@@ -11,7 +10,7 @@ export default function Logout() {
 
     useEffect(() => {
         async function log() {
-            const response = await fetch(`${GetUrl}/auth/logout`, {
+            const response = await fetch(`/auth/logout`, {
                 credentials: "include",
             })
             await response.json();

@@ -1,6 +1,5 @@
 import useAuth from "../hooks/useAuth";
 import { useRef, useState, useEffect } from 'react';
-import GetUrl from "../util/GetUrl";
 import { useLocation } from "wouter";
 import './style/login.css';
 import apiFetch from "../util/fetch";
@@ -35,14 +34,14 @@ export const Login = () => {
         loginData.append("password", pass)
 
         try {
-            const response = await fetch(`${GetUrl}/auth/login`, {
+            const response = await fetch(`/auth/login`, {
                 method: 'POST',
                 credentials: 'include',
                 body: loginData
             });
             const data = await response.json();  
             console.log(data.message);
-            const actualData = await apiFetch<User>(`${GetUrl}/auth/user`, { credentials: 'include' })
+            const actualData = await apiFetch<User>(`/auth/user`, { credentials: 'include' })
             if (actualData.username) {
                 const validUser = actualData?.username;
                 const roles = actualData?.roles;

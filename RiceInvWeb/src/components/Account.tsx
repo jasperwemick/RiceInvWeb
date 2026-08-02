@@ -2,7 +2,6 @@ import React, { useState, useEffect, useRef } from "react";
 import './style/account.css'
 import './style/login.css'
 import useAuth from "../hooks/useAuth";
-import GetUrl from "../util/GetUrl";
 import { useLocation } from "wouter";
 
 export const Account = () => {
@@ -42,7 +41,7 @@ export const Account = () => {
         const handlePassword = async () => {
             try {
                 // Update password
-                const response = await fetch(`${GetUrl}/auth/password/reset`, {
+                const response = await fetch(`/auth/password/reset`, {
                     method: 'PUT',
                     credentials: 'include',
                     body: loginData
@@ -51,7 +50,7 @@ export const Account = () => {
     
                 // Logout
                 if (data.status === 'success') {
-                    await fetch(`${GetUrl}/auth/logout`, {
+                    await fetch(`/auth/logout`, {
                         credentials: "include",
                     })
                     setAuth(null);

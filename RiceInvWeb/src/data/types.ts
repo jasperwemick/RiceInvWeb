@@ -37,6 +37,11 @@ export interface User {
     profileId : string;
 }
 
+export interface UserAuth extends User {
+    message : string;
+    status : string;
+}
+
 export interface GameMode {
     _id : string;
     gameId : string;

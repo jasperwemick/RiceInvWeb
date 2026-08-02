@@ -1,7 +1,6 @@
 import React, { createRef, useCallback, useEffect, useRef, useState } from 'react'
 import type { Dispatch, RefObject, SetStateAction } from 'react';
 import useAuth from '../../hooks/useAuth'
-import GetUrl from '../../util/GetUrl'
 // import useAlert from '../../hooks/useAlert'
 // import { DayOverview } from './DayOverview'
 import type { CalendarDay, RiceEvent } from '../../data/types';
@@ -79,7 +78,7 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate} : Cale
 
             const getMonthTimes = async () => {
 
-                const res = await fetch(`${GetUrl}/api/events/time/${auth.username}/${currentDay.getFullYear()}/${'0' + String(currentDay.getMonth() + 1)}/borders`)
+                const res = await fetch(`/api/events/time/${auth.username}/${currentDay.getFullYear()}/${'0' + String(currentDay.getMonth() + 1)}/borders`)
                 let entries = await res.json()
 
                 setMonthlyTimeEntries(entries)

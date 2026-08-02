@@ -1,6 +1,5 @@
 import { useContext, useEffect } from 'react'
 import { parseISO, addSeconds } from 'date-fns'
-import GetUrl from '../../../util/GetUrl'
 import { ProfileContext } from '../context/ProfileContextProvider'
 import type { Path } from 'wouter';
 import apiFetch from '../../../util/fetch';
@@ -19,7 +18,7 @@ export default function useProfiles() {
 
         async function getProfiles(path : Path) {
             try {
-                const jsponse = await apiFetch<Profile[]>(`${GetUrl}/api/profiles/${path}`);
+                const jsponse = await apiFetch<Profile[]>(`/api/profiles/${path}`);
 
                 const merge = jsponse.map((jprof : Profile) => {
                     const localMatch = profiles.find((x) => x._id === jprof._id)

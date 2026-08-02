@@ -16,14 +16,6 @@ const upload = multer({ storage: storage})
 
 import { Verify, VerifyRole } from '../middleware/verify'
 
-router.use(function(req, res, next) {
-    res.setHeader('Access-Control-Allow-Credentials', 'true');
-    res.setHeader('Access-Control-Allow-Headers', ['Origin', 'X-Requested-With', 'Content-Type', 'Accept'].join(', '));
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000');
-    res.setHeader('Access-Control-Allow-Method', ['POST', 'GET', 'DELETE', 'OPTIONS'].join(', '));
-    next();
-});
-
 router.post("/login", upload.none(), async (req, res) => {
     const { username } = req.body;
     try {

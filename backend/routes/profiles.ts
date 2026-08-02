@@ -1,14 +1,6 @@
 import express from "express";
-import Profile from '../models/profileModel';
-
 import { Verify, VerifyRole } from '../middleware/verify'
-
 import multer from 'multer';
-import sharp from 'sharp';
-
-import { S3Client, PutObjectCommand, GetObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3';
-
-import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { createNewProfile, createNewProfileImage, deleteNewProfile, deleteProfileImage, getAllProfiles, getAllProfilesNoImage, getProfileById, patchProfileImage, updateNewProfile } from "../controllers/profileController";
 
 const router = express.Router();
@@ -17,42 +9,30 @@ const router = express.Router();
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage});
 
-if (!process.env.ACCESS_KEY || !process.env.SECRET_KEY || !process.env.BUCKET_REGION) {
-    throw new Error("Missing S3 bucket access info");
-}
-
-const s3 = new S3Client({
-    credentials: {
-        accessKeyId: process.env.ACCESS_KEY,
-        secretAccessKey: process.env.SECRET_KEY
-    },
-    region: process.env.BUCKET_REGION
-});
-
 // Get all profiles
-router.get('/default', getAllProfiles);
+router.get('/', getAllProfiles);
 
-router.get('/default/noimg', getAllProfilesNoImage);
+router.get('/noimg', getAllProfilesNoImage);
 
 // Get a profile
-router.get('/default/:id', getProfileById);
+router.get('/:id', getProfileById);
 
 // Post a new profile
-router.post('/default', Verify, VerifyRole, upload.single('image'), createNewProfile);
+router.post('/', Verify, VerifyRole, upload.single('image'), createNewProfile);
 
 // Delete profile
-router.delete('/default/:id', Verify, VerifyRole, deleteNewProfile);
+router.delete('/:id', Verify, VerifyRole, deleteNewProfile);
 
-router.patch('/default/:id', Verify, VerifyRole, upload.none(), updateNewProfile);
+router.patch('/:id', Verify, VerifyRole, upload.none(), updateNewProfile);
 
 //##############################################################################################
 
 // Post a new image for a profile
-router.post('/default/images', Verify, VerifyRole, upload.single('image'), createNewProfileImage);
+router.post('/images', Verify, VerifyRole, upload.single('image'), createNewProfileImage);
 
-router.delete('/default/:id/images', Verify, VerifyRole, deleteProfileImage);
+router.delete('/:id/images', Verify, VerifyRole, deleteProfileImage);
 
-router.patch('/default/:id/images', Verify, VerifyRole, upload.single('image'), patchProfileImage);
+router.patch('/:id/images', Verify, VerifyRole, upload.single('image'), patchProfileImage);
 
 //###########################################################################################################################
 

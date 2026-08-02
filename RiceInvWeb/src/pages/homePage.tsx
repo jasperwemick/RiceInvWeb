@@ -1,6 +1,6 @@
-import { NavigationProfile } from "./Profile/NavigationProfile";
+import { NavigationProfile } from "../components/Profile/NavigationProfile";
 import './style/home.css'
-import ProfileList from "./Profile/ProfileList";
+import ProfileList from "../components/Profile/ProfileList";
 
 export default function Home() {
 

@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../style/leaguePage.css"
 import Placement from "../components/Placement";
-import GetUrl from "../util/GetUrl";
 import useProfiles from "../components/Profile/hooks/useProfiles";
 import { Link } from "wouter";
 

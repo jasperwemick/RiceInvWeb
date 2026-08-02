@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import GetUrl from "../util/GetUrl";
 import { Link, useParams } from "wouter";
 import apiFetch from "../util/fetch";
 import type { Profile } from "../data/types";
@@ -15,7 +14,7 @@ export default function Description() {
             const id = params.id;
 
             try {
-                const profile = await apiFetch<Profile>(`${GetUrl}/api/profiles/default/${id}`);
+                const profile = await apiFetch<Profile>(`/api/profiles/default/${id}`);
                 setProfile(profile);
             }
             catch(err) {

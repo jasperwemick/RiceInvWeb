@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import useAuth from "../../hooks/useAuth";
-import GetUrl from "../../util/GetUrl";
 import TimeEntry from "./TimeEntry";
 import TimeInterval from "./TimeInterval";
 import useSchedulePopUp from "./hooks/useSchedulePopUp";
@@ -157,7 +156,7 @@ export default function TimeEditor({ date } : { date : Date }) {
         const putTime = async () => {
 
             try {
-                await fetch(`${GetUrl}/api/events/time/${auth.username}/${dateFormatted}`, {
+                await fetch(`/api/events/time/${auth.username}/${dateFormatted}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",

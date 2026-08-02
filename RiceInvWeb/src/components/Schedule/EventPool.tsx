@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import type { Dispatch, SetStateAction } from 'react';
-import GetUrl from "../../util/GetUrl"
 import useAuth from "../../hooks/useAuth";
 import type { RiceEvent, User } from "../../data/types";
 import useRiceEvent from "./hooks/useRiceEvent";
@@ -47,7 +46,7 @@ export default function EventPool() {
         const getEvents = async () => {
 
             try {
-                const unfinishedEvents = await apiFetch<RiceEvent[]>(`${GetUrl}/api/events/ev?finished=false`);
+                const unfinishedEvents = await apiFetch<RiceEvent[]>(`/api/events/ev?finished=false`);
 
                 setEvents(unfinishedEvents);
                 setEventPool(unfinishedEvents);

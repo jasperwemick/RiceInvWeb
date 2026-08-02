@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import "../style/leagueProfile.css"
-import GetUrl from "../util/GetUrl";
 import { Link, useParams } from "wouter";
 
 // const Game = (props) => {

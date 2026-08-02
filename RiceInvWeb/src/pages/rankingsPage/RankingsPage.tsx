@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import "../../style/brawlPage.css"
-import GetUrl from "../../util/GetUrl";
 import { Link } from "wouter";
 import apiFetch from "../../util/fetch";
 import type { FlatGameProfile, Game } from "../../data/types";
@@ -27,8 +26,8 @@ export default function RankingsPage() {
         // 4) More details button to show Tournament Bracket, and groups/gauntlet
         const getRanking = async () => {
             try {
-                const gameData = await apiFetch<Game>(`${GetUrl}/game/${game.name}`);
-                const brawlProfileData = await apiFetch<FlatGameProfile[]>(`${GetUrl}/profile/game-profile/${game.name}`)
+                const gameData = await apiFetch<Game>(`/game/${game.name}`);
+                const brawlProfileData = await apiFetch<FlatGameProfile[]>(`/profile/game-profile/${game.name}`)
                 setProfiles(brawlProfileData);
                 setGame(gameData);
             }

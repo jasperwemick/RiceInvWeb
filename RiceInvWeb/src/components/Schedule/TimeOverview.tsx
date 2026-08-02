@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
 import type { Dispatch, SetStateAction } from 'react';
-import GetUrl from "../../util/GetUrl";
 import TimeInterval from "./TimeInterval";
 import type { TimeEntry, TimeEntryConfig, TimeIntervalData } from "../../data/types";
 import useSchedulePopUp from "./hooks/useSchedulePopUp";
@@ -52,7 +51,7 @@ export const TimeOverview = ({ date } : { date : Date }) => {
     useEffect(() => {
 
         const getTimeEntries = async () => {
-            const entries = await apiFetch<TimeEntry[]>(`${GetUrl}/api/events/time/all/${date.getFullYear()}/${'0' + String(date.getMonth() + 1)}/${date.getDate()}`);
+            const entries = await apiFetch<TimeEntry[]>(`/api/events/time/all/${date.getFullYear()}/${'0' + String(date.getMonth() + 1)}/${date.getDate()}`);
 
             console.log(entries)
             const todaysEntries = entries.filter((entry : TimeEntry) => entry.day === date.getDate())

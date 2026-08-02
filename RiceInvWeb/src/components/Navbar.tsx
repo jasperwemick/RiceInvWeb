@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./style/navbar.css"
 import useAuth from "../hooks/useAuth";
-import GetUrl from "../util/GetUrl";
 import { Link } from "wouter";
 import { AccountItems, LogItems, type NavbarItem, NavbarItems } from "./NavbarItems";
+import apiFetch from "../util/fetch";
+import type { User, UserAuth } from "../data/types";
 
 interface NavItemProps {
     item : NavbarItem;
@@ -33,19 +34,14 @@ function NavItem({ item } : NavItemProps) {
 export default function Navbar() {
 
     const { auth, setAuth } = useAuth();
-    console.log(auth);
  
     useEffect(() => {
         async function validateCookie() {
             try {
-                const responeAuth = await fetch(`${GetUrl}/auth/user`, {
-                    credentials: 'include'
-                })
-                const actualData = await responeAuth.json();
-                console.log(actualData.message)
-                const user = actualData?.user;
+                const actualData = await apiFetch<UserAuth>(`/auth/user`, { credentials: 'include' });
+                const user = actualData?.username;
                 const roles = actualData?.roles;
-                const profile = actualData?.profile;
+                const profile = actualData?.profileId;
                 setAuth({ username : user, roles : roles, profileId : profile });
             }
             catch(e) {
@@ -56,8 +52,7 @@ export default function Navbar() {
         }
 
         validateCookie();
-        return;
-    }, [setAuth]);
+    }, [auth]);
 
     const listItems = (obj : NavbarItem[]) => {
         return obj.map((item, index) => {

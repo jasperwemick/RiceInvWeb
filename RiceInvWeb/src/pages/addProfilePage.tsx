@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import GetUrl from "../util/GetUrl";
 import { useLocation } from "wouter";
  
 export default function Add() {
@@ -23,7 +22,7 @@ export default function Add() {
             profileData.append("gamertag", gamertag)
             profileData.append("user", user)
 
-            await fetch(`${GetUrl}/api/profiles/default`, {
+            await fetch(`/api/profiles/default`, {
                 method: "POST",
                 credentials: "include",
                 body: profileData

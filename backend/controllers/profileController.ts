@@ -6,6 +6,9 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import multer from 'multer';
 import sharp from 'sharp';
 import { gameProfileSchema } from "../types/validation";
+import { configDotenv } from "dotenv";
+
+configDotenv();
 
 if (!process.env.ACCESS_KEY || !process.env.SECRET_KEY || !process.env.BUCKET_REGION) {
     throw new Error("Missing S3 bucket access info");

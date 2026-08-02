@@ -1,8 +1,11 @@
 {
-    "extends": "@tsconfig/node22/tsconfig.json",
-
     "compilerOptions": {
-        "preserveConstEnums": true
+        "outDir": "./dist",
+        "rootDir": ".",
+        "module": "esnext",
+        "moduleResolution": "bundler",
+        "target": "es2023",
+        "esModuleInterop": true
     },
     "include": ["server.ts", "controllers/*", "middleware/*", "models/*", "routers/*", "types/*"],
     "exclude": ["node_modules", "build", "**/*.spec.ts"]

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import type { Dispatch, SetStateAction } from 'react';
 import TimeEntry from "./TimeEntry"
-import GetUrl from "../../util/GetUrl";
 import type { RiceEvent, TimeRange } from "../../data/types";
 
 interface EventScheduleProps {
@@ -23,7 +22,7 @@ export const EventSchedule = ({eventData, setEventData, toggleEventInfo, setTogg
         const upsertEventData = async () => {
 
             try {
-                await fetch(`${GetUrl}/api/events/ev/${eventData._id}`, {
+                await fetch(`/api/events/ev/${eventData._id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
@@ -90,7 +89,7 @@ export const EventSchedule = ({eventData, setEventData, toggleEventInfo, setTogg
         const upsertEventData = async () => {
 
             try {
-                await fetch(`${GetUrl}/api/events/ev/${eventData._id}`, {
+                await fetch(`/api/events/ev/${eventData._id}`, {
                     method: "PUT",
                     headers: {
                         "Content-Type": "application/json",
