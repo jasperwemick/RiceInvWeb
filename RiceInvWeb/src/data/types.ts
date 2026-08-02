@@ -1,0 +1,144 @@
+export interface GameModeProfile {
+    _id : string;
+    mode : string;
+    rank : number;
+}
+
+export interface GameProfile {
+    _id : string;
+    gameId : string;
+    gameModeProfiles : GameModeProfile[];
+}
+
+export interface Profile {
+    _id : string;
+    name : string;
+    description : string;
+    imageName : string;
+    imageURL : string;
+    aliases : string[];
+    gameProfiles : GameProfile[];
+}
+
+export interface FlatGameProfile { 
+    _id : string;
+    playerName : string;
+    gameName : 'brawl' | 'LoL' | 'Valorant' | 'Rocket';
+    gameModes : GameModeProfile[]
+}
+
+export interface FlatBrawlGameProfile extends FlatGameProfile {
+
+}
+
+export interface User {
+    username : string;
+    roles : string[];
+    profileId : string;
+}
+
+export interface GameMode {
+    _id : string;
+    gameId : string;
+    mode : 'singles' | 'duos' | 'triples' | 'five' | 'other';
+}
+
+export interface Game {
+    _id : string;
+    name : string;
+    gameModes : GameMode[];
+}
+
+export interface GameStats {
+    player : string;
+    gameMode : GameMode;
+    matchWins : number;
+    matchLoses : number;
+    setWins : number;
+    setLoses : number;
+    placing : number;
+    rating : () => number;
+    final : () => number;
+}
+
+export interface Tournament {
+    name : string;
+    gameMode : string;
+    players : string[] | Profile[];
+}
+
+export interface Team {
+    name : string;
+    tournament : string | Tournament;
+    members : string[] | Profile[]
+}
+
+export interface TournamentMatch {
+    matchNumber : number;
+    matchSet : string;
+    winningTeam : Team;
+    duration : number;
+}
+
+export interface TournamentSet {
+    setId : number;
+    tournament : string | Tournament;
+    bestOf : number;
+    bracket : boolean;
+    teams : Team[];
+    parents : string[];
+    lowerSetID : number;
+    nextSetID : number;
+    matches : TournamentMatch[];
+}
+
+export interface TimeRange {
+    year : number;
+    month : number;
+    day : number;
+    range : boolean[];
+}
+
+export interface RiceEvent {
+    _id: string;
+    name: string;
+    description: string;
+    year: number;
+    month: number;
+    day: number;
+    group: string;
+    duration: number;
+    timeRanges: TimeRange[];
+    participants: Profile[];
+    ready: boolean;
+    finished: boolean;
+}
+
+export interface TimeEntry {
+    user : string;
+    profileId : string;
+    year : number;
+    month : number;
+    day : number;
+    timeRange : boolean[];
+}
+
+export interface CalendarDay {
+    dayNum : number;
+    currentMonth : boolean;
+    date : Date;
+    month : number;
+    number : number;
+    selected : boolean;
+    year : number;
+}
+
+export interface TimeIntervalData {
+    strength : number;
+    players : string[];
+}
+
+export interface TimeEntryConfig {
+    opacity : number;
+    rangeType : 'AM' | 'PM' | 'BOTH';
+}

@@ -1,0 +1,97 @@
+.leaderboard {
+    position: relative;
+    width: 1500px;
+    min-width: 1500px;
+    height: 800px;
+}
+
+.leaderboard table {
+    position: absolute;
+    border-collapse: collapse;
+    margin: 0 0 60px 60px;    
+}
+
+.leaderboard-header {
+    background-color: cornflowerblue;
+}
+
+.leaderboard-header th {
+    position: relative;
+    width: 140px;
+    height: 40px;
+}
+
+.leaderboard-header th a {
+    position: absolute;
+    text-decoration: none;
+    color: black;
+    padding: 10px 5px 10px 5px;
+    width: 130px;
+    height: 20px;
+    top: 0px;
+    text-align: center;
+    transform: translateX(-50%);
+}
+
+.leaderboard-header th span {
+    position: absolute;
+    text-decoration: none;
+    color: black;
+    padding: 10px 5px 10px 5px;
+    width: 130px;
+    height: 20px;
+    top: 0px;
+    text-align: center;
+    transform: translateX(-50%);
+}
+
+.leaderboard-row td {
+    position: relative;
+    width: 140px;
+    height: 40px;
+}
+
+.leaderboard-row td a {
+    position: absolute;
+    text-decoration: none;
+    color: black;
+    padding: 10px 5px 10px 5px;
+    width: 130px;
+    height: 20px;
+    top: 0px;
+    text-align: center;
+}
+
+.leaderboard-row td span {
+    position: absolute;
+    text-decoration: none;
+    color: black;
+    padding: 10px 5px 10px 5px;
+    width: 130px;
+    height: 20px;
+    top: 0px;
+    text-align: center;
+}
+
+.leaderboard-row:hover {
+    background-color: silver;
+    opacity: 50%;
+}
+
+.leaderboard-row td a:hover {
+    background-color: white;
+    opacity: 30%;
+}
+
+.leaderboard-header th a:hover {
+    background-color: white;
+    opacity: 30%;
+}
+
+.leaderboard-row:nth-child(odd) {
+    background-color: grey;
+}
+
+.leaderboard-row:nth-child(even) {
+    background-color: lightgray;
+}

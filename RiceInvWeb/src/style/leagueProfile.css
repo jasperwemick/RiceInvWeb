@@ -1,0 +1,53 @@
+.game-list {
+    width: 400px;
+    position: relative;
+    list-style: none;
+}
+
+.list-game {
+    position: relative;
+    width: inherit;
+    min-height: 100px;
+    transition: 0.5s;
+}
+.list-details-expand-league {
+    position: relative;
+    background-color: gray;
+    animation-name: slideRevealLeague;
+    animation-duration: 0.5s;
+    width: inherit;
+    height: 200px;
+}
+
+.list-details-shrink-league {
+    position: relative;
+    transition: 0.5s;
+    width: inherit;
+    height: 0px;
+}
+
+.hidden {
+    display: none;
+}
+
+.stats-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.winner-game {
+    background-color: rgb(45, 130, 45);
+}
+
+.loser-game {
+    background-color: rgb(119, 119, 119);
+}
+
+@keyframes slideRevealLeague {
+    from {
+        height: 0px;
+    }
+    to {
+        height: 200px;
+    }
+}
