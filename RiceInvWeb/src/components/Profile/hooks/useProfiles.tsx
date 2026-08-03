@@ -18,14 +18,13 @@ export default function useProfiles() {
 
         async function getProfiles(path : Path) {
             try {
-                const jsponse = await apiFetch<Profile[]>(`/api/profiles/${path}`);
-
+                const jsponse = await apiFetch<Profile[]>(`/api/profiles${path}`);
                 const merge = jsponse.map((jprof : Profile) => {
                     const localMatch = profiles.find((x) => x._id === jprof._id)
                     return {...localMatch, ...jprof }
-                })
-
-                setProfiles(merge)
+                });
+                console.log(jsponse);
+                setProfiles(merge);
             }
             catch(e) {
                 const message = `An error occurred: ${e}`;
@@ -34,17 +33,17 @@ export default function useProfiles() {
             }
         }
 
+        // Basically, reuse locally cached images if they've already been obtained from S3 in order to reduce calls to AWS
+        // and give Jeff less money
         if (profiles.length === 0) {
-            getProfiles('default');
+            getProfiles('');
         }
         else {
             // get the query params: https://stackoverflow.com/a/901144/9362404
-            const params = new Proxy(new URLSearchParams(profiles[0].imageURL), {
-                get: (searchParams, prop) => searchParams.get(String(prop)),
-            });
+            const params = new URLSearchParams(profiles[0].imageUrl);
             const date = params.get('X-Amz-Date')
             if (!date) {
-                getProfiles('default/noimg')
+                getProfiles('/noimg')
                 throw new Error("Image date validation failed")
             }
             const creationDate = parseISO(date);
@@ -54,10 +53,10 @@ export default function useProfiles() {
             const isExpired = expiryDate < new Date();
 
             if (isExpired) {
-                getProfiles('default')
+                getProfiles('')
             }
             else {
-                getProfiles('default/noimg')
+                getProfiles('/noimg')
             }
         }   
     }, [])

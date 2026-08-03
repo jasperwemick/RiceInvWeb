@@ -15,7 +15,7 @@ export interface Profile {
     name : string;
     description : string;
     imageName : string;
-    imageURL : string;
+    imageUrl : string;
     aliases : string[];
     gameProfiles : GameProfile[];
 }

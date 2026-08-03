@@ -22,7 +22,7 @@ export default function Home() {
                     </div>
                     <div style={{display: "flex", justifyContent: 'center', width: '100%', height: 'fit-content'}}>
                         <ProfileList 
-                        Wrapper={NavigationProfile} 
+                        Wrapper={NavigationProfile}
                         WrapperProps={{currentLocation: '/', styleOptions: {background: 'linear-gradient(#afc0df, #a1a7e4)'}}}
                         isInfinite={true}/>
                     </div>

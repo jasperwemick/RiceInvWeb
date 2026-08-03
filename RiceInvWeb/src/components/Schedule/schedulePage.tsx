@@ -17,19 +17,19 @@ export default function SchedulePage() {
     const [entryDate, setEntryDate] = useState<Date>(new Date())
 
     return (
-            <div>
-                <SchedulePopUpToggleProvider>
-                <EventContextProvider>
-                    <TimeEditor date={entryDate}/>
-                    <EventInfo />
-                    <TimeOverview date={entryDate}/>
-                    <DayOverview date={entryDate}/>
-                    <div style={{display: 'flex'}}>
-                        <Calendar setEntryDate={setEntryDate}/>
-                        <EventPool />
-                    </div>
-                </EventContextProvider>
-                </SchedulePopUpToggleProvider>
-            </div>
+        <div>
+            <SchedulePopUpToggleProvider>
+            <EventContextProvider>
+                <TimeEditor date={entryDate}/>
+                <EventInfo />
+                <TimeOverview date={entryDate}/>
+                <DayOverview date={entryDate}/>
+                <div style={{display: 'flex'}}>
+                    <Calendar setEntryDate={setEntryDate}/>
+                    <EventPool />
+                </div>
+            </EventContextProvider>
+            </SchedulePopUpToggleProvider>
+        </div>
     )
 }

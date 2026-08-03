@@ -75,6 +75,7 @@
 
 .profile-list li:hover {
     opacity: .5;
+    user-select: none;
 }
 
 .profile-shift-button {

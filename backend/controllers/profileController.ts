@@ -7,6 +7,7 @@ import multer from 'multer';
 import sharp from 'sharp';
 import { gameProfileSchema } from "../types/validation";
 import { configDotenv } from "dotenv";
+import mongoose from "mongoose";
 
 configDotenv();
 
@@ -24,7 +25,8 @@ const s3 = new S3Client({
 
 export const getAllProfiles = async (req : Request, res : Response) => {
     try {
-        const profiles = await Profile.find<ProfileDoc>()
+        const profiles = await Profile.find<ProfileDoc>();
+        console.log(mongoose.connection.db.databaseName);
 
         for (let profile of profiles) {
             const params = {
@@ -36,7 +38,7 @@ export const getAllProfiles = async (req : Request, res : Response) => {
     
             profile.imageUrl = url
         }
-        
+        console.log(profiles);
         res.json(profiles)
     }
     catch(e) {

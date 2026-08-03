@@ -14,8 +14,8 @@ export const NavbarItems : NavbarItem[] = [
     },
     {
         class: 'nav-button',
-        pathTo: '/score',
-        text: 'Score',
+        pathTo: '/rankings',
+        text: 'Rankings',
     },
     {
         class: 'nav-button',

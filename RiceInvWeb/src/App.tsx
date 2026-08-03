@@ -39,8 +39,8 @@ const App = () => {
           <Switch>
             {/* PUBLIC */}
             <Route path="/" component={Home} /> {/* Home page with player list */}
-            <Route path="/score" component={Leaderboard} /> {/* Overall leaderboard for the RI */}
-            <Route path="/:id" component={Description} /> {/* Main profile page for player */}
+            <Route path="/rankings" component={RankingsPage} /> {/* Individual game rankings for players */}
+            <Route path="profile/:id" component={Description} /> {/* Main profile page for player */}
             <Route path="/schedule" component={SchedulePage}/> {/* Schedule Page */}
             <Route path="/login" component={Login}/> {/* Login Page (Admin only for now) */}
             <Route path="/logout" component={Logout}/> {/* Logout Function */}
