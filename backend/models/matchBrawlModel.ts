@@ -1,17 +1,20 @@
 import mongoose, { Document } from "mongoose";
-import { MatchDoc } from "./matchModel";
+import { MatchDoc, matchSchema } from "./matchModel";
 
 const Schema = mongoose.Schema;
 
-interface matchBrawlDoc extends MatchDoc {
+export interface MatchBrawlDoc extends MatchDoc {
+    game : 'Brawl';
     map : string;
 }
 
-const matchBrawlSchema = new Schema<matchBrawlDoc>({
+const matchBrawlSchema = new Schema<MatchBrawlDoc>({
     map: {
         type: String,
         required: true
     }
 }, { timestamps: false });
 
-export default mongoose.model<matchBrawlDoc>('MatchBrawl', matchBrawlSchema)
+matchBrawlSchema.add(matchSchema);
+
+export default mongoose.model<MatchBrawlDoc>('MatchBrawl', matchBrawlSchema)

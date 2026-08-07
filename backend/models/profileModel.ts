@@ -4,7 +4,6 @@ const Schema = mongoose.Schema;
 
 export interface GameProfileBase {
     game : string;
-    gameId : mongoose.Schema.Types.ObjectId;
     gameModes : Types.DocumentArray<GameModeProfileBase & Document>;
 }
 
@@ -13,15 +12,14 @@ const gameProfileBaseSchema = new Schema<GameProfileBase>({
         type : String,
         required : true
     },
-    gameId : {
-        type : mongoose.Schema.Types.ObjectId,
-        required : true
-    },
+    gameModes : [{
+        mode : { type : String, required : true }
+    }]
 })
 
 export interface GameModeProfileBase {
     mode : string;
-    gameModeId : mongoose.Schema.Types.ObjectId;
+    gameId : mongoose.Types.ObjectId;
     rank : number;
     rating : number;
     ricePoints : number;
@@ -32,7 +30,7 @@ const gameModeProfileBaseSchema = new Schema<GameModeProfileBase>({
         type : String,
         required : true
     },
-    gameModeId : {
+    gameId : {
         type : mongoose.Schema.Types.ObjectId,
         required : true
     },
@@ -65,7 +63,7 @@ const gameModeBrawl2v2Schema = new Schema<GameModeBrawl2v2>({
 
 }).add(gameModeProfileBaseSchema);
 
-type GameModeBrawl = GameModeBrawl1v1 | GameModeBrawl2v2
+export type GameModeBrawl = GameModeBrawl1v1 | GameModeBrawl2v2
 
 interface GameProfileBrawl extends GameProfileBase {
     game : 'Brawl';
@@ -105,7 +103,7 @@ const gameModeAramSchema = new Schema<GameModeARAM>({
 
 }).add(gameModeProfileBaseSchema);
 
-type GameModeLoL = GameModeRift | GameModeARAM
+export type GameModeLoL = GameModeRift | GameModeARAM
 
 interface GameProfileLoL extends GameProfileBase {
     game : 'LoL';
@@ -136,7 +134,7 @@ const gameModeVal5v5Schema = new Schema<GameModeVal5v5>({
 
 }).add(gameModeProfileBaseSchema);
 
-type GameModeValorant = GameModeVal5v5
+export type GameModeValorant = GameModeVal5v5
 
 interface GameProfileValorant extends GameProfileBase {
     game : 'Valorant';
@@ -178,7 +176,7 @@ const gameModeRocket3v3Schema = new Schema<GameModeRocket3v3>({
 
 }).add(gameModeProfileBaseSchema);
 
-type GameModeRocket = GameModeRocket1v1 | GameModeRocket3v3
+export type GameModeRocket = GameModeRocket1v1 | GameModeRocket3v3
 
 interface GameProfileRocket extends GameProfileBase {
     game : 'Rocket';

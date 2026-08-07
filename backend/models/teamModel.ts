@@ -1,12 +1,13 @@
 import mongoose, { Document, PopulatedDoc } from "mongoose";
 import { ProfileDoc } from "./profileModel";
+import { GameDoc } from "./gameModel";
 
 const Schema = mongoose.Schema;
 
 export interface TeamDoc extends Document {
     name : String;
-    tournament : mongoose.Schema.Types.ObjectId;
-    members : PopulatedDoc<ProfileDoc>;
+    game : PopulatedDoc<GameDoc>;
+    members : PopulatedDoc<ProfileDoc>[];
     placing : number
 }
 
@@ -15,13 +16,13 @@ const teamSchema = new Schema<TeamDoc>({
         type : String,
         required : true
     },
-    tournament: {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : "Tournament",
+    game : {
+        type : mongoose.Types.ObjectId,
+        ref : 'Game',
         required : true
     },
     members : [{
-        type : mongoose.Schema.Types.ObjectId,
+        type : mongoose.Types.ObjectId,
         ref : 'Profile',
         required : true
     }],

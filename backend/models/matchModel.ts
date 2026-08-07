@@ -1,30 +1,44 @@
-import mongoose, { Document } from "mongoose";
+import mongoose, { Document, PopulatedDoc } from "mongoose";
+import { ProfileDoc } from "./profileModel";
+import { TeamDoc } from "./teamModel";
+import { Participant } from "../types/types";
 
 const Schema = mongoose.Schema;
 
 export interface MatchDoc extends Document {
+    game : string;
     matchNumber : Number;
-    matchSet : mongoose.Schema.Types.ObjectId;
-    winningTeam : mongoose.Schema.Types.ObjectId;
+    matchSet : mongoose.Types.ObjectId;
+    winner : Participant;
+    winnerType : 'Profile' | 'Team';
 }
 
-const matchSchema = new Schema<MatchDoc>({
+export const matchSchema = new Schema<MatchDoc>({
+    game : {
+        type : String,
+        required : true
+    },
     matchNumber : {
         type : Number,
         required : true,
-        default : 1
+        default : 0
     },
     matchSet : {
-        type : mongoose.Schema.Types.ObjectId,
+        type : Schema.Types.ObjectId,
         ref : 'Set',
         required : true
     },
-    winningTeam : {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'Team',
+    winner : {
+        type : Schema.Types.ObjectId,
+        ref : 'winnerType',
         required : true
-    }
+    },
+    winnerType: {
+        type: String,
+        required: true,
+        enum: ['Profile', 'Team'],
+    },
 
-}, { timestamps: false });
+}, { discriminatorKey : 'game', collection : 'matches'});
 
-export default mongoose.model<MatchDoc>('Match', matchSchema)
+export default mongoose.model<MatchDoc>('Match', matchSchema);

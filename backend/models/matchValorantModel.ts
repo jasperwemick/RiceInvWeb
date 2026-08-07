@@ -1,5 +1,5 @@
 import mongoose, { Document } from "mongoose";
-import { MatchDoc } from "./matchModel";
+import { MatchDoc, matchSchema } from "./matchModel";
 
 const Schema = mongoose.Schema;
 
@@ -23,5 +23,7 @@ const matchValorantSchema = new Schema<MatchValorantDoc>({
         type: String
     }
 }, { timestamps: false });
+
+matchValorantSchema.add(matchSchema);
 
 export default mongoose.model<MatchValorantDoc>('MatchValorant', matchValorantSchema)

@@ -1,14 +1,15 @@
 import mongoose, { Document, PopulatedDoc } from "mongoose";
-import { SetDoc } from "./setModel";
 import { ProfileDoc } from "./profileModel";
-import { GameDoc } from "./gameModel";
+import { TeamDoc } from "./teamModel";
+import { Participant } from "../types/types";
 
 const Schema = mongoose.Schema;
 
 export interface TournamentDoc extends Document {
     name : string;
     gameMode : mongoose.Schema.Types.ObjectId;
-    players : PopulatedDoc<ProfileDoc>[];
+    participants : Participant[];
+    participantType : 'Profile' | 'Team';
 }
 
 const tournamentSchema = new Schema<TournamentDoc>({
@@ -20,11 +21,16 @@ const tournamentSchema = new Schema<TournamentDoc>({
         type : mongoose.Schema.Types.ObjectId,
         required: true
     },
-    players : [{
+    participants : [{
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'Profile',
+        ref : 'participantType',
         required : true
-    }]
+    }],
+    participantType : {
+        type : String,
+        required : true,
+        enum: ['Profile', 'Team'],
+    }
 }, { timestamps: false });
 
 

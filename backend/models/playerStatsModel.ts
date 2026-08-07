@@ -1,20 +1,27 @@
 import mongoose, { Document, PopulatedDoc } from "mongoose";
-import profileModel, { ProfileDoc } from "./profileModel";
-import Game from "../models/gameModel";
+import profileModel, { GameModeProfileBase, ProfileDoc } from "./profileModel";
+import Game, { GameDoc } from "../models/gameModel";
 import { MatchDoc } from "./matchModel";
+import { MatchLoLDoc } from "./matchLoLModel";
+import { MatchValorantDoc } from "./matchValorantModel";
+import { MatchBrawlDoc } from "./matchBrawlModel";
+import { MatchRocketDoc } from "./matchRocketModel";
+import gameModel from "../models/gameModel";
 
 const Schema = mongoose.Schema;
 
+type AnyMatchDoc = MatchDoc | MatchBrawlDoc | MatchLoLDoc | MatchValorantDoc | MatchRocketDoc
+
 export interface PlayerStatsDoc extends Document {
     playerProfile : mongoose.Types.ObjectId;
-    match : PopulatedDoc<MatchDoc>;
+    match : PopulatedDoc<AnyMatchDoc>;
     game : string;
     gameMode : string;
-    type : string;
     calculateMatchRating() : number;
+    generateNewGameModeProfile(game : GameDoc) : GameModeProfileBase;
 }
 
-export const playerStatsSchema = new Schema({
+export const playerStatsSchema = new Schema<PlayerStatsDoc>({
     playerProfile: {
         type: mongoose.Schema.Types.ObjectId,
         ref : 'Profile',
@@ -33,42 +40,67 @@ export const playerStatsSchema = new Schema({
         type: String,
         required : true
     },
-}, { discriminatorKey : 'type', collection : 'playerstats'});
+}, { discriminatorKey : 'game', collection : 'playerstats'});
 
 playerStatsSchema.methods.calculateMatchRating = function (doc : PlayerStatsDoc) : number {
-    throw new Error(`calculateMatchRating() not implemented for type : ${doc.type}`)
+    throw new Error(`calculateMatchRating() not implemented for type : ${doc.game}`)
+}
+
+playerStatsSchema.methods.generateNewGameModeProfile = function (doc : PlayerStatsDoc, game : GameDoc) : GameModeProfileBase {
+    throw new Error(`generateNewGameModeProfile() not implemented for type : ${doc.game}`)
 }
 
 playerStatsSchema.pre('save', async function(next) {
     const stats = this;
 
+    const session = await mongoose.startSession();
+
     try {
-        const profile = await profileModel.findById<ProfileDoc>(stats.playerProfile);
-        const exists = profile?.gameProfiles.find((gp) => {
-            return gp.gameModes.find((gm) => {
-                return gm.mode === stats.gameMode
-            });
-        });
-        if (!exists) {
-            const game = await Game.findOne({ name : stats.game })
 
-            if (!game) {
-                throw new Error('Game for player stats does not exist. Game must be created first');
-            }
+        const game = await gameModel.findOne<GameDoc>({ name : stats.game });
 
-            await profileModel.updateOne(
-                { _id : stats.playerProfile }, 
-                { $push : { 'gameProfiles.$.gameModes' : {
-                    mode : stats.gameMode,
-                    gameModeId : game?._id
-                }}}
-            )
+        session.startTransaction();
+
+        const gamePush = await profileModel.updateOne(
+            {
+                _id: stats.playerProfile,
+                'gameProfiles.game': stats.game,
+                'gameProfiles.gameModes.mode': { $ne: stats.gameMode },
+            },
+            {
+                $push: { 'gameProfiles.$.gameModes': stats.generateNewGameModeProfile(game) },
+            },
+            { session : session }
+        );
+
+        if (gamePush.modifiedCount > 0) {
+            return; // done — GameProfile existed, GameMode didn't, now it does
         }
+        const gmPush = await profileModel.updateOne(
+            {
+                _id: stats.playerProfile,
+                'gameProfiles.game': { $ne: stats.game },
+            },
+            {
+                $push: {
+                    gameProfiles: {
+                        game : stats.game,
+                        gameModes: [stats.generateNewGameModeProfile(game)],
+                        // any other required GameProfile base fields go here
+                    },
+                },
+            },
+            { session : session }
+        );
+
+        await session.commitTransaction();
     }
     catch(e) {
-
+        await session.abortTransaction();
+        console.log("Error at pre 'save' hook for PlayerStats: ", e);
     }
     finally {
+        await session.endSession();
         next();
     }
 });

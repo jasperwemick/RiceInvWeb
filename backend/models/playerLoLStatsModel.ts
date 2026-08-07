@@ -1,6 +1,8 @@
 import mongoose, { PopulatedDoc } from "mongoose";
 import { PlayerStatsDoc, playerStatsSchema } from "./playerStatsModel";
 import MatchLoL, { MatchLoLDoc } from "./matchLoLModel";
+import { GameDoc } from "./gameModel";
+import { GameModeLoL } from "./profileModel";
 
 const Schema = mongoose.Schema;
 
@@ -8,14 +10,14 @@ interface PlayerLoLStatsDoc extends PlayerStatsDoc {
     game : 'LoL';
     gameMode : 'ARAM' | 'Rift';
     match : PopulatedDoc<MatchLoLDoc>;
-    role : 'Top' | 'Mid' | 'ADC' | 'Support' | 'Jungle';
+    role ? : 'Top' | 'Mid' | 'ADC' | 'Support' | 'Jungle';
     kills : number;
     deaths : number;
     assists : number;
-    damage : number;
-    cs : number;
+    damage ? : number;
+    cs ? : number;
     gold : number;
-    vision : number;
+    vision ? : number;
     level : number;
 }
 
@@ -27,7 +29,6 @@ const playerLoLStatsSchema = new Schema<PlayerLoLStatsDoc>({
     },
     role : {
         type : String,
-        required : true
     },
     kills : {
         type : Number,
@@ -43,7 +44,6 @@ const playerLoLStatsSchema = new Schema<PlayerLoLStatsDoc>({
     },
     damage : {
         type : Number,
-        required : true
     },
     cs : {
         type : Number,
@@ -74,6 +74,16 @@ playerLoLStatsSchema.methods.calculateMatchRating = function (doc : PlayerLoLSta
     }
     else {
         return 2 * (0.35 - 1.437 * (doc.deaths / t) + 0.000117 * (doc.gold / t) + 0.443 * ((doc.kills + doc.assists) / t) + 0.264 * (doc.level / t));
+    }
+}
+
+playerLoLStatsSchema.methods.generateNewGameModeProfile = function (doc : PlayerLoLStatsDoc, game : GameDoc) : GameModeLoL {
+    return {
+        mode : doc.gameMode,
+        gameId : game._id,
+        rank : 0,
+        rating : doc.calculateMatchRating(),
+        ricePoints : 0
     }
 }
 

@@ -57,7 +57,7 @@ export const statRocketSchema = statBaseSchema.extend({
 })
 
 
-const statSchema = z.discriminatedUnion('format', [
+export const statSchema = z.discriminatedUnion('format', [
     statBrawlSchema,
     statLoLSchema,
     statValorantSchema,
@@ -65,6 +65,7 @@ const statSchema = z.discriminatedUnion('format', [
 ])
 
 export const matchBaseSchema = z.object({
+    _id : objectIdSchema,
     matchNumber : z.number(),
     teamAWin : z.boolean(),
     duration : z.number(),
@@ -92,7 +93,7 @@ export const matchRocketSchema = matchBaseSchema.extend({
     map : z.string(),
 })
 
-const newMatchSchema = z.discriminatedUnion('format', [
+export const newMatchSchema = z.discriminatedUnion('format', [
     matchBrawlSchema,
     matchLoLSchema,
     matchValorantSchema,

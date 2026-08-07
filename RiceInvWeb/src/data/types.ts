@@ -51,6 +51,8 @@ export interface GameMode {
 export interface Game {
     _id : string;
     name : string;
+    fullName : string;
+    description : string;
     gameModes : GameMode[];
 }
 

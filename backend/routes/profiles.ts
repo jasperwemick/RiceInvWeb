@@ -1,7 +1,7 @@
 import express from "express";
 import { Verify, VerifyRole } from '../middleware/verify'
 import multer from 'multer';
-import { createNewProfile, createNewProfileImage, deleteNewProfile, deleteProfileImage, getAllProfiles, getAllProfilesNoImage, getProfileById, patchProfileImage, updateNewProfile } from "../controllers/profileController";
+import { createNewProfile, createNewProfileImage, deleteNewProfile, deleteProfileImage, getAllGameProfiles, getAllProfiles, getAllProfilesNoImage, getProfileById, patchProfileImage, updateNewProfile } from "../controllers/profileController";
 
 const router = express.Router();
 
@@ -35,6 +35,8 @@ router.delete('/:id/images', Verify, VerifyRole, deleteProfileImage);
 router.patch('/:id/images', Verify, VerifyRole, upload.single('image'), patchProfileImage);
 
 //###########################################################################################################################
+
+router.get('/game/:name', getAllGameProfiles);
 
 // router.get('/league', async (req, res) => {
 //     try {

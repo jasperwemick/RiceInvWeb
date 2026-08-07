@@ -7,7 +7,7 @@ import { configDotenv } from "dotenv";
 
 import authRoutes from "./routes/auth";
 import profileRoutes from './routes/profiles';
-import gameRoutes from './routes/tournaments';
+import gameRoutes from './routes/games';
 import eventRoutes from './routes/events';
 import tournamentRoutes from './routes/tournaments';
 import path from "path";

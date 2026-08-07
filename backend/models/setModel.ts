@@ -1,16 +1,21 @@
 import mongoose, { Document, PopulatedDoc } from "mongoose";
 import { TeamDoc } from "./teamModel";
 import { MatchDoc } from "./matchModel";
+import { ProfileDoc } from "./profileModel";
+import { Participant } from "../types/types";
 
 const Schema = mongoose.Schema;
 
 export interface SetDoc extends Document {
     setId : number;
-    tournament : mongoose.Schema.Types.ObjectId;
+    tournament : mongoose.Types.ObjectId;
     bestOf : number;
-    bracket : boolean;
-    teams : PopulatedDoc<TeamDoc>;
-    parents : string[];
+    stage : 'Group' | 'Gauntlet' | 'Playoffs';
+    stageName ? : string;
+    setName : string;
+    participants : Participant[];
+    participantType : 'Profile' | 'Team';
+    parents : number[];
     lowerSetID : number;
     nextSetID : number;
     matches : MatchDoc[];
@@ -30,17 +35,29 @@ const setSchema = new Schema<SetDoc>({
         type: Number,
         required: true,
     },
-    bracket : {
-        type : Boolean,
+    stage : {
+        type : String,
         required : true,
     },
-    teams : [{
+    stageName : {
+        type : String,
+    },
+    setName : {
+        type : String,
+        required : true
+    },
+    participants : [{
         type : mongoose.Schema.Types.ObjectId,
-        ref : 'Team',
+        ref : 'participantType',
         required : true
     }],
+    participantType : {
+        type : String,
+        required : true,
+        enum: ['Profile', 'Team'],
+    },
     parents: [{
-        type: String
+        type: Number
     }],
     lowerSetID: {
         type: Number

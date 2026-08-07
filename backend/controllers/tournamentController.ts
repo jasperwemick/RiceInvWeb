@@ -16,8 +16,7 @@ import Game from "../models/gameModel";
 
 import { SetDoc } from "../models/setModel";
 import mongoose from "mongoose";
-import { newSetSchema, newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
-import pl from "zod/v4/locales/pl.js";
+import { matchBaseSchema, newMatchSchema, newSetSchema, newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
 import Team, { TeamDoc } from "../models/teamModel";
 import Match from "../models/matchModel";
 
@@ -94,8 +93,6 @@ export const getAllPlayerTournaments = async (req : Request, res : Response) => 
     }
 }
 
-interface PlayerSetsResult extends SetDoc {}
-
 export const getPlayerTournamentSets = async (req : Request, res : Response) => {
     const tid = req.params.tid;
     const pid = req.params.pid;
@@ -126,8 +123,8 @@ export const getTournamentPlayerGameProfiles = async (req : Request, res : Respo
                 message : 'Tournament with id' + tid + 'does not exist'
             }
         }
-        const { gameMode, players } = tournament;
-        const parsed = profilesSchema.safeParse(players);
+        const { gameMode, participants } = tournament;
+        const parsed = profilesSchema.safeParse(participants);
         const gameProfiles = parsed.data?.map((profile) => {
             return profile.gameProfiles.map((gameProfile) => {
                 const matchingMode = gameProfile.gameModes.find((x) => x.gameModeId === gameMode.toString())
@@ -201,34 +198,30 @@ export const createTournament = async (req : Request, res : Response) => {
                     const match = await RocketMatch.create([{ set: setDoc._id, ...matchData }], { session });
                     matchId = match[0].id;
                 }
-
+                
                 for (const pStat of matchBody.playerStats) {
                     if (pStat.format === 'Brawl') {
                         const { format, ...statData } = pStat
-                        const statsForMatch = { ...statData, match: matchId};
-                        await BrawlStats.create({ ...statsForMatch }, { session });
+                        await BrawlStats.create([{ ...statData, match: matchId }], { session });
                     }
                     else if (pStat.format === 'LoL') {
                         const { format, ...statData } = pStat
-                        const statsForMatch = { ...statData, match: matchId};
-                        await LoLStats.create({ ...statsForMatch }, { session });
+                        await LoLStats.create([{ ...statData,  match: matchId }], { session });
                     }
                     else if (pStat.format === 'Valorant') {
                         const { format, ...statData } = pStat
-                        const statsForMatch = { ...statData, match: matchId};
-                        await ValorantStats.create({ ...statsForMatch }, { session });
+                        await ValorantStats.create([{ ...statData, match: matchId }], { session });
                     }
                     else if (pStat.format === 'Rocket') {
                         const { format, ...statData } = pStat
-                        const statsForMatch = { ...statData, match: matchId};
-                        await RocketStats.create({ ...statsForMatch }, { session });
+                        await RocketStats.create([{ ...statData, match: matchId }], { session });
                     }
                 }
             }
         }
 
         await session.commitTransaction();
-        res.status(201).json(tournamentDoc);
+        res.status(201).json(tournament);
     } 
     catch (e) {
         await session.abortTransaction();
@@ -236,7 +229,7 @@ export const createTournament = async (req : Request, res : Response) => {
         res.status(500).json({ error: "Failed to create tournament" });
     } 
     finally {
-        session.endSession();
+        await session.endSession();
     }
 }
 
@@ -248,13 +241,55 @@ export const createTournamentSet = async (req : Request, res : Response) => {
     }
     try {
         const { matches, ...setData } = body.data;
-        Set.create({
+        const newSet = await Set.create({
             ...setData
-        })
+        });
+        await newSet.save();
     }
     catch(e) {
         console.log("Error at POST /tournament/set: ", e);
         res.status(500).json({ error: "Failed to create tournament set" });
     }
+}
 
+export const createTournamentMatch = async (req : Request, res : Response) => {
+    const body = newMatchSchema.safeParse(req.body);
+
+    if (!body.success) {
+        return res.status(400).json({ message: body.error.message });
+    }
+
+    const session = await mongoose.startSession();
+
+    try {
+        session.startTransaction();
+
+        const { playerStats, ...matchData } = body.data;
+        const newMatch = await Match.create([{
+            ...matchData
+        }], { session });
+
+        for (const ps of playerStats) {
+            const { format, ...statData } = ps;
+            const statsForMatch = { ...statData, match: matchData._id};
+            switch (format) {
+                case 'Brawl'    : await BrawlStats.create([{ ...statsForMatch }], { session }); break;
+                case 'LoL'      : await LoLStats.create([{ ...statsForMatch }], { session }); break;
+                case 'Valorant' : await ValorantStats.create([{ ...statsForMatch }], { session }); break;
+                case 'Rocket'   : await RocketStats.create([{ ...statsForMatch }], { session }); break;
+                default : console.log('Illegal format for Player Stats');
+            };
+        }
+
+        await session.commitTransaction();
+        res.status(201).json(newMatch);
+    }
+    catch(e) {
+        await session.abortTransaction();
+        console.log("Error at POST /tournament/set/match: ", e);
+        res.status(500).json({ error: "Failed to create tournament match" });
+    }
+    finally {
+        await session.endSession();
+    }
 }

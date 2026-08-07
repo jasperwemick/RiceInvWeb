@@ -1,6 +1,8 @@
 import mongoose, { PopulatedDoc } from "mongoose";
 import { PlayerStatsDoc, playerStatsSchema } from "./playerStatsModel";
 import { MatchValorantDoc } from "./matchValorantModel";
+import { GameDoc } from "./gameModel";
+import { GameModeValorant } from "./profileModel";
 
 const Schema = mongoose.Schema;
 
@@ -82,6 +84,16 @@ playerValorantStatsSchema.methods.calculateMatchRating = function (doc : PlayerV
     
     const t = doc.match.rounds;
     return ((0.2 * doc.kills / t) - (0.085 * doc.deaths / t) + (0.12 * doc.assists / t) + (0.6 * doc.kast)) * 0.65 + (0.04 * doc.fk / doc.fd) + (0.0045 * doc.adr) + (0.8 * doc.mk / t);
+}
+
+playerValorantStatsSchema.methods.generateNewGameModeProfile = function (doc : PlayerValorantStatsDoc, game : GameDoc) : GameModeValorant {
+    return {
+        mode : doc.gameMode,
+        gameId : game._id,
+        rank : 0,
+        rating : doc.calculateMatchRating(),
+        ricePoints : 0
+    }
 }
 
 export default mongoose.model<PlayerValorantStatsDoc>('PlayerValorantStats', playerValorantStatsSchema)

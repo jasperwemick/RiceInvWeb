@@ -26,7 +26,6 @@ const s3 = new S3Client({
 export const getAllProfiles = async (req : Request, res : Response) => {
     try {
         const profiles = await Profile.find<ProfileDoc>();
-        console.log(mongoose.connection.db.databaseName);
 
         for (let profile of profiles) {
             const params = {
@@ -38,7 +37,6 @@ export const getAllProfiles = async (req : Request, res : Response) => {
     
             profile.imageUrl = url
         }
-        console.log(profiles);
         res.json(profiles)
     }
     catch(e) {
@@ -80,9 +78,14 @@ export const getProfileById = async (req : Request, res : Response) => {
     }
 }
 
-export const getGameProfiles = async (req : Request, res : Response) => {
-    const gameName = req.params.game;
+export const getGameProfileByName = async (req : Request, res : Response) => {
+    const gameName = req.params.name;
+}
+
+export const getAllGameProfiles = async (req : Request, res : Response) => {
+    const gameName = req.params.name;
     try {
+        console.log(gameName);
         const gameProfiles = await Profile.aggregate([
             // 1. Early filter — only profiles that have a league entry at all (uses your index, cheap)
             { $match: { 'gameProfiles.name': gameName } },
@@ -111,7 +114,7 @@ export const getGameProfiles = async (req : Request, res : Response) => {
         res.json(gameProfiles);
     }
     catch(e) {
-        console.log("Error at GET /profile/game-profile/:gid");
+        console.log("Error at GET /profile/game/:gid");
         res.status(500).json({ message : 'Failed to obtain Game Profiles' });
     }
 }

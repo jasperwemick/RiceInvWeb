@@ -11,7 +11,7 @@ export interface GameDoc extends Document {
     name : string;
     fullName : string;
     description : string;
-    gameModes : Types.DocumentArray<GameModeSchema & Document>
+    gameModes : Types.DocumentArray<GameModeSchema & Document>;
 }
 
 const gameModeSchema = new Schema<GameModeSchema>({

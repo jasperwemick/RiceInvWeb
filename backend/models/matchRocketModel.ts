@@ -1,9 +1,9 @@
 import mongoose, { Document } from "mongoose";
-import { MatchDoc } from "./matchModel";
+import matchModel, { MatchDoc, matchSchema } from "./matchModel";
 
 const Schema = mongoose.Schema;
 
-interface MatchRocketDoc extends MatchDoc {
+export interface MatchRocketDoc extends MatchDoc {
     game : 'Rocket';
     map : string;
 }
@@ -14,5 +14,7 @@ const matchRocketSchema = new Schema<MatchRocketDoc>({
         required: true
     }
 }, { timestamps: false });
+
+matchRocketSchema.add(matchSchema);
 
 export default mongoose.model<MatchRocketDoc>('MatchRocket', matchRocketSchema)

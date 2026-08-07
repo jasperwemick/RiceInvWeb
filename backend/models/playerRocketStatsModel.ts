@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 import { PlayerStatsDoc, playerStatsSchema } from "./playerStatsModel";
+import { GameModeProfileBase, GameModeRocket } from "./profileModel";
+import gameModel, { GameDoc } from "./gameModel";
 
 const Schema = mongoose.Schema;
 
@@ -15,11 +17,6 @@ interface PlayerRocketStatsDoc extends PlayerStatsDoc {
 }
 
 const playerRocketStatsSchema = new Schema<PlayerRocketStatsDoc>({
-    match : {
-        type: mongoose.Schema.Types.ObjectId,
-        ref : 'MatchRocket',
-        required: true
-    },
     score : {
         type : Number
     },
@@ -52,6 +49,16 @@ playerRocketStatsSchema.methods.calculateMatchRating = function (doc : PlayerRoc
     else {
         const sigScore = (100 * doc.goals) + (50 * doc.assists) + (50 * doc.saves) + (10 * doc.shots);
         return 0.1 * doc.goals + 0.08 * doc.assists + 0.075 * doc.saves + 0.02 * doc.shots + 0.004 * (doc.score - sigScore);
+    }
+}
+
+playerRocketStatsSchema.methods.generateNewGameModeProfile = function (doc : PlayerRocketStatsDoc, game : GameDoc) : GameModeRocket {
+    return {
+        mode : doc.gameMode,
+        gameId : game._id,
+        rank : 0,
+        rating : doc.calculateMatchRating(),
+        ricePoints : 0
     }
 }
 

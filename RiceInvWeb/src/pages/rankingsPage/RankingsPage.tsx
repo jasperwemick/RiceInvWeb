@@ -11,7 +11,9 @@ export default function RankingsPage() {
     // const [brawlProfiles, setBrawlProfiles] = useState([])
     const [game, setGame] = useState<Game>({
         _id: '',
-        name : 'brawl',
+        name : 'Brawl',
+        fullName : 'Brawlhalla',
+        description : '',
         gameModes : []
     });
     const [profiles, setProfiles] = useState<FlatGameProfile[]>([])
@@ -26,8 +28,8 @@ export default function RankingsPage() {
         // 4) More details button to show Tournament Bracket, and groups/gauntlet
         const getRanking = async () => {
             try {
-                const gameData = await apiFetch<Game>(`/game/${game.name}`);
-                const brawlProfileData = await apiFetch<FlatGameProfile[]>(`/profile/game-profile/${game.name}`)
+                const gameData = await apiFetch<Game>(`/api/games/name/${game.name}`);
+                const brawlProfileData = await apiFetch<FlatGameProfile[]>(`api/profiles/game/${game.name}`)
                 setProfiles(brawlProfileData);
                 setGame(gameData);
             }
@@ -39,16 +41,16 @@ export default function RankingsPage() {
         }
         getRanking();
         return;
-    }, [game]);
+    }, [game.name]);
 
     const onChangeGame = () => {
 
     }
 
     const listGames = () => {
-        return game.gameModes.map((mode) => {
+        return game.gameModes.map((mode, index) => {
             return (
-                <ProfileRanks profiles={profiles} mode={mode}/>
+                <ProfileRanks profiles={profiles} mode={mode} key={index}/>
             );
         });
     }

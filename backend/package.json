@@ -27,6 +27,9 @@
   "scripts": {
     "dev": "tsx watch server.ts",
     "build": "tsc",
-    "start": "node dist/server.js"
+    "start": "node dist/server.js",
+    "seedgame": "tsx scripts/seed.ts",
+    "seed" : "tsx scripts/tournamentSeed.ts",
+    "teamSeed" : "tsx scripts/teamSeed.ts"
   }
 }
