@@ -1,0 +1,123 @@
+.go-to-create-button {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: darkgrey;
+    min-width: max-content;
+    min-height: 4rem;
+}
+
+.go-to-create-button > a {
+    flex: 1;
+    position: relative;
+    min-height: 2rem;
+    background-color: cornflowerblue;
+}
+
+.tournament-create {
+    position: relative;
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-width: 100%;
+    min-height: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: #354f86;
+}
+
+.tournament-illusion-list {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    min-height: 100%;
+}
+
+.tournament-illusion-list > * {
+    border-radius: 1rem;
+}
+
+.tournament-configuration-box {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    align-items: center;
+    min-height: fit-content;
+    margin: 2rem 1rem;
+    padding: 12rem 4rem;
+    background: linear-gradient(0deg,rgba(201, 201, 201, 0) 0%, rgba(125, 165, 189, 1) 50%, rgba(201, 201, 201, 0) 100%);
+
+    /* filter: drop-shadow(0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.5)); */
+}
+
+.tournament-configuration-box > * {
+    padding: 1rem;
+}
+
+.tournament-configuration-box > * > * {
+    padding: 0.5rem;
+    border-radius: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.tournament-configuration-box-header {
+    min-width: 100%;
+
+    /* border-top-left-radius: 1rem;
+    border-top-right-radius: 1rem; */
+
+}
+
+.tournament-configuration-box-header > p {
+    font-size: 2pc;
+    color: aliceblue;
+    text-align: center;
+}
+
+.tournament-configuration-box-body {
+    display: flex;
+    min-width: 100%;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    padding-top: 2rem;
+    padding-bottom: 4rem;
+    /* border-bottom-left-radius: 1rem;
+    border-bottom-right-radius: 1rem; */
+}
+
+.tournament-configuration-box-body > input {
+    min-height: 4rem;
+    border: 0.5rem solid rgb(198, 198, 202);
+    text-align: center;
+    font-size: 1.75pc;
+    max-width: 80%;
+    background-color: rgb(206, 209, 212);
+}
+
+.tournament-configuration-box-body > button {
+    max-width: fit-content;
+    min-width: 50%;
+    min-height: 3rem;
+    border: none;
+    background-color: #354f86;
+    font-size: 1.75pc;
+    color: aliceblue;
+
+    transition-property: min-width, background-color;
+    transition-duration: 0.2s;
+    transition-timing-function: ease-in-out;
+}
+
+.tournament-configuration-box-body > button:hover {
+    min-width: 60%;
+    background-color: #3747a1;
+}
+
+.go-up-lol {
+    
+}

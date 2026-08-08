@@ -29,8 +29,8 @@ export const NavbarItems : NavbarItem[] = [
     },
     {
         class: 'nav-button',
-        pathTo: '/league',
-        text: 'League of Legends',
+        pathTo: '/tournament',
+        text: 'Tournaments',
     },
     {
         class: 'nav-button',

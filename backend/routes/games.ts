@@ -1,10 +1,12 @@
 import express from 'express';
-import { getGameById, getGameByName } from '../controllers/gameController';
+import { getAllGameModeProfileStats, getGameById, getGameByName } from '../controllers/gameController';
 
 const router = express.Router()
 
 router.get('/:id', getGameById);
 
 router.get('/name/:name', getGameByName);
+
+router.get('/name/:name/mode/:mode/stats/player/:pid', getAllGameModeProfileStats);
 
 export default router;

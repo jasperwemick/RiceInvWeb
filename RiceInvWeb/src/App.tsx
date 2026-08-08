@@ -4,7 +4,6 @@ import Navbar from "./components/Navbar";
 import Home from "./pages/homePage";
 import Add from "./pages/addProfilePage";
 import Edit from "./pages/editProfilePage";
-import Leaderboard from "./components/Leaderboard";
 import Description from "./pages/profilePage";
 import LeagueProfilePage from "./pages/leagueProfilePage";
 import LeaguePage from "./pages/leagueHomePage";
@@ -24,13 +23,16 @@ import { AlertProvider } from "./context/AlertProvider";
 import { ProfileContextProvider } from "./components/Profile/context/ProfileContextProvider";
 
 import './style/global.css'
+import './App.css'
 import SchedulePage from "./components/Schedule/schedulePage";
 import { Account } from "./components/Account";
 import RankingsPage from "./pages/rankingsPage/RankingsPage";
+import TournamentPage from "./pages/tournament/tournamentPage";
+import CreateTournamentPage from "./pages/tournament/createTournamentPage";
  
 const App = () => {
   return (
-    <div>
+    <div className={'app-layout'}>
       <Navbar/>
       <AlertProvider>
       <ProfileContextProvider>
@@ -40,23 +42,26 @@ const App = () => {
             {/* PUBLIC */}
             <Route path="/" component={Home} /> {/* Home page with player list */}
             <Route path="/rankings" component={RankingsPage} /> {/* Individual game rankings for players */}
-            <Route path="profile/:id" component={Description} /> {/* Main profile page for player */}
+            <Route path="/profile/:id" component={Description} /> {/* Main profile page for player */}
             <Route path="/schedule" component={SchedulePage}/> {/* Schedule Page */}
             <Route path="/login" component={Login}/> {/* Login Page (Admin only for now) */}
             <Route path="/logout" component={Logout}/> {/* Logout Function */}
 
+            <Route path="/tournament/create" component={CreateTournamentPage} />
+            <Route path="/tournament" component={TournamentPage} />
+
+            <Route path="/league/games/:num" component={LeagueGamePage} /> {/* Game stats with listed individual player stats for a League of Legends game */}
             <Route path="/league/:id" component={LeagueProfilePage} /> {/* League of Legends focused profile page for player */}
             <Route path="/league" component={LeaguePage} /> {/* Details regarding RI League of Legends rules, scoring, and highlights */}
-            <Route path="/league/games/:num" component={LeagueGamePage} /> {/* Game stats with listed individual player stats for a League of Legends game */}
 
             <Route path="/brawl/:id" component={BrawlProfilePage}/> {/* Brawlhalla focused profile page for player */}
-            <Route path="/brawl" component={RankingsPage}/> {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
             <Route path="/brawl/ones" component={BrawlOnesPage}/> {/* Brawlhalla ones games and stats */}
             <Route path="/brawl/twos" component={BrawlTwosPage}/> {/* Brawlhalla twos games and stats */}
+            <Route path="/brawl" component={RankingsPage}/> {/* Details regarding RI Brawlhalla rules, scoring, and highlights */}
 
-            <Route path="/blast" component={BlastHomePage}/> {/* Bullshit Blast Page */}
             <Route path="/blast/jeopardy" component={BlastJeopardyPage}/> {/* Bullshit Blast Jeopardy Page */}
             <Route path="/blast/amongus" component={BlastAmongusPage}/> {/* Bullshit Blast Among Us Page */}
+            <Route path="/blast" component={BlastHomePage}/> {/* Bullshit Blast Page */}
 
             {/* PROTECTED */}
             <Route>

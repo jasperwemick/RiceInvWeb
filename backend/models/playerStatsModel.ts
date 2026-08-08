@@ -56,7 +56,6 @@ playerStatsSchema.pre('save', async function(next) {
     const session = await mongoose.startSession();
 
     try {
-
         const game = await gameModel.findOne<GameDoc>({ name : stats.game });
 
         session.startTransaction();
