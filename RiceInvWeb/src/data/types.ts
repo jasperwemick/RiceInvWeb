@@ -68,16 +68,16 @@ export interface GameStats {
     final : () => number;
 }
 
-export interface Tournament {
-    name : string;
-    gameMode : string;
-    players : string[] | Profile[];
-}
 
 export interface Team {
     name : string;
-    tournament : string | Tournament;
     members : string[] | Profile[]
+}
+
+export interface Tournament {
+    name : string;
+    gameMode : string;
+    participants : string[] | Profile[] | Team[];
 }
 
 export interface TournamentMatch {

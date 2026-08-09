@@ -36,9 +36,42 @@
     min-height: 100%;
 }
 
-.tournament-illusion-list > * {
+.tournament-illusion-list > li {
     border-radius: 1rem;
 }
+
+.tournament-illusion-list > li.exiting {
+    animation-name: exitAnim;
+    animation-duration: 1s;
+}
+
+.tournament-illusion-list > li.active {
+    animation-name: enterAnim;
+    animation-duration: 1s;
+}
+
+@keyframes enterAnim {
+    from {
+        transform: translateY(200px);
+        opacity: 0;
+    }
+    to {
+        transform : translateY(0);
+        opacity: 1;
+    }
+}
+
+@keyframes exitAnim {
+    from {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    to {
+        transform : translateY(-200px);
+        opacity: 0;
+    }
+}
+
 
 .tournament-configuration-box {
     position: relative;
@@ -50,7 +83,6 @@
     margin: 2rem 1rem;
     padding: 12rem 4rem;
     background: linear-gradient(0deg,rgba(201, 201, 201, 0) 0%, rgba(125, 165, 189, 1) 50%, rgba(201, 201, 201, 0) 100%);
-
     /* filter: drop-shadow(0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.5)); */
 }
 
@@ -76,6 +108,7 @@
     font-size: 2pc;
     color: aliceblue;
     text-align: center;
+    user-select: none;
 }
 
 .tournament-configuration-box-body {
@@ -107,6 +140,7 @@
     background-color: #354f86;
     font-size: 1.75pc;
     color: aliceblue;
+    cursor: pointer;
 
     transition-property: min-width, background-color;
     transition-duration: 0.2s;
@@ -118,6 +152,22 @@
     background-color: #3747a1;
 }
 
-.go-up-lol {
-    
+.tournament-participants-grid {
+    display: grid;
+    gap: 0.5rem;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
+}
+
+.tournament-participants-grid > div {
+    min-height: max-content;
+    min-width: max-content;
+    background-color: cadetblue;
+    user-select: none;
+    cursor: pointer;
+}
+
+.tournament-participants-grid > div.selected {
+    background-color: aliceblue;
+
 }

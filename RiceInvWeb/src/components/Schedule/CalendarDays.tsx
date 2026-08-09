@@ -6,14 +6,7 @@ import useAuth from '../../hooks/useAuth'
 import type { CalendarDay, RiceEvent } from '../../data/types';
 import useRiceEvent from './hooks/useRiceEvent'
 import useSchedulePopUp from './hooks/useSchedulePopUp'
-
-const useGetRef = () => {
-    const refs = useRef<Record<number, RefObject<HTMLDivElement>>>({})
-    return useCallback(
-        (idx : number) => (refs.current[idx] ??= createRef()),
-        [refs]
-    )
-}
+import useGetRef from '../../hooks/useGetRef';
 
 interface CalendarDaysProps {
     currentDay : Date;
@@ -27,7 +20,7 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate} : Cale
 
     // const { setAlert } = useAlert() // RENDERING PROBLEM
 
-    const getRef = useGetRef()
+    const getRef = useGetRef<HTMLDivElement>()
     const selectionRef = useRef<HTMLDivElement>(null)
 
     function downHandler({ key } : { key : string }) {
