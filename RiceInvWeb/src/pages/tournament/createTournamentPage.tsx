@@ -89,10 +89,10 @@ export default function CreateTournamentPage() {
         <div className={'tournament-create'}>
             <ul className={'tournament-illusion-list'} ref={listRef}>
                 {step === 0 && <CreateStart itemRef={getRef(0)} transition={NextStep}/>}
-                {/* {step === 1 && <SetGame itemRef={getRef(0)} transition={NextStep} animInProgress={animInProgress}/>} */}
-                {step === 1 && <AddParticipants itemRef={getRef(1)} transition={NextStep} animInProgress={animInProgress} profiles={profiles}/>}
-                {step === 2 && <SetTeams itemRef={getRef(2)} transition={NextStep}/>}
-                {step === 2 && sideStep === 1 && 
+                {step === 1 && <SetGame itemRef={getRef(1)} transition={NextStep} animInProgress={animInProgress}/>}
+                {step === 2 && <AddParticipants itemRef={getRef(2)} transition={NextStep} animInProgress={animInProgress} profiles={profiles}/>}
+                {step === 3 && <SetTeams itemRef={getRef(3)} transition={NextStep}/>}
+                {step === 3 && sideStep === 1 && 
                 <CreateTeams 
                 itemRef={getSideRef(1)} 
                 transition={NextStep} 

@@ -7,10 +7,11 @@ interface SelectableItemsListProps<T, P extends object = {}> {
     list : T[];
     selected : T[];
     setSelected : React.Dispatch<React.SetStateAction<T[]>>;
+    limit ? : number;
     removalPredicate : (a : T, b : T) => boolean;
     getLabel : (x : T) => string;
     ComponentItem ? : (
-        { item } : { 
+        { item, topRef, clickAction, getLabel } : { 
             item : T, topRef : React.RefObject<HTMLDivElement>, clickAction ? : () => void, getLabel : (x : T) => string 
         } & P) => React.JSX.Element;
     ExtraProps ? : P;
@@ -21,6 +22,7 @@ export default function SelectableItemsList<T, P extends object = {}>({
     list, 
     selected, 
     setSelected, 
+    limit,
     removalPredicate, 
     getLabel, 
     ComponentItem = ListItem as unknown as (
@@ -47,6 +49,9 @@ export default function SelectableItemsList<T, P extends object = {}>({
             setSelected(selected.filter((x) => removalPredicate(x, item)))
             return;
         }
+
+        if (selected.length === limit) return;
+
         dom.classList.add('selected');
         setSelected([...selected, item]);
     }

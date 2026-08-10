@@ -21,8 +21,8 @@
     display: flex;
     flex-direction: column;
     min-width: 100%;
-    min-height: 0;
-    align-items: center;
+    /* min-height: 0; */
+    align-items: stretch;
     justify-content: center;
     background-color: #354f86;
 }
@@ -77,8 +77,10 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    flex : 1;
     flex-wrap: nowrap;
     align-items: center;
+    max-width: 30%;
     min-height: fit-content;
     margin: 2rem 1rem;
     padding: 12rem 4rem;
@@ -152,20 +154,26 @@
 
 .tournament-participants-grid {
     display: grid;
+    min-width: 100%;
     gap: 0.5rem;
-    grid-template-columns: repeat(3, 1fr);
+    align-items: center;
+    grid-template-columns: repeat(auto-fit,  minmax(min(8rem, 100%), 1fr));
+    grid-auto-rows: min-content;
 }
 
 .tournament-participants-grid > div {
     min-height: max-content;
-    min-width: max-content;
-    padding: 0.25rem;
+    min-width: 8rem;
     background-color: rgb(15, 74, 77);
     user-select: none;
     cursor: pointer;
     text-align: center;
     border-radius: 0.5rem;
     color: aliceblue;
+}
+
+.tournament-participants-grid > div.list-image-item {
+    aspect-ratio: 1 / 1;
 }
 
 .tournament-participants-grid > div:hover {

@@ -9,6 +9,6 @@ interface ListItemProps<T> {
 
 export default function ListItem<T>({item, topRef, clickAction=(() => {}), getLabel} : ListItemProps<T>) {
     return (
-        <div onClick={clickAction} ref={topRef}>{getLabel(item)}</div>
+        <div className={'list-item'} onClick={clickAction} ref={topRef}>{getLabel(item)}</div>
     )
 };
