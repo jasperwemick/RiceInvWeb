@@ -1,59 +1,19 @@
 import { useEffect, useState, type RefObject } from "react";
-import apiFetch from "../../../util/fetch";
 import type { Profile } from "../../../data/types";
-import useGetRef from "../../../hooks/useGetRef";
-
-interface AddParticipantsData {
-    participants : Profile[];
-}
+import type { TournamentData } from "../createTournamentPage";
+import SelectableItemsList from "./selectableItemsList";
 
 interface CreateStartProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : AddParticipantsData) => void;
+    transition : (data : TournamentData, ss : boolean) => void;
     animInProgress : boolean;
+    profiles : Profile[];
 }
 
 
-
-export default function AddParticipants({ itemRef, transition, animInProgress } : CreateStartProps) {
+export default function AddParticipants({ itemRef, transition, animInProgress, profiles } : CreateStartProps) {
 
     const [participants, setParticipants] = useState<Profile[]>([]);
-    const [profiles, setProfiles] = useState<Profile[]>([]);
-
-    const getRef = useGetRef<HTMLDivElement>();
-
-    useEffect(() => {
-
-        const getPlayers = async () =>  {
-            try {
-                setProfiles(await apiFetch<Profile[]>('/api/profiles/noimg'));
-            }
-            catch(e) {
-                console.log('Failed to fetch: ', e);
-            }
-        }
-
-        getPlayers();
-    }, []);
-
-    const toggleParticipant = (profile : Profile, index : number) => {
-        const item = getRef(index).current;
-        if (item.classList.contains('selected')) {
-            item.classList.remove('selected');
-            setParticipants(participants.filter(x => x._id != profile._id))
-            return;
-        }
-        item.classList.add('selected');
-        setParticipants([...participants, profile]);
-    }
-
-    const mapProfileNames = () => {
-        return profiles.map((profile, i) => {
-            return (
-                <div key={i} ref={getRef(i)} onClick={() => toggleParticipant(profile, i)}>{profile.name}</div>
-            )
-        })
-    }
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
@@ -62,9 +22,15 @@ export default function AddParticipants({ itemRef, transition, animInProgress } 
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-participants-grid'}>
-                    {!animInProgress && mapProfileNames()}
+                    {!animInProgress && 
+                    <SelectableItemsList<Profile> 
+                    list={profiles} 
+                    selected={participants} 
+                    setSelected={setParticipants} 
+                    removalPredicate={(a, b) => a._id != b._id} 
+                    getLabel={(x) => x.name}/>}
                 </div>
-                <button onClick={() => transition({ participants : participants })}>Continue</button>
+                <button onClick={() => transition({ step : 'AddParticipants', participants : participants }, false)}>Continue</button>
             </div>
         </li>
     )

@@ -1,12 +1,9 @@
 import { useState, type RefObject } from "react";
-
-interface SetTeamsData {
-    participantType : 'Profile' | 'Team';
-}
+import type { TournamentData } from "../createTournamentPage";
 
 interface SetTeamsProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : SetTeamsData) => void;
+    transition : (data : TournamentData, ss : boolean) => void;
 }
 
 export default function SetTeams({ itemRef, transition } : SetTeamsProps) {
@@ -17,9 +14,9 @@ export default function SetTeams({ itemRef, transition } : SetTeamsProps) {
                 <p>Are there teams?</p>
             </div>
             <div className={'tournament-configuration-box-body'}>
-                <div>
-                    <button onClick={() => transition({ participantType : 'Team' })}>Yes</button>
-                    <button onClick={() => transition({ participantType : 'Profile' })}>No</button>
+                <div className={'tournament-configuration-button-option'}>
+                    <button onClick={() => transition({ step : 'SetTeams' }, true)}>Yes</button>
+                    <button onClick={() => transition({ step : 'SetTeams' }, false)}>No</button>
                 </div>
             </div>
         </li>

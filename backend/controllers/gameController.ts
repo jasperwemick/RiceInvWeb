@@ -2,6 +2,16 @@ import { Request, Response } from "express";
 import Game, { GameDoc } from "../models/gameModel";
 import PlayerStats, { PlayerStatsDoc } from '../models/playerStatsModel';
 
+export const getAllGames = async (req : Request, res : Response) => {
+    try {
+        const game = await Game.find<GameDoc>();
+        res.json(game);
+    }
+    catch(e) {
+        console.log('Error at GET /api/games');
+    }
+}
+
 export const getGameById = async (req : Request, res : Response) => {
     const gid = req.params.id;
 

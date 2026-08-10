@@ -1,7 +1,9 @@
 import express from 'express';
-import { getAllGameModeProfileStats, getGameById, getGameByName } from '../controllers/gameController';
+import { getAllGameModeProfileStats, getAllGames, getGameById, getGameByName } from '../controllers/gameController';
 
 const router = express.Router()
+
+router.get('/', getAllGames);
 
 router.get('/:id', getGameById);
 

@@ -30,7 +30,7 @@
 .tournament-illusion-list {
     flex: 1;
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     flex-wrap: nowrap;
     justify-content: center;
     min-height: 100%;
@@ -86,11 +86,7 @@
     /* filter: drop-shadow(0.2rem 0.2rem 0.4rem rgba(0, 0, 0, 0.5)); */
 }
 
-.tournament-configuration-box > * {
-    padding: 1rem;
-}
-
-.tournament-configuration-box > * > * {
+.tournament-configuration-box  * {
     padding: 0.5rem;
     border-radius: 1rem;
     font-family: Arial, Helvetica, sans-serif;
@@ -123,7 +119,7 @@
     border-bottom-right-radius: 1rem; */
 }
 
-.tournament-configuration-box-body > input {
+.tournament-configuration-box-body input {
     min-height: 4rem;
     border: 0.5rem solid rgb(198, 198, 202);
     text-align: center;
@@ -132,23 +128,25 @@
     background-color: rgb(206, 209, 212);
 }
 
-.tournament-configuration-box-body > button {
-    max-width: fit-content;
-    min-width: 50%;
+.tournament-configuration-box-body button {
+    min-width: 40%;
     min-height: 3rem;
     border: none;
     background-color: #354f86;
     font-size: 1.75pc;
     color: aliceblue;
     cursor: pointer;
+    padding: 0.5rem;
+    border-radius: 1rem;
+    font-family: Arial, Helvetica, sans-serif;
 
     transition-property: min-width, background-color;
     transition-duration: 0.2s;
     transition-timing-function: ease-in-out;
 }
 
-.tournament-configuration-box-body > button:hover {
-    min-width: 60%;
+.tournament-configuration-box-body button:hover {
+    min-width: 50%;
     background-color: #3747a1;
 }
 
@@ -156,18 +154,46 @@
     display: grid;
     gap: 0.5rem;
     grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: repeat(4, 1fr);
 }
 
 .tournament-participants-grid > div {
     min-height: max-content;
     min-width: max-content;
-    background-color: cadetblue;
+    padding: 0.25rem;
+    background-color: rgb(15, 74, 77);
     user-select: none;
     cursor: pointer;
+    text-align: center;
+    border-radius: 0.5rem;
+    color: aliceblue;
+}
+
+.tournament-participants-grid > div:hover {
+
 }
 
 .tournament-participants-grid > div.selected {
-    background-color: aliceblue;
+    background-color: rgb(2, 27, 49);
+}
 
+.tournament-configuration-button-option {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    gap: 1rem;
+}
+
+.tournament-configuration-button-option > * {
+    flex-shrink: 0;
+}
+
+.tournament-configuration-subbox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 90%;
+    min-height: fit-content;
+    gap: 1rem;
+    background: linear-gradient(0deg,rgba(75, 89, 172, 0.5) 0%, rgba(125, 165, 189, 1) 50%, rgba(75, 89, 172, 0.5) 100%);
+    border: 0.25rem solid #354f86;
 }

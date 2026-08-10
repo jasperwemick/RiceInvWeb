@@ -11,6 +11,7 @@ export interface GameProfile {
 }
 
 export interface Profile {
+    def : 'Profile';
     _id : string;
     name : string;
     description : string;
@@ -70,8 +71,9 @@ export interface GameStats {
 
 
 export interface Team {
+    def : 'Team';
     name : string;
-    members : string[] | Profile[]
+    members : Profile[]
 }
 
 export interface Tournament {

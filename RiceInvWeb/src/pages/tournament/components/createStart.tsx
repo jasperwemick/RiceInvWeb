@@ -1,12 +1,9 @@
 import { useState, type RefObject } from "react";
-
-interface CreateStartData {
-    name : string;
-}
+import type { TournamentData } from "../createTournamentPage";
 
 interface CreateStartProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : CreateStartData) => void;
+    transition : (data : TournamentData, ss : boolean) => void;
 }
 
 export default function CreateStart({ itemRef, transition } : CreateStartProps) {
@@ -20,7 +17,7 @@ export default function CreateStart({ itemRef, transition } : CreateStartProps) 
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <input value={inputText} onChange={e => setInputText(e.target.value)}/>
-                <button onClick={() => transition({ name : inputText })}>Continue</button>
+                <button onClick={() => transition({ step : 'CreateStart', name : inputText }, false)}>Continue</button>
             </div>
         </li>
     )
