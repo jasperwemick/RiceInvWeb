@@ -1,12 +1,21 @@
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import useGetRef from "../../../hooks/useGetRef";
 import ListItem from "./listItem";
 
 
-interface SelectableItemsListProps<T, P extends object = {}> {
-    list : T[];
+type SelectedItemProps<T> = {
+    selected : T | null;
+    setSelected : React.Dispatch<React.SetStateAction<T | null>>;
+    multiple : false
+} | {
     selected : T[];
     setSelected : React.Dispatch<React.SetStateAction<T[]>>;
+    multiple : true
+}
+
+interface SelectableItemsListProps<T, P extends object = {}> {
+    list : T[];
+    selection : SelectedItemProps<T>;
     limit ? : number;
     removalPredicate : (a : T, b : T) => boolean;
     getLabel : (x : T) => string;
@@ -20,8 +29,7 @@ interface SelectableItemsListProps<T, P extends object = {}> {
 
 export default function SelectableItemsList<T, P extends object = {}>({ 
     list, 
-    selected, 
-    setSelected, 
+    selection,
     limit,
     removalPredicate, 
     getLabel, 
@@ -33,35 +41,48 @@ export default function SelectableItemsList<T, P extends object = {}>({
 } : SelectableItemsListProps<T, P>) {
     
     const getRef = useGetRef<HTMLDivElement>();
+    const [selectedIndex, setSelectedIndex] = useState<number>(-1);
 
+    // If the parent modifies the length of the list, unselect all
     useEffect(() => {
         list.forEach((value, i) => {
-            console.log(getRef(i));
             getRef(i).current.classList.remove('selected');
         })
+        if (selection.multiple === true) selection.setSelected([]);
+        else selection.setSelected(null);
     }, [list.length]);
 
-    //x._id != item._id
+    // If parent sets single selected item to null, remove css class
+    useEffect(() => {
+        const dom = getRef(selectedIndex).current;
+        if (dom && selection.multiple === false && !selection.selected) {
+            getRef(selectedIndex).current.classList.remove('selected');
+        }
+    }, [selection.selected])
+
     const toggleParticipant = (item : T, index : number) => {
         const dom = getRef(index).current;
         if (dom.classList.contains('selected')) {
             dom.classList.remove('selected');
-            setSelected(selected.filter((x) => removalPredicate(x, item)))
+            
+            if (selection.multiple === true) selection.setSelected(selection.selected.filter((x) => removalPredicate(x, item)))
+            else selection.setSelected(null);
             return;
         }
 
-        if (selected.length === limit) return;
+        if (limit && selection.multiple && selection.selected.length === limit) return;
+
+        if (!selection.multiple && selectedIndex >= 0) getRef(selectedIndex).current.classList.remove('selected');
+        setSelectedIndex(index);
 
         dom.classList.add('selected');
-        setSelected([...selected, item]);
+        if (selection.multiple === true) selection.setSelected([...selection.selected, item]);
+        else selection.setSelected(item);
     }
 
     return list.map((item, i) => {
         return (
-            (
-                <ComponentItem item={item} topRef={getRef(i)} clickAction={() => toggleParticipant(item, i)} getLabel={getLabel} {...ExtraProps} key={i}/>
-                // <div key={i} ref={getRef(i)} onClick={() => toggleParticipant(item, i)}>{getLabel(item)}</div>
-            )
+            <ComponentItem item={item} topRef={getRef(i)} clickAction={() => toggleParticipant(item, i)} getLabel={getLabel} {...ExtraProps} key={i}/>
         )
     })
 }

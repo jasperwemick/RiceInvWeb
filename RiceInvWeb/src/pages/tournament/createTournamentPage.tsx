@@ -97,7 +97,17 @@ export default function CreateTournamentPage() {
                 itemRef={getSideRef(1)} 
                 transition={NextStep} 
                 animInProgress={animInProgress} 
-                participants={tournament.participants.filter(x => x.def == 'Profile')}/>}
+                participants={tournament.participants.filter(x => x.def == 'Profile')}
+                gameMode={tournament.gameMode}/>}
+                {step === 4 /* Tournament Format - Stage 1 ? Groups ? Round robin ? group size*/}
+                {step === 4 /* Assign to groups - Seeding ? Manual ? Random */}
+
+                {step === 5 /* Tournament Format - Stage 2 ? Play-in / Gauntlet (format) / LCQ */}
+                {step === 5 /* Tournament Format - Who goes to play-in ? */}
+
+                {step === 6 /* Tournament Format - Stage 3 ? Playoffs / Single Elim / Double elim*/}
+                {step === 6 /* Tournament Format - Stage 3 ? Generate Bracket */}
+
             </ul>
         </div>
     )

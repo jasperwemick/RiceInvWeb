@@ -25,8 +25,7 @@ export default function AddParticipants({ itemRef, transition, animInProgress, p
                     {!animInProgress && 
                     <SelectableItemsList<Profile> 
                     list={profiles} 
-                    selected={participants} 
-                    setSelected={setParticipants} 
+                    selection={{ selected : participants, setSelected : setParticipants, multiple : true }} 
                     removalPredicate={(a, b) => a._id != b._id} 
                     getLabel={(x) => x.name}/>}
                 </div>

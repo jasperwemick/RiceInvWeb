@@ -5,6 +5,7 @@ const Schema = mongoose.Schema;
 interface GameModeSchema {
     mode : string;
     description : string;
+    teamSize : number;
 }
 
 export interface GameDoc extends Document {
@@ -21,6 +22,10 @@ const gameModeSchema = new Schema<GameModeSchema>({
     },
     description : {
         type : String,
+        required : true
+    },
+    teamSize : {
+        type : Number,
         required : true
     }
 }, { timestamps: false })

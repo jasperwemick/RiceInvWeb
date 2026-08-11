@@ -9,6 +9,11 @@ interface CreateStartProps {
 export default function CreateStart({ itemRef, transition } : CreateStartProps) {
 
     const [inputText, setInputText] = useState<string>('');
+    
+    const submitName = () => {
+        if (inputText.length < 3) return;
+        transition({ step : 'CreateStart', name : inputText }, false);
+    }
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
@@ -17,7 +22,7 @@ export default function CreateStart({ itemRef, transition } : CreateStartProps) 
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <input value={inputText} onChange={e => setInputText(e.target.value)}/>
-                <button onClick={() => transition({ step : 'CreateStart', name : inputText }, false)}>Continue</button>
+                <button onClick={submitName}>Continue</button>
             </div>
         </li>
     )

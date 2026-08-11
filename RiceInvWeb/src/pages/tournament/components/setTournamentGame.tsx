@@ -1,6 +1,6 @@
 import { useEffect, useState, type RefObject } from "react";
 import type { TournamentData } from "../createTournamentPage";
-import type { Game } from "../../../data/types";
+import type { Game, GameMode } from "../../../data/types";
 import apiFetch from "../../../util/fetch";
 import SelectableItemsList from "./selectableItemsList";
 import ListImageItem from "./listImageItem";
@@ -15,7 +15,8 @@ interface SetTournamentGameProps {
 export default function SetTournamentGame({ itemRef, transition, animInProgress } : SetTournamentGameProps) {
 
     const [games, setGames] = useState<Game[]>([]);
-    const [selectedGame, setSelectedGame] = useState<Game[]>([]);
+    const [selectedGame, setSelectedGame] = useState<Game | null>(null);
+    const [selectedGameMode, setSelectedGameMode] = useState<GameMode | null>(null);
 
     useEffect(() => {
 
@@ -32,6 +33,15 @@ export default function SetTournamentGame({ itemRef, transition, animInProgress 
         getGames();
     }, []);
 
+    useEffect(() => {
+        setSelectedGameMode(null);
+    }, [selectedGame])
+
+    const submitGame = () => {
+        if (!selectedGameMode) return;
+        transition({step : 'SetGame', gameMode : selectedGameMode}, false);
+    }
+
     
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
@@ -44,17 +54,26 @@ export default function SetTournamentGame({ itemRef, transition, animInProgress 
                         {!animInProgress && 
                         <SelectableItemsList<Game>
                         list={games} 
-                        selected={selectedGame} 
-                        setSelected={setSelectedGame} 
-                        limit={1}
-                        ComponentItem={ListImageItem}
+                        selection={{selected : selectedGame, setSelected : setSelectedGame, multiple : false}}
                         removalPredicate={(a, b) => (a.name != b.name)}
                         getLabel={(x) => x.fullName}
-                        ExtraProps={{ getImgSrc : (x : Game) => '/', imgWidth : 100, imgHeight : 100 }}/>}
+                        ComponentItem={ListImageItem}
+                        ExtraProps={{ getImgSrc : (x : Game) => '/', imgWidth : '6rem', imgHeight : '6rem' }}/>}
                     </div>
                 </div>
+                {selectedGame && 
+                <div className={'tournament-configuration-subbox'}>
+                    <div className={'tournament-item-list'}>
+                    {!animInProgress && 
+                    <SelectableItemsList<GameMode>
+                    list={selectedGame?.gameModes} 
+                    selection={{selected : selectedGameMode, setSelected : setSelectedGameMode, multiple : false}}
+                    removalPredicate={(a, b) => (a.mode != b.mode)}
+                    getLabel={(x) => x.mode}/>}
+                    </div>
+                </div>}
+                <button onClick={submitGame}>Continue</button>
             </div>
-            <button onClick={() => transition({step : 'SetGame'}, false)}>Continue</button>
         </li>
     )
 }

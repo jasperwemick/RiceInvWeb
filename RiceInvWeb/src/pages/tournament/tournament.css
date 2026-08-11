@@ -110,6 +110,13 @@
 }
 
 .tournament-configuration-box-body {
+    font-size: 1.5pc;
+    color: aliceblue;
+    text-align: center;
+    user-select: none;
+}
+
+.tournament-configuration-box-body {
     display: flex;
     min-width: 100%;
     flex-direction: column;
@@ -161,7 +168,14 @@
     grid-auto-rows: min-content;
 }
 
-.tournament-participants-grid > div {
+.tournament-item-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+:is(.tournament-participants-grid, .tournament-item-list) > * {
     min-height: max-content;
     min-width: 8rem;
     background-color: rgb(15, 74, 77);
@@ -172,6 +186,10 @@
     color: aliceblue;
 }
 
+:is(.tournament-participants-grid, .tournament-item-list) > div.selected {
+    background-color: rgb(2, 27, 49);
+}
+
 .tournament-participants-grid > div.list-image-item {
     aspect-ratio: 1 / 1;
 }
@@ -180,8 +198,28 @@
 
 }
 
-.tournament-participants-grid > div.selected {
-    background-color: rgb(2, 27, 49);
+.list-dropdown-item {
+    display: flex;
+    flex-direction: column;
+}
+
+.list-dropdown-list-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s ease;
+    overflow: hidden; 
+    font-size: 1pc;
+}
+
+.list-dropdown-item > .list-dropdown-list-wrapper.expanded {
+    grid-template-rows: 1fr;
+}
+
+.list-dropdown-item > .list-dropdown-list-wrapper > ul {
+    min-height: 0;
+    padding: 0;
+    overflow: hidden;
+    list-style: none;
 }
 
 .tournament-configuration-button-option {

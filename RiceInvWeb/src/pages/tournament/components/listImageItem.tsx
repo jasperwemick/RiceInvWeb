@@ -1,13 +1,9 @@
-import type { CSSProperties } from "react";
+import type { ListItemProps } from "./listItem";
 
-interface ImageListItemProps<T> {
-    item : T;
-    topRef : React.RefObject<HTMLDivElement>
+interface ImageListItemProps<T> extends ListItemProps<T> {
     imgWidth ? : number;
     imgHeight ? : number;
-    clickAction ? : () => void;
     getImgSrc ? : (x : T) => string;
-    getLabel : (x : T) => string;
 }
 
 export default function ListImageItem<T>({item, topRef, imgWidth=200, imgHeight=200, clickAction=(() => {}), getImgSrc, getLabel} : ImageListItemProps<T>) {

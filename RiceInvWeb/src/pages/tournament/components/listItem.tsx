@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-interface ListItemProps<T> {
+export interface ListItemProps<T> {
     item : T;
     topRef : React.RefObject<HTMLDivElement>
     clickAction ? : () => void;

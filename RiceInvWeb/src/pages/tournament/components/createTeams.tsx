@@ -1,17 +1,19 @@
 import { useEffect, useState, type RefObject } from "react";
-import type { Profile, Team } from "../../../data/types";
+import type { GameMode, Profile, Team } from "../../../data/types";
 import useGetRef from "../../../hooks/useGetRef";
 import type { TournamentData } from "../createTournamentPage";
 import SelectableItemsList from "./selectableItemsList";
+import ListDropdownItem from "./listDropdownItem";
 
 interface CreateTeamsProps {
     itemRef : RefObject<HTMLLIElement>
     transition : (data : TournamentData, ss : boolean) => void;
     animInProgress : boolean;
     participants : Profile[];
+    gameMode : GameMode;
 }
 
-export default function CreateTeams({ itemRef, transition, animInProgress, participants } : CreateTeamsProps) {
+export default function CreateTeams({ itemRef, transition, animInProgress, participants, gameMode } : CreateTeamsProps) {
 
     const [teamMembers, setTeamMembers] = useState<Profile[]>([]);
     const [teamName, setTeamName] = useState<string>('');
@@ -52,12 +54,13 @@ export default function CreateTeams({ itemRef, transition, animInProgress, parti
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-subbox'}>
+                    <p>{`Team Size : ${gameMode.teamSize}`}</p>
                     <div className={'tournament-participants-grid'}>
                         {!animInProgress && 
                         <SelectableItemsList<Profile> 
                         list={getUnlockedProfiles()} 
-                        selected={teamMembers} 
-                        setSelected={setTeamMembers} 
+                        selection={{ selected : teamMembers, setSelected : setTeamMembers, multiple : true }} 
+                        limit={gameMode.teamSize}
                         removalPredicate={(a, b) => a._id != b._id} 
                         getLabel={(x) => x.name}/>}
                     </div>
@@ -69,10 +72,11 @@ export default function CreateTeams({ itemRef, transition, animInProgress, parti
                         {!animInProgress && 
                         <SelectableItemsList<Team> 
                         list={teams} 
-                        selected={selectedTeams} 
-                        setSelected={setSelectedTeams} 
+                        selection={{ selected : selectedTeams, setSelected : setSelectedTeams, multiple : true }} 
                         removalPredicate={(a, b) => a.name != b.name} 
-                        getLabel={(x) => x.name}/>}
+                        getLabel={(x) => x.name}
+                        ComponentItem={ListDropdownItem}
+                        ExtraProps={{subItems : (x) => x.members.flatMap(x => x.name)}}/>}
                     </div>
                     {selectedTeams.length > 0 && <button onClick={removeTeams}>Remove</button>}
                 </div>

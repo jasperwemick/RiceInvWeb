@@ -45,8 +45,9 @@ export interface UserAuth extends User {
 
 export interface GameMode {
     _id : string;
-    gameId : string;
     mode : 'singles' | 'duos' | 'triples' | 'five' | 'other';
+    description : string;
+    teamSize : number;
 }
 
 export interface Game {
