@@ -2,8 +2,8 @@ import { useEffect, useState, type RefObject } from "react";
 import type { GameMode, Profile, Team } from "../../../data/types";
 import useGetRef from "../../../hooks/useGetRef";
 import type { TournamentData } from "../createTournamentPage";
-import SelectableItemsList from "./selectableItemsList";
-import ListDropdownItem from "./listDropdownItem";
+import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
+import ListDropdownItem from "../../../components/SelectableList/listDropdownItem";
 
 interface CreateTeamsProps {
     itemRef : RefObject<HTMLLIElement>
@@ -80,7 +80,7 @@ export default function CreateTeams({ itemRef, transition, animInProgress, parti
                     </div>
                     {selectedTeams.length > 0 && <button onClick={removeTeams}>Remove</button>}
                 </div>
-                <button onClick={() => transition({step : 'CreateTeams'}, false)}>Continue</button>
+                <button onClick={() => transition({nextStep : 'CreateTeams', participants : teams, particpantType : 'Team'}, false)}>Continue</button>
             </div>
         </li>
     )

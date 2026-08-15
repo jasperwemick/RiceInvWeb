@@ -1,5 +1,3 @@
-import type { CSSProperties } from "react";
-
 export interface ListItemProps<T> {
     item : T;
     topRef : React.RefObject<HTMLDivElement>

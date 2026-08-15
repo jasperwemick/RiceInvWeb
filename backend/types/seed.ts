@@ -130,6 +130,11 @@ export interface TeamSeed {
     placing ? : number;
 }
 
+export interface StageSeed {
+    stage : string;
+    formats : string[];
+}
+
 export interface SetSeed {
     setId : number;
     bestOf : number;

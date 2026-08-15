@@ -3,6 +3,7 @@ import { TeamDoc } from "./teamModel";
 import { MatchDoc } from "./matchModel";
 import { ProfileDoc } from "./profileModel";
 import { Participant } from "../types/types";
+import { TournamentStageDoc } from "./tournamentStageModel";
 
 const Schema = mongoose.Schema;
 
@@ -10,8 +11,7 @@ export interface SetDoc extends Document {
     setId : number;
     tournament : mongoose.Types.ObjectId;
     bestOf : number;
-    stage : 'Group' | 'Gauntlet' | 'Playoffs';
-    stageName ? : string;
+    stage : PopulatedDoc<TournamentStageDoc>;
     setName : string;
     participants : Participant[];
     participantType : 'Profile' | 'Team';
@@ -36,11 +36,9 @@ const setSchema = new Schema<SetDoc>({
         required: true,
     },
     stage : {
-        type : String,
-        required : true,
-    },
-    stageName : {
-        type : String,
+        type: mongoose.Schema.Types.ObjectId,
+        ref : 'TournamentStage',
+        required: true
     },
     setName : {
         type : String,

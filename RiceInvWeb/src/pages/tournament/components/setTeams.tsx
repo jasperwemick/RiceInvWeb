@@ -15,8 +15,8 @@ export default function SetTeams({ itemRef, transition } : SetTeamsProps) {
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-button-option'}>
-                    <button onClick={() => transition({ step : 'SetTeams' }, true)}>Yes</button>
-                    <button onClick={() => transition({ step : 'SetTeams' }, false)}>No</button>
+                    <button onClick={() => transition({ nextStep : 'CreateTeams' }, true)}>Yes</button>
+                    <button onClick={() => transition({ nextStep : 'SetStages' }, false)}>No</button>
                 </div>
             </div>
         </li>

@@ -102,6 +102,19 @@ export interface TournamentSet {
     matches : TournamentMatch[];
 }
 
+export interface Stage {
+    stage : string;
+    formats : string[];
+}
+
+export interface TournamentStage {
+    tournament ? : string | Tournament;
+    order : number;
+    stageType : string;
+    format : string;
+    stageName ? : string;
+}
+
 export interface TimeRange {
     year : number;
     month : number;

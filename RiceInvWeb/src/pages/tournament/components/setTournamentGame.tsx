@@ -2,8 +2,8 @@ import { useEffect, useState, type RefObject } from "react";
 import type { TournamentData } from "../createTournamentPage";
 import type { Game, GameMode } from "../../../data/types";
 import apiFetch from "../../../util/fetch";
-import SelectableItemsList from "./selectableItemsList";
-import ListImageItem from "./listImageItem";
+import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
+import ListImageItem from "../../../components/SelectableList/listImageItem";
 
 
 interface SetTournamentGameProps {
@@ -39,7 +39,7 @@ export default function SetTournamentGame({ itemRef, transition, animInProgress 
 
     const submitGame = () => {
         if (!selectedGameMode) return;
-        transition({step : 'SetGame', gameMode : selectedGameMode}, false);
+        transition({nextStep : 'AddParticipants', gameMode : selectedGameMode}, false);
     }
 
     

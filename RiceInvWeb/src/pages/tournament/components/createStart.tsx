@@ -12,7 +12,7 @@ export default function CreateStart({ itemRef, transition } : CreateStartProps) 
     
     const submitName = () => {
         if (inputText.length < 3) return;
-        transition({ step : 'CreateStart', name : inputText }, false);
+        transition({ nextStep : 'SetGame', name : inputText }, false);
     }
 
     return (

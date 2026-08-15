@@ -29,6 +29,7 @@ import { Account } from "./components/Account";
 import RankingsPage from "./pages/rankingsPage/RankingsPage";
 import TournamentPage from "./pages/tournament/tournamentPage";
 import CreateTournamentPage from "./pages/tournament/createTournamentPage";
+import { TournamentProvider } from "./pages/tournament/context/TournamentProvider";
  
 const App = () => {
   return (
@@ -49,7 +50,7 @@ const App = () => {
 
             <Route path="/tournament/create" component={CreateTournamentPage} />
             <Route path="/tournament" component={TournamentPage} />
-
+            
             <Route path="/league/games/:num" component={LeagueGamePage} /> {/* Game stats with listed individual player stats for a League of Legends game */}
             <Route path="/league/:id" component={LeagueProfilePage} /> {/* League of Legends focused profile page for player */}
             <Route path="/league" component={LeaguePage} /> {/* Details regarding RI League of Legends rules, scoring, and highlights */}
