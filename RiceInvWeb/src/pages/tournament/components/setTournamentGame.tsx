@@ -8,7 +8,7 @@ import ListImageItem from "../../../components/SelectableList/listImageItem";
 
 interface SetTournamentGameProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss : boolean) => void;
+    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
     animInProgress : boolean;
 }
 
@@ -39,7 +39,7 @@ export default function SetTournamentGame({ itemRef, transition, animInProgress 
 
     const submitGame = () => {
         if (!selectedGameMode) return;
-        transition({nextStep : 'AddParticipants', gameMode : selectedGameMode}, false);
+        transition({nextStep : 'AddParticipants', gameMode : selectedGameMode});
     }
 
     

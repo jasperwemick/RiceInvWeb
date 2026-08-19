@@ -3,11 +3,12 @@ import type { TournamentData } from "../createTournamentPage";
 
 interface SetTeamsProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss : boolean) => void;
+    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
+    data : TournamentData
 }
 
-export default function SetTeams({ itemRef, transition } : SetTeamsProps) {
-
+export default function SetTeams({ itemRef, transition, data } : SetTeamsProps) {
+    
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
             <div className={'tournament-configuration-box-header'} >
@@ -15,8 +16,8 @@ export default function SetTeams({ itemRef, transition } : SetTeamsProps) {
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-button-option'}>
-                    <button onClick={() => transition({ nextStep : 'CreateTeams' }, true)}>Yes</button>
-                    <button onClick={() => transition({ nextStep : 'SetStages' }, false)}>No</button>
+                    <button onClick={() => transition({ nextStep : 'CreateTeams' }, { undo : false })}>Yes</button>
+                    {data.gameMode.teamSize < 2 && <button onClick={() => transition({ nextStep : 'SetStages' })}>No</button>}
                 </div>
             </div>
         </li>

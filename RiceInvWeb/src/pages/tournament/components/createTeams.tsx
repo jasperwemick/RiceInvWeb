@@ -7,7 +7,7 @@ import ListDropdownItem from "../../../components/SelectableList/listDropdownIte
 
 interface CreateTeamsProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss : boolean) => void;
+    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
     animInProgress : boolean;
     participants : Profile[];
     gameMode : GameMode;
@@ -80,7 +80,7 @@ export default function CreateTeams({ itemRef, transition, animInProgress, parti
                     </div>
                     {selectedTeams.length > 0 && <button onClick={removeTeams}>Remove</button>}
                 </div>
-                <button onClick={() => transition({nextStep : 'CreateTeams', participants : teams, particpantType : 'Team'}, false)}>Continue</button>
+                <button onClick={() => transition({nextStep : 'SetStages', participants : teams, particpantType : 'Team'})}>Continue</button>
             </div>
         </li>
     )

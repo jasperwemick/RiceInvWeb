@@ -3,7 +3,7 @@ import type { TournamentData } from "../createTournamentPage";
 
 interface CreateStartProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss : boolean) => void;
+    transition : (data : TournamentData, ss ? : { undo : boolean  }) => void;
 }
 
 export default function CreateStart({ itemRef, transition } : CreateStartProps) {
@@ -12,7 +12,7 @@ export default function CreateStart({ itemRef, transition } : CreateStartProps) 
     
     const submitName = () => {
         if (inputText.length < 3) return;
-        transition({ nextStep : 'SetGame', name : inputText }, false);
+        transition({ nextStep : 'SetGame', name : inputText });
     }
 
     return (

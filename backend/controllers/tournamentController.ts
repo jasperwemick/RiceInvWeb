@@ -62,11 +62,30 @@ export const getTournamentsByGameName = async (req : Request, res : Response) =>
 export const getAllTournamentSets = async (req : Request, res : Response) => {
     const tid = req.params.tid;
     try {
-        const sets = await Set.find<SetDoc>({ tournament : tid }).populate('teams').populate('matches').exec();
+        const sets = await Set.find<SetDoc>({ tournament : tid }).populate('participants').populate('matches').exec();
         res.json(sets);
     }
     catch(e) {
         console.log('Error at GET /tournament/:tid/sets', e)
+        if (e instanceof Error) {
+            res.json({
+                data : [],
+                message : e.message
+            })
+        }
+    }
+}
+
+export const getTournamentSet = async (req : Request, res : Response) => {
+    const tid = req.params.tid;
+    const sid = req.params.sid;
+    const num = req.params.num;
+    try {
+        const sets = await Set.find<SetDoc>({ tournament : tid, stage : sid, setId : num }).populate('participants').populate('matches').exec();
+        res.json(sets);
+    }
+    catch(e) {
+        console.log('Error at GET /tournament/:tid/stage/:sid/set/:num', e)
         if (e instanceof Error) {
             res.json({
                 data : [],

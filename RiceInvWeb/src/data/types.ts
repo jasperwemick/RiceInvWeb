@@ -115,6 +115,13 @@ export interface TournamentStage {
     stageName ? : string;
 }
 
+export interface StageGroup {
+    stage : number;
+    name : string;
+    format : string;
+    members : Profile[] | Team[];
+}
+
 export interface TimeRange {
     year : number;
     month : number;

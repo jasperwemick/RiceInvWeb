@@ -31,6 +31,8 @@
     list-style: none;
 }
 
+/* Tournament Illusion List */
+
 .tournament-illusion-list {
     flex: 1;
     display: flex;
@@ -76,6 +78,38 @@
     }
 }
 
+.tournament-illusion-list > li.side-exiting {
+    animation-name: exitSideAnim;
+    animation-duration: 1s;
+}
+
+.tournament-illusion-list > li.side-active {
+    animation-name: enterSideAnim;
+    animation-duration: 1s;
+}
+
+@keyframes enterSideAnim {
+    from {
+        transform: translateX(200px);
+        opacity: 0;
+    }
+    to {
+        transform : translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes exitSideAnim {
+    from {
+        transform: translateX(0);
+        opacity: 1;
+    }
+    to {
+        transform : translateX(200px);
+        opacity: 0;
+    }
+}
+
 
 .tournament-configuration-box {
     position: relative;
@@ -84,7 +118,8 @@
     flex : 1;
     flex-wrap: nowrap;
     align-items: center;
-    max-width: 30%;
+    min-width: 30%;
+    max-width: 50%;
     min-height: fit-content;
     margin: 2rem 1rem;
     padding: 12rem 4rem;

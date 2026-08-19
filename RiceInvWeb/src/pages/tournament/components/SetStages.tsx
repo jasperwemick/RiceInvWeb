@@ -51,7 +51,7 @@ function ComplexListItem({ item, tournamentData, setTournamentData, index } : Co
 
 interface SetStagesProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss : boolean) => void;
+    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
     animInProgress : boolean
 }
 
@@ -168,7 +168,7 @@ export default function SetStages({ itemRef, transition, animInProgress } : SetS
                         {mapFormatSelect()}
                     </ul>
                 </div>
-                {checkStageData() && <button onClick={() => transition({ nextStep : 'SetGroups', stages : tournamentStageData }, false)}>Continue</button>}
+                {checkStageData() && <button onClick={() => transition({ nextStep : 'SetGroups', stages : tournamentStageData })}>Continue</button>}
             </div>
         </li>
     )
