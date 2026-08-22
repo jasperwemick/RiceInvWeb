@@ -92,14 +92,14 @@ export interface TournamentMatch {
 
 export interface TournamentSet {
     setId : number;
-    tournament : string | Tournament;
     bestOf : number;
-    bracket : boolean;
-    teams : Team[];
-    parents : string[];
-    lowerSetID : number;
-    nextSetID : number;
-    matches : TournamentMatch[];
+    stage ? : TournamentStage;
+    setName ? : string;
+    participants : Profile[] | Team[];
+    participantType : string;
+    parents ? : string[];
+    lowerSetID ? : number;
+    nextSetID ? : number;
 }
 
 export interface Stage {

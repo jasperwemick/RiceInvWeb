@@ -18,12 +18,12 @@ function CreateBracketNode(val : number, lev : number, par : BracketNode | null,
     }
 }
 
-export function GenerateBracketTree(type : string, numPlayers : number, format : string) {
-    // format === 'full'
-    let numUpperSets = numPlayers - 1 
-    let numLowerSets = (type === 'Double') ? ((numPlayers - 1)) : 0
+export function GenerateBracketTree(type : string, numPlayers : number) {
+    console.log('Bracket type: ', type);
+    let numUpperSets = numPlayers - 1;
+    let numLowerSets = (type.includes('Double')) ? ((numPlayers - 1)) : 0
 
-    if (format === 'split') {
+    if (type.includes('Biased')) {
         numUpperSets = Math.ceil(numPlayers / 2) - 1
     }
 

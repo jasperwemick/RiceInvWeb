@@ -1,8 +1,8 @@
-import type { RefObject } from "react";
+import { useEffect, useState, type RefObject } from "react";
 import type { TournamentData } from "../createTournamentPage";
 import GroupTable from "./GroupTable";
 import type { GroupActions } from "./SetGroups";
-import type { StageGroup } from "../../../data/types";
+import type { StageGroup, TournamentSet } from "../../../data/types";
 
 interface AddTournamentSetsProps {
     itemRef : RefObject<HTMLLIElement>;
@@ -10,26 +10,37 @@ interface AddTournamentSetsProps {
     animInProgress : boolean;
     subGroup : StageGroup;
     data : TournamentData;
+    signal : { action ? : string };
 }
 
-export default function AddTournamentSets({ itemRef, transition, animInProgress, subGroup, data } : AddTournamentSetsProps) {
+export default function AddTournamentSets({ itemRef, transition, animInProgress, subGroup, data, signal } : AddTournamentSetsProps) {
 
-    const removal = () => {
-        console.log('1 ', data.subStages);
-        const filtered = data.subStages.filter(x => x !== subGroup)
-        console.log('2', filtered);
-        transition({ nextStep : 'AddTournamentSets', subStages : filtered }, { undo : true })
+    const [tSets, addTSets] = useState<TournamentSet[]>([]);
+
+    const undo = () => {
+        const filteredStages = data.subStages.filter(x => x !== subGroup);
+        const filteredSets = data.sets.filter(x => !tSets.includes(x));
+        transition({ nextStep : 'AddTournamentSets', subStages : filteredStages, sets : filteredSets }, { undo : true })
     }
+
+    useEffect(() => {
+        transition({ nextStep : '', sets : [...(data.sets ? data.sets : []), ...tSets]})
+    }, [tSets])
+
+    useEffect(() => {
+        if (!signal) return;
+        if (signal.action === 'undo') undo();
+    }, [signal])
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
             <div className={'tournament-configuration-box-header'} >
-                <button onClick={removal}>{`X`}</button>
+                <button onClick={undo}>{`X`}</button>
                 <p>{subGroup.name}</p>
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-subbox'}>
-                    {!animInProgress && <GroupTable groupSize={subGroup.members.length} members={subGroup.members}/>}
+                    {!animInProgress && <GroupTable groupSize={subGroup.members.length} members={subGroup.members} setSets={addTSets} interactive={true}/>}
                 </div>
             </div>
         </li>

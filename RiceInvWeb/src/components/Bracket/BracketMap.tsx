@@ -15,31 +15,31 @@ interface BracketMapProps {
 
 export default function BracketMap({ tid, tag, highTree, lowTree, maxDepth } : BracketMapProps) {
 
-    const [toggleEditor , setToggleEditor] = useState(false)
+    // const [toggleEditor , setToggleEditor] = useState(false)
 
-    const [editorData, setEditorData] = useState<TournamentSet | null>(null)
+    // const [editorData, setEditorData] = useState<TournamentSet | null>(null)
 
     const [sets, setSets] = useState<TournamentSet[]>([])
 
     const upperBracketArray = highTree ? treeToArray(highTree, maxDepth) : []
     const lowerBracketArray = lowTree ? treeToArray(lowTree, maxDepth) : []
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        const getSetData = async () => {
+    //     const getSetData = async () => {
 
-            try {
-                const jsetData = await apiFetch<TournamentSet[]>(`/api/tournament/${tid}/set`);
-                setSets(jsetData)
-            }
-            catch(e) {
-                console.log('Failed to fetch: ', e)
-            }
+    //         try {
+    //             const jsetData = await apiFetch<TournamentSet[]>(`/api/tournament/${tid}/set`);
+    //             setSets(jsetData)
+    //         }
+    //         catch(e) {
+    //             console.log('Failed to fetch: ', e)
+    //         }
 
-        }
+    //     }
 
-        getSetData()
-    }, [!toggleEditor])
+    //     getSetData()
+    // }, [!toggleEditor])
 
     return (
         <React.Fragment>

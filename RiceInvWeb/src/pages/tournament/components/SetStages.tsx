@@ -19,6 +19,7 @@ function ComplexListItem({ item, tournamentData, setTournamentData, index } : Co
     }, [item.stage]);
 
     useEffect(() => {
+        if (selected === '') return;
         const newData : TournamentStage[] = tournamentData.map((d, i) => {
 
             return i === index ? { ...d, format : selected } : d
@@ -57,7 +58,7 @@ interface SetStagesProps {
 
 export default function SetStages({ itemRef, transition, animInProgress } : SetStagesProps) {
 
-    const [stageCount, setStageCount] = useState<number>(1);
+    const [stageCount, setStageCount] = useState<number>(0);
 
     const defaultStages = [
         {
@@ -78,12 +79,14 @@ export default function SetStages({ itemRef, transition, animInProgress } : SetS
     const [tournamentStageData, setTournamentStageData] = useState<TournamentStage[]>([]);
 
     useEffect(() => {
-        console.log(stageCount);
-        setStages(defaultStages.filter((x, i) => i < stageCount));
+        console.log("bro");
+        setStages(defaultStages.filter((_, i) => i < stageCount));
     }, [stageCount])
 
     useEffect(() => {
+        console.log('updato')
         if (tournamentStageData.length === 0) {
+            console.log(stages.length);
             setTournamentStageData(stages.map((stg, index) => {
                 return {
                     order : index,
@@ -142,7 +145,8 @@ export default function SetStages({ itemRef, transition, animInProgress } : SetS
     }
 
     const checkStageData = () : boolean => {
-        return !tournamentStageData.find(x => x.format === null);
+        console.log(tournamentStageData)
+        return !tournamentStageData.find(x => x.format === null) && tournamentStageData.length !== 0;
     }
     
     return (
@@ -156,7 +160,7 @@ export default function SetStages({ itemRef, transition, animInProgress } : SetS
                         <SelectableItemsList
                         list={[1, 2, 3]}
                         selection={{ selected : stageCount, setSelected : setStageCount, multiple : false }}
-                        removalPredicate={(a, b) => a != b}
+                        removalPredicate={(a, b) => a !== b}
                         getLabel={(x) => String(x)}/>
                     </div>
                 </div>

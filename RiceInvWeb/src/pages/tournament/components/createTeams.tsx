@@ -11,14 +11,29 @@ interface CreateTeamsProps {
     animInProgress : boolean;
     participants : Profile[];
     gameMode : GameMode;
+    data : TournamentData;
+    signal : { action ? : string };
 }
 
-export default function CreateTeams({ itemRef, transition, animInProgress, participants, gameMode } : CreateTeamsProps) {
+export default function CreateTeams({ itemRef, transition, animInProgress, participants, gameMode, data, signal } : CreateTeamsProps) {
 
     const [teamMembers, setTeamMembers] = useState<Profile[]>([]);
     const [teamName, setTeamName] = useState<string>('');
     const [teams, setTeams] = useState<Team[]>([]);
     const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
+
+    const undo = () => {
+        transition({ nextStep : 'CreateTeams' }, { undo : true });
+        setTeams([]);
+        setTeamName('');
+        setTeamMembers([]);
+        setSelectedTeams([]);;
+    }
+
+    useEffect(() => {
+        if (!signal) return;
+        if (signal.action === 'undo') undo();
+    }, [signal])
 
     const saveTeam = () => {
         console.log(teamName.length);

@@ -23,11 +23,14 @@ export interface TournamentData {
     particpantType ? : 'Profile' | 'Team';
     stages ? : TournamentStage[];
     subStages ? : StageGroup[];
+    isStage ? : boolean;
+    sets ? : TournamentSet[];
 }
 
 interface ProcessSideStep<S extends object = {}> {
-    Component: React.ComponentType<S & { itemRef : React.RefObject<HTMLLIElement>, data : TournamentData}>;
+    Component: React.ComponentType<S & { itemRef : React.RefObject<HTMLLIElement>, data : TournamentData, signal : { action ? : string}}>;
     key : string;
+    parentKey : string;
     props?: S;
 }
 
@@ -48,16 +51,19 @@ export default function CreateTournamentPage() {
     const [step, setStep] = useState<string>('Start');
     const [stepIndex, setStepIndex] = useState<number>(0);
     const [sideStep, setSideStep] = useState<{ nss : string, undo : boolean }>({ nss : '', undo : false});
-    const [sideStepIndex, setSideStepIndex] = useState<number>(1);
+    const [sideStepIndex, setSideStepIndex] = useState<number>(0);
+    const [ssSignal, setSSSignal] = useState<{action ? : string}>(null);
     
     const [tournament, setTournament] = useState<TournamentData | null>(null);
     const [profiles, setProfiles] = useState<Profile[]>([]);
     const [currentStage, setCurrentStage] = useState<number>(0);
+    const [history, setHistory] = useState<string[]>([]);
 
     const [animInProgress, setAnimInProgress] = useState<boolean>(false);
 
     const listRef = useRef<HTMLUListElement | null>(null);
     const getRef = useGetRef<HTMLLIElement>();
+    const getSideRef = useGetRef<HTMLLIElement>();
 
     useEffect(() => {
 
@@ -92,9 +98,9 @@ export default function CreateTournamentPage() {
             setAnimInProgress(true);
             setTimeout(() => {
                 onAdd(item);
-            }, 900);
+            }, 200);
         }
-    }, [step])
+    }, [step, stepIndex])
 
     useLayoutEffect(() => {
         if (sideStep.nss === '') return;
@@ -103,17 +109,20 @@ export default function CreateTournamentPage() {
             console.log('undo ', sideStepIndex - 1)
             return;
         }
-        const newIndex = stepIndex === sideStepIndex ? stepIndex + 1 : sideStepIndex + 1;
-        console.log(newIndex);
-        const item = getRef(newIndex).current;
-        setSideStepIndex(newIndex);
-        console.log("side ", item);
+        // const newIndex = stepIndex === sideStepIndex ? stepIndex + 1 : sideStepIndex + 1;
+        // console.log(newIndex);
+        // const item = getRef(newIndex).current;
+        // setSideStepIndex(newIndex);
+        // console.log("side ", item);
+        const item = getSideRef(sideStepIndex).current;
+        setSideStepIndex(sideStepIndex + 1);
+        console.log(item)
         if (item) {
             item.classList.add('side-active');
             setAnimInProgress(true);
             setTimeout(() => {
                 onAdd(item, true);
-            }, 900);
+            }, 200);
         }
 
     }, [sideStep])
@@ -122,27 +131,57 @@ export default function CreateTournamentPage() {
         console.log(tournament);
     }, [tournament])
 
+    const undoStep = () => {
+        if (!tournament || animInProgress) return;
+        if (tournament.isStage) setCurrentStage(currentStage > 0 ? currentStage - 1 : 0);
+        console.log('undo blocked, ', sideStep.nss);
+
+        if (sideStep.nss === step) {
+            setSSSignal({action : 'undo'});
+            return;
+        }
+        
+        setStepIndex(stepIndex - 1);
+        console.log('history: ', history);
+        setStep(history.pop());
+    }
+
+    // Reset signal after being sent
+    useEffect(() => {
+        if (ssSignal) {
+            setSSSignal(null);
+            setSideStep({nss : '', undo : false});
+            setSideStepIndex(0);
+            undoStep();
+        }
+    }, [ssSignal])
+
     function NextStep ( data : TournamentData, ss ? : { undo : boolean } ) {
         const mergedData = {...tournament, ...data}
         setTournament(mergedData)
+
+        if (data.nextStep === '') return;
         
         if (ss) {
             setSideStep({ nss : data.nextStep, undo : ss.undo});
             return;
         }
-        setSideStep({ nss : '', undo : false});
+        // setSideStep({ nss : '', undo : false});
+        // setSideStepIndex(0);
+        setHistory([...history, step]);
 
-        if (data.subStages) setCurrentStage(currentStage + 1);
-
+        if (data.isStage) {
+            setCurrentStage(currentStage + 1);
+        }
+        
         const item = getRef(stepIndex).current;
         setStepIndex(stepIndex + 1);
-        setSideStepIndex(stepIndex + 1);
         if (item) {
             item.classList.add('exiting');
             setAnimInProgress(true);
             setTimeout(() => {
                 onRemove(mergedData);
-            }, 900);
+            }, 200);
         }
     }
 
@@ -154,6 +193,7 @@ export default function CreateTournamentPage() {
             defineSideStep({
                 Component : CreateTeams, 
                 key : 'CreateTeams',
+                parentKey : 'SetTeams',
                 props : { transition : NextStep, animInProgress, participants : tournament?.participants?.filter(x => x.def == 'Profile'), gameMode : tournament?.gameMode }
             })
         ]}),
@@ -163,30 +203,48 @@ export default function CreateTournamentPage() {
         defineStep({ key : 'SetGroups', Component : SetGroups, props : { 
             transition : NextStep, 
             animInProgress, 
-            stage : tournament?.stages?.length > 0 ? tournament.stages[currentStage] : null, 
+            stageNum : currentStage, 
             participants : tournament?.participants
         }, 
         sidesteps : tournament?.subStages?.map((subStage) => {
             return defineSideStep({
                 Component : AddTournamentSets,
                 key : 'AddTournamentSets',
+                parentKey : 'SetGroups',
                 props : { transition : NextStep, animInProgress, subGroup : subStage, parentList : tournament.subStages }
-            })
+            });
         })}),
-        defineStep({ key : 'SetPlayins', Component : SetPlayins, props : {}}),
-        defineStep({ key : 'SetPlayoffs', Component : SetPlayoffs, props : {}})
+        defineStep({ key : 'SetPlayins', Component : SetPlayins, props : {
+            transition : NextStep, 
+            animInProgress, 
+            stageNum : currentStage, 
+            participants : tournament?.participants
+        }}),
+        defineStep({ key : 'SetPlayoffs', Component : SetPlayoffs, props : { 
+            transition : NextStep, 
+            animInProgress, 
+            stageNum : currentStage, 
+            participants : tournament?.participants
+        }})
     ]
 
     return (
         <div className={'tournament-create'}>
+            <button onClick={undoStep}>Back</button>
             <ul className={'tournament-illusion-list'} ref={listRef}>
                 {steps.map((st, i) => {
                     return (
                         <React.Fragment>
-                        {step === st.key && <st.Component key={i} itemRef={getRef(i)} data={tournament} {...st.props}/>}
-                        {st.sidesteps?.map((sst, j) => {
-                            return sideStep.nss === sst.key && <sst.Component key={i + j + 1} itemRef={getRef(i + j + 1)} data={tournament} {...sst.props}/>
-                        })}
+                            {
+                                step === st.key && 
+                                <st.Component key={i} itemRef={getRef(i)} data={tournament} {...st.props}/>
+                            }
+                            {
+                                st.sidesteps?.map((sst, j) => {
+                                    return sideStep.nss === sst.key && step === sst.parentKey &&
+                                    <sst.Component key={i + j + 1} itemRef={getSideRef(j)} data={tournament} signal={ssSignal} {...sst.props}/>
+                                })
+                            }
                         </React.Fragment>
                     )
                 }

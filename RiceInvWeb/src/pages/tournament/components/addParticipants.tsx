@@ -19,7 +19,7 @@ export default function AddParticipants({ itemRef, transition, animInProgress, p
 
     const submit = () => {
         if (participants.length % data.gameMode.teamSize === 0) {
-            transition({ nextStep : 'SetTeams', participants : participants })
+            transition({ nextStep : 'SetTeams', participants : participants, particpantType : 'Profile' })
         }
         else {
             setErrorMsg(`Participants must evenly distribute for teams of size ${data.gameMode.teamSize}`)
@@ -45,7 +45,7 @@ export default function AddParticipants({ itemRef, transition, animInProgress, p
                     getLabel={(x) => x.name}/>}
                 </div>
                 {errorMsg !== '' && <p style={{ color : '#fd3b3bff' }}>{errorMsg}</p>}
-                <button onClick={submit}>Continue</button>
+                {participants.length >= 2 && <button onClick={submit}>Continue</button>}
             </div>
         </li>
     )

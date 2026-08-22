@@ -1,6 +1,7 @@
 import React from "react"
 import BracketSet from "./BracketSet"
-import Xarrow from "react-xarrows"
+import * as XarrowModule from "react-xarrows";
+const Xarrow = (XarrowModule as any).default.default;
 import useAuth from "../../hooks/useAuth"
 import type { BracketNode } from "./Auxillery/tree"
 import type { TournamentSet } from "../../data/types"
@@ -66,22 +67,16 @@ export default function BracketBuilder({ nodeArr, tag, sets } : BracketBuilderPr
 
     const { auth } = useAuth();
 
-    return nodeArr.map((level, index) => {
+    return nodeArr.map((level, i) => {
         return (
-            <div key={index}>
-                {level.map((node, index) => {   
+            <div key={i}>
+                {level.map((node, j) => {   
                     return (
-                        <React.Fragment key={index}>
-                            <div className="bracket-set-shell" id={`${tag}-bracket-set-${node.value}`} onClick={() => {
-                                // if (auth?.username) {
-                                //     if (auth.roles.includes('Admin')) {
-                                //         handleSlotClick(node, tag)
-                                //     }
-                                // }
-                            }}>
+                        <React.Fragment key={j}>
+                            <div className="bracket-set-shell" id={`${tag}-bracket-set-${node.value}`}>
                                 <BracketSet setData={sets.find(({ setId }) => setId === node.value)}/>
                             </div>
-                            {node.parent ? <Xarrow start={`${tag}-bracket-set-${node.value}`} end={`${tag}-bracket-set-${node.parent.value}`} headSize={0}/> : null}
+                            {node.parent ? <Xarrow start={`${tag}-bracket-set-${node.value}`} end={`${tag}-bracket-set-${node.parent.value}`} headSize={0}/> : <></>}
                         </React.Fragment>
                     )
                 })}

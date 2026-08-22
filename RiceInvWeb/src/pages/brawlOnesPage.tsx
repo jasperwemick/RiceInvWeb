@@ -110,7 +110,7 @@ export default function BrawlOnesPage() {
             </section>
             <section>
                 <h3>Playoffs</h3>
-                <GenerateBracket type={'Double'} numPlayers={numPlayers} format={'split'} gameTag={'brawlhalla-playoff-ones'}/>
+                <GenerateBracket type={'Double'} numPlayers={numPlayers} gameTag={'brawlhalla-playoff-ones'}/>
             </section>
         </div>
     )

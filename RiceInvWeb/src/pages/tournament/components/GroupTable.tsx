@@ -1,5 +1,5 @@
 import { useEffect, useState, type CSSProperties } from "react"
-import type { Profile, Team } from "../../../data/types"
+import type { Profile, Team, TournamentSet } from "../../../data/types"
 
 
 
@@ -16,30 +16,59 @@ function GroupCell({style, text, index, interactive} : {style : CSSProperties | 
     }
 
     return (
-        <div onClick={interactive && openSetView} style={style}>{text}</div>
+        <div onClick={interactive ? openSetView : undefined} style={style}>{text}</div>
     )
 }
 
 interface GroupTableProps {
     groupSize : number;
     members : Profile[] | Team[];
+    tableNum ? : number;
+    setSets ? : React.Dispatch<React.SetStateAction<TournamentSet[]>>;
     interactive ? : boolean;
 }
 
-export default function GroupTable({ groupSize, members, interactive } : GroupTableProps) {
+export default function GroupTable({ groupSize, members, tableNum, setSets, interactive } : GroupTableProps) {
 
-    const [groupCells, setGroupCells] = useState<string[]>([])
+    const [groupCells, setGroupCells] = useState<string[]>([]);
+
+    interface CastResult {
+        data : Profile[] | Team[],
+        dataType : 'Profile' | 'Team'
+    }
+
+    const castMixedMembers = (list : (Profile | Team)[]) : CastResult => {
+        if (list.every(x => x.def === 'Profile')) return {data : list, dataType : 'Profile'};
+        if (list.every(x => x.def === 'Team')) return {data : list, dataType : 'Team'};
+        return { data : [], dataType : 'Profile' };
+    }
 
     useEffect(() => {
-        const matrixSize = groupSize + 1
-        const arr = Array.from({length : Math.pow(matrixSize, 2)}, () => '')
+        const matrixSize = groupSize + 1;
+        const arr = Array.from({length : Math.pow(matrixSize, 2)}, () => '');
+        let setList : TournamentSet[] = [];
         setGroupCells(arr.map((_, index) => {
             if (index === 0) return '';
-            if (index < matrixSize || index % matrixSize === 0) {
+            if (index < matrixSize || index % matrixSize === 0) { // Name
                 return members[index % groupSize].name;
             }
+
+            if (interactive && index !== Math.floor(index / matrixSize) * (matrixSize + 1)) { // set
+                const row = Math.floor(index / matrixSize);
+                const col = index % matrixSize;
+                const setMembers = castMixedMembers([members[row % groupSize], members[col % groupSize]]);
+                setList.push({
+                    setId : setList.length,
+                    bestOf : 5,
+                    participants : setMembers.data,
+                    participantType : setMembers.dataType,
+                });
+                return `${0} - ${0}`;
+            }
             return '';
-        }))
+        }));
+        console.log(setList);
+        if (interactive) setSets(setList);
     }, [groupSize])
 
     const mapCrossTable = () => {

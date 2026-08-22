@@ -18,25 +18,25 @@ export default function BracketSet({ setData } : { setData : TournamentSet | und
     const [localData, setLocalData] = useState<TournamentSet | null>(null)
     const [teamRecords, setTeamRecords] = useState<Record<string, number>>({});
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (setData) {
-            const matches = setData.matches;
+    //     if (setData) {
+    //         const matches = setData.matches;
 
-            const wins = matches.reduce((accum, match) => {
-                accum[match.winningTeam.name] = (accum[match.winningTeam.name] ?? 0) + 1;
-                return accum;
-            }, {} as Record<string, number>)
+    //         const wins = matches.reduce((accum, match) => {
+    //             accum[match.winningTeam.name] = (accum[match.winningTeam.name] ?? 0) + 1;
+    //             return accum;
+    //         }, {} as Record<string, number>)
 
-            setTeamRecords(wins);
-        }
+    //         setTeamRecords(wins);
+    //     }
 
-    }, [setData])
+    // }, [setData])
     
     if (localData) {
         return (
             <div className="bracket-set-box open-bracket-slot"> 
-                <MapSetInfo teamRecords={teamRecords} setData={localData}/>
+                {/* <MapSetInfo teamRecords={teamRecords} setData={localData}/> */}
             </div>
         );
     }

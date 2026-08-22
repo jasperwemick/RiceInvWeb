@@ -9,7 +9,7 @@ interface SetGroupsProps {
     itemRef : RefObject<HTMLLIElement>;
     transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
     animInProgress : boolean;
-    stage : TournamentStage;
+    stageNum : number;
     participants : Profile[] | Team[];
     data : TournamentData;
 }
@@ -17,12 +17,14 @@ interface SetGroupsProps {
 export type GroupActions = { type : 'add'; payload : StageGroup } | { type : 'remove'; payload : StageGroup }
 
 
-export default function SetGroups({ itemRef, transition, animInProgress, stage, participants, data } : SetGroupsProps) {
+export default function SetGroups({ itemRef, transition, animInProgress, stageNum, participants, data } : SetGroupsProps) {
     
     const [groupSize, setGroupSize] = useState(4);
     const [groupMembers, setGroupMembers] = useState<Profile[] | Team[]>([]);
     const [groupName, setGroupName] = useState<string>('');
     const [groups, setGroups] = useState<StageGroup[]>([]);
+
+    const [stage, setStage] = useState<TournamentStage>(null);
 
     const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -40,24 +42,39 @@ export default function SetGroups({ itemRef, transition, animInProgress, stage, 
 
     // const [state, dispatch] = useReducer(reducer, [])
 
+    useEffect(() => {
+        if (data.stages) {
+            console.log(data.stages, ' num ', stageNum);
+            console.log('stage ', data.stages.find(x => x.order === stageNum))
+            setStage(data.stages.find(x => x.order === stageNum))
+        }
+    }, [data]);
+
     const isParticipantAvailable = (participant : Profile | Team) => {
         const assignedMembers : string[] = groups.flatMap(x => x.members.flatMap(y => y.name));
         return !assignedMembers.includes(participant.name)
     }
 
     const getParticipants = () => {
-        return participants.filter(x => isParticipantAvailable(x))
+        return participants.filter(x => isParticipantAvailable(x));
     }
 
     const confirmGroup = () => {
         setGroups([...groups, {
-            stage : stage.order,
+            stage : stage?.order,
             name : groupName,
-            format : stage.format,
+            format : stage?.format,
             members : groupMembers,
         }]);
         setGroupMembers([]);
         setGroupName('');
+    }
+
+    const submitGroups = () => {
+        const nextStage = data.stages.find(x => x.order === stageNum + 1)
+        if (nextStage) {
+            transition({nextStep : `Set${nextStage.stageType}`, isStage : true})
+        }
     }
 
     useEffect(() => {
@@ -65,7 +82,7 @@ export default function SetGroups({ itemRef, transition, animInProgress, stage, 
             const num = getParticipants().length;
             setGroupSize(num < groupSize ? num : groupSize)
             inputRef.current.value = String(num);
-
+            console.log("lololol");
             transition({ nextStep : 'AddTournamentSets',  subStages : groups }, { undo : false })
         }
     }, [groups.length])
@@ -104,7 +121,11 @@ export default function SetGroups({ itemRef, transition, animInProgress, stage, 
             </div>
             <div className={'tournament-configuration-subbox'}>
                 {!animInProgress && groupMembers.length === groupSize && groupSize !== 0 && <GroupTable groupSize={groupSize} members={groupMembers}/>}
-                <button onClick={() => confirmGroup()}>Confirm</button>
+                {
+                getParticipants().length > 0 ? 
+                <button onClick={confirmGroup}>Confirm</button> : 
+                <button onClick={submitGroups}>Finish</button>
+                }
             </div>
         </div>
     </li>
