@@ -115,11 +115,12 @@ export interface TournamentStage {
     stageName ? : string;
 }
 
-export interface StageGroup {
+export interface TournamentSubStage {
     stage : number;
     name : string;
     format : string;
     members : Profile[] | Team[];
+    qualificationSlots ? : number;
 }
 
 export interface TimeRange {

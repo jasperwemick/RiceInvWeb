@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react"
 import type { TournamentSet } from "../../data/types";
+import { useXarrow } from "../../util/xarrow-compat";
 
 
 function MapSetInfo({ teamRecords, setData } : { teamRecords : Record<string, number>, setData : TournamentSet }) {
@@ -13,36 +14,35 @@ function MapSetInfo({ teamRecords, setData } : { teamRecords : Record<string, nu
 }
 
 
-export default function BracketSet({ setData } : { setData : TournamentSet | undefined }) {
+export default function BracketSet({ setData, ref } : { setData : TournamentSet | undefined, ref : React.RefObject<HTMLDivElement> }) {
 
-    const [localData, setLocalData] = useState<TournamentSet | null>(null)
+    const [localData, setLocalData] = useState<TournamentSet | null>(null);
     const [teamRecords, setTeamRecords] = useState<Record<string, number>>({});
 
-    // useEffect(() => {
-
-    //     if (setData) {
-    //         const matches = setData.matches;
-
-    //         const wins = matches.reduce((accum, match) => {
-    //             accum[match.winningTeam.name] = (accum[match.winningTeam.name] ?? 0) + 1;
-    //             return accum;
-    //         }, {} as Record<string, number>)
-
-    //         setTeamRecords(wins);
-    //     }
-
-    // }, [setData])
+    useEffect(() => {
+        // if (setData) {
+        //     const matches = setData.matches;
+        //     const wins = matches.reduce((accum, match) => {
+        //         accum[match.winningTeam.name] = (accum[match.winningTeam.name] ?? 0) + 1;
+        //         return accum;
+        //     }, {} as Record<string, number>)
+        //     setTeamRecords(wins);
+        // }
+    }, [setData])
     
     if (localData) {
         return (
-            <div className="bracket-set-box open-bracket-slot"> 
+            <div className="bracket-set-shell" ref={ref}> 
+                <div className={`bracket-set-box open-bracket-slot`}></div>
                 {/* <MapSetInfo teamRecords={teamRecords} setData={localData}/> */}
             </div>
         );
     }
     else {
         return (
-            <div className="bracket-set-box open-bracket-slot"></div>
+            <div className="bracket-set-shell" ref={ref}>
+                <div className={`bracket-set-box open-bracket-slot`}></div>
+            </div>
         );
     }
 

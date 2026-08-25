@@ -1,6 +1,6 @@
 import { useEffect, useReducer, useRef, useState, type RefObject } from "react";
 import type { TournamentData } from "../createTournamentPage";
-import type { Profile, StageGroup, Team, TournamentStage } from "../../../data/types";
+import type { Profile, Team, TournamentStage, TournamentSubStage } from "../../../data/types";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 import GroupTable from "./GroupTable";
 
@@ -14,7 +14,7 @@ interface SetGroupsProps {
     data : TournamentData;
 }
 
-export type GroupActions = { type : 'add'; payload : StageGroup } | { type : 'remove'; payload : StageGroup }
+export type GroupActions = { type : 'add'; payload : TournamentSubStage } | { type : 'remove'; payload : TournamentSubStage }
 
 
 export default function SetGroups({ itemRef, transition, animInProgress, stageNum, participants, data } : SetGroupsProps) {
@@ -22,7 +22,7 @@ export default function SetGroups({ itemRef, transition, animInProgress, stageNu
     const [groupSize, setGroupSize] = useState(4);
     const [groupMembers, setGroupMembers] = useState<Profile[] | Team[]>([]);
     const [groupName, setGroupName] = useState<string>('');
-    const [groups, setGroups] = useState<StageGroup[]>([]);
+    const [groups, setGroups] = useState<TournamentSubStage[]>([]);
 
     const [stage, setStage] = useState<TournamentStage>(null);
 

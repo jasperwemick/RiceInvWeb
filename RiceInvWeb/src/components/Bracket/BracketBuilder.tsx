@@ -1,18 +1,18 @@
-import React from "react"
+import React, { useEffect, useRef, useState } from "react"
 import BracketSet from "./BracketSet"
-import * as XarrowModule from "react-xarrows";
-const Xarrow = (XarrowModule as any).default.default;
 import useAuth from "../../hooks/useAuth"
 import type { BracketNode } from "./Auxillery/tree"
 import type { TournamentSet } from "../../data/types"
+import useGetRef from "../../hooks/useGetRef";
+import { useXarrow, Xarrow, Xwrapper } from "../../util/xarrow-compat"
 
 interface BracketBuilderProps {
     nodeArr : BracketNode[][];
-    tag : string;
+    refMap : (idx : number) => React.RefObject<HTMLDivElement>;
     sets : TournamentSet[];
 }
 
-export default function BracketBuilder({ nodeArr, tag, sets } : BracketBuilderProps) {
+export default function BracketBuilder({ nodeArr, refMap, sets } : BracketBuilderProps) {
 
     // const handleSlotClick = (node : BracketNode, tag : string) => {
     
@@ -65,23 +65,39 @@ export default function BracketBuilder({ nodeArr, tag, sets } : BracketBuilderPr
     //     retrieveSetData()
     // }
 
+    // const [go, setGo] = useState<boolean>(false);
+    // useEffect(() => {
+    //     setGo(true);
+    // }, [])
+
     const { auth } = useAuth();
 
-    return nodeArr.map((level, i) => {
-        return (
-            <div key={i}>
-                {level.map((node, j) => {   
-                    return (
-                        <React.Fragment key={j}>
-                            <div className="bracket-set-shell" id={`${tag}-bracket-set-${node.value}`}>
-                                <BracketSet setData={sets.find(({ setId }) => setId === node.value)}/>
-                            </div>
-                            {node.parent ? <Xarrow start={`${tag}-bracket-set-${node.value}`} end={`${tag}-bracket-set-${node.parent.value}`} headSize={0}/> : <></>}
-                        </React.Fragment>
-                    )
-                })}
-            </div>
-        )
-    })
+    return (
+        <Xwrapper>
+        {nodeArr.map((level, i) => {
+            return (
+                <div key={i}>
+                    { level.length ? level.map((node, j) => {
+                        return (
+                            <React.Fragment key={j}>
+                                <BracketSet setData={sets.find(({ setId }) => setId === node.value)} ref={refMap(node.value)}/>
+                                {
+                                node.parent ?
+                                <Xarrow 
+                                start={refMap(node.value)} 
+                                end={refMap(node.parent.value)} 
+                                headSize={0}
+                                startAnchor={'right'}
+                                endAnchor={'left'}/> : 
+                                null
+                                }
+                            </React.Fragment>
+                        )
+                    }) : <div className={`bracket-ghost-shell`}/>}
+                </div>
+            )
+        })}
+        </Xwrapper>
+    )
 }
 

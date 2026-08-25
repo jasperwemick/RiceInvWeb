@@ -1,5 +1,5 @@
 import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react"
-import type { GameMode, Profile, StageGroup, Team, Tournament, TournamentSet, TournamentStage } from "../../data/types";
+import type { GameMode, Profile, Team, Tournament, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types";
 import CreateStart from "./components/createStart";
 import useGetRef from "../../hooks/useGetRef";
 import AddParticipants from "./components/addParticipants";
@@ -14,6 +14,42 @@ import AddTournamentSets from "./components/AddTournamentSets";
 import React from "react";
 import SetPlayoffs from "./components/SetPlayoffs";
 
+interface WizardState {
+    step: string;
+    stepIndex: number;
+    pendingStep: string | null; // the step we're animating TOWARD, set by NEXT_STEP, consumed by ANIM_REMOVE_DONE
+    sideStep: { nss: string; undo: boolean };
+    sideStepIndex: number;
+    ssSignal: { action?: string } | null;
+    tournament: TournamentData | null;
+    currentStage: number;
+    history: string[];
+    animInProgress: boolean;
+}
+
+type WizardAction =
+    | { type: 'NEXT_STEP'; data: TournamentData }
+    | { type: 'ENTER_SIDESTEP'; data: TournamentData; undo: boolean }
+    | { type: 'ANIM_REMOVE_DONE' } // fired after the exit-animation setTimeout — commits the pending step
+    | { type: 'ANIM_ADD_DONE'; isSideStep: boolean } // fired after the enter-animation setTimeout
+    | { type: 'SIDESTEP_ADVANCE' } // the non-undo branch of the sideStep useLayoutEffect
+    | { type: 'SIDESTEP_UNDO' }
+    | { type: 'UNDO_STEP' }
+    | { type: 'TRIGGER_SIDESTEP_SIGNAL' }
+    | { type: 'SIGNAL_HANDLED' };
+
+const initialWizardState : WizardState = {
+    step: 'Start',
+    stepIndex: 0,
+    pendingStep: null,
+    sideStep: { nss: '', undo: false },
+    sideStepIndex: 0,
+    ssSignal: null,
+    tournament: null,
+    currentStage: 0,
+    history: [],
+    animInProgress: false,
+};
 
 export interface TournamentData {
     nextStep : string;
@@ -22,9 +58,83 @@ export interface TournamentData {
     participants ? : Profile[] | Team[];
     particpantType ? : 'Profile' | 'Team';
     stages ? : TournamentStage[];
-    subStages ? : StageGroup[];
+    subStages ? : TournamentSubStage[];
     isStage ? : boolean;
     sets ? : TournamentSet[];
+}
+
+function wizardReducer(state: WizardState, action: WizardAction): WizardState {
+    switch (action.type) {
+        case 'NEXT_STEP': {
+            const mergedData = { ...state.tournament, ...action.data };
+            if (action.data.nextStep === '') {
+                return { ...state, tournament: mergedData };
+            }
+            return {
+                ...state,
+                tournament: mergedData,
+                history: [...state.history, state.step],
+                currentStage: action.data.isStage ? state.currentStage + 1 : state.currentStage,
+                stepIndex: state.stepIndex + 1,
+                pendingStep: action.data.nextStep, // NOT committed to `step` yet — waits for exit animation
+                animInProgress: true,
+            };
+        }
+
+        case 'ENTER_SIDESTEP': {
+            const mergedData = { ...state.tournament, ...action.data };
+            return {
+                ...state,
+                tournament: mergedData,
+                sideStep: { nss: action.data.nextStep, undo: action.undo },
+            };
+        }
+
+        case 'ANIM_REMOVE_DONE':
+            return {
+                ...state,
+                step: state.pendingStep ?? state.step,
+                pendingStep: null,
+                animInProgress: false,
+            };
+
+        case 'ANIM_ADD_DONE':
+            return { ...state, animInProgress: false };
+
+        case 'SIDESTEP_ADVANCE':
+            return { ...state, sideStepIndex: state.sideStepIndex + 1, animInProgress: true };
+
+        case 'SIDESTEP_UNDO':
+            return { ...state, sideStepIndex: Math.max(0, state.sideStepIndex - 1) };
+
+        case 'UNDO_STEP': {
+            if (state.sideStep.nss === state.step) {
+                return { ...state, ssSignal: { action: 'undo' } };
+            }
+            const prevHistory = [...state.history];
+            const prevStep = prevHistory.pop() ?? state.step;
+            return {
+                ...state,
+                history: prevHistory,
+                step: prevStep,
+                stepIndex: Math.max(0, state.stepIndex - 1),
+                currentStage: state.tournament?.isStage ? Math.max(0, state.currentStage - 1) : state.currentStage,
+            };
+        }
+
+        case 'SIGNAL_HANDLED':
+            return {
+                ...state,
+                ssSignal: null,
+                sideStep: { nss: '', undo: false },
+                sideStepIndex: 0,
+            };
+
+        default: {
+            const _  = action;
+            return state;
+        }
+    }
 }
 
 interface ProcessSideStep<S extends object = {}> {

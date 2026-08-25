@@ -14,7 +14,7 @@ interface SetPlayoffsProps {
 
 export default function SetPlayoffs({itemRef, transition, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
     
-    const [numPlayers, setNumPlayers] = useState(16)
+    const [numPlayers, setNumPlayers] = useState(16);
     const [stage, setStage] = useState<TournamentStage>(null);
 
     useEffect(() => {
@@ -26,7 +26,7 @@ export default function SetPlayoffs({itemRef, transition, animInProgress, stageN
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
             <div className={'tournament-configuration-box-header'} >
-                <p>How many Stages?</p>
+                <p>Set the Playoff Bracket</p>
             </div>
             <div className={'tournament-configuration-box-body'}>
                 {stage ? <GenerateBracket type={stage.format} numPlayers={numPlayers} gameTag={'placeholder'}/> : <></>}

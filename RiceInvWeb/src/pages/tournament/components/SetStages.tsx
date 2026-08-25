@@ -172,7 +172,7 @@ export default function SetStages({ itemRef, transition, animInProgress } : SetS
                         {mapFormatSelect()}
                     </ul>
                 </div>
-                {checkStageData() && <button onClick={() => transition({ nextStep : 'SetGroups', stages : tournamentStageData })}>Continue</button>}
+                {checkStageData() && <button onClick={() => transition({ nextStep : `Set${tournamentStageData.find(x => x.order === 0)?.stageType}`, stages : tournamentStageData })}>Continue</button>}
             </div>
         </li>
     )

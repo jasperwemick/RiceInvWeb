@@ -4,6 +4,7 @@ import React from "react"
 import BracketBuilder from "./BracketBuilder"
 import apiFetch from "../../util/fetch"
 import type { TournamentSet } from "../../data/types"
+import useGetRef from "../../hooks/useGetRef"
 
 interface BracketMapProps {
     tid : string;
@@ -41,6 +42,9 @@ export default function BracketMap({ tid, tag, highTree, lowTree, maxDepth } : B
     //     getSetData()
     // }, [!toggleEditor])
 
+    const getRef = useGetRef<HTMLDivElement>();
+
+
     return (
         <React.Fragment>
             {/* <BracketSetEditor 
@@ -49,8 +53,8 @@ export default function BracketMap({ tid, tag, highTree, lowTree, maxDepth } : B
                 toggleEditor={toggleEditor}
                 setToggleEditor={setToggleEditor}
                 allSets={allNodes}/> */}
-            <div><BracketBuilder nodeArr={upperBracketArray} tag={tag} sets={sets}/></div>
-            <div><BracketBuilder nodeArr={lowerBracketArray} tag={tag} sets={sets}/></div>
+            <div><BracketBuilder nodeArr={upperBracketArray} refMap={getRef} sets={sets}/></div>
+            <div><BracketBuilder nodeArr={lowerBracketArray} refMap={getRef} sets={sets}/></div>
         </React.Fragment>
     )
 }
