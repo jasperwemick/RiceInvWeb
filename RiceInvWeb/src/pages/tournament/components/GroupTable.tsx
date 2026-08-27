@@ -23,12 +23,13 @@ function GroupCell({style, text, index, interactive} : {style : CSSProperties | 
 interface GroupTableProps {
     groupSize : number;
     members : Profile[] | Team[];
+    stageNum ? : number;
     tableNum ? : number;
     setSets ? : React.Dispatch<React.SetStateAction<TournamentSet[]>>;
     interactive ? : boolean;
 }
 
-export default function GroupTable({ groupSize, members, tableNum, setSets, interactive } : GroupTableProps) {
+export default function GroupTable({ groupSize, members, stageNum, tableNum, setSets, interactive } : GroupTableProps) {
 
     const [groupCells, setGroupCells] = useState<string[]>([]);
 
@@ -60,6 +61,8 @@ export default function GroupTable({ groupSize, members, tableNum, setSets, inte
                 setList.push({
                     setId : setList.length,
                     bestOf : 5,
+                    stageOrder : stageNum,
+                    subStageOrder : tableNum,
                     participants : setMembers.data,
                     participantType : setMembers.dataType,
                 });

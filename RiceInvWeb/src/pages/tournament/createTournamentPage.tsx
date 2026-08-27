@@ -1,4 +1,4 @@
-import { createRef, useCallback, useEffect, useLayoutEffect, useRef, useState, type RefObject } from "react"
+import { createRef, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState, type RefObject } from "react"
 import type { GameMode, Profile, Team, Tournament, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types";
 import CreateStart from "./components/createStart";
 import useGetRef from "../../hooks/useGetRef";
@@ -78,6 +78,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
                 stepIndex: state.stepIndex + 1,
                 pendingStep: action.data.nextStep, // NOT committed to `step` yet — waits for exit animation
                 animInProgress: true,
+                ssSignal : { action: 'submit' }
             };
         }
 
@@ -131,7 +132,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
             };
 
         default: {
-            const _  = action;
+            const _ = action;
             return state;
         }
     }
@@ -158,22 +159,11 @@ function defineSideStep<S extends object>(process : ProcessSideStep<S>) : Proces
 
 export default function CreateTournamentPage() {
 
-    const [step, setStep] = useState<string>('Start');
-    const [stepIndex, setStepIndex] = useState<number>(0);
-    const [sideStep, setSideStep] = useState<{ nss : string, undo : boolean }>({ nss : '', undo : false});
-    const [sideStepIndex, setSideStepIndex] = useState<number>(0);
-    const [ssSignal, setSSSignal] = useState<{action ? : string}>(null);
-    
-    const [tournament, setTournament] = useState<TournamentData | null>(null);
     const [profiles, setProfiles] = useState<Profile[]>([]);
-    const [currentStage, setCurrentStage] = useState<number>(0);
-    const [history, setHistory] = useState<string[]>([]);
-
-    const [animInProgress, setAnimInProgress] = useState<boolean>(false);
+    const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
+    const { step, stepIndex, sideStep, sideStepIndex, ssSignal, tournament, currentStage, history, animInProgress } = state;
 
     const listRef = useRef<HTMLUListElement | null>(null);
-    const getRef = useGetRef<HTMLLIElement>();
-    const getSideRef = useGetRef<HTMLLIElement>();
 
     useEffect(() => {
 
@@ -190,110 +180,78 @@ export default function CreateTournamentPage() {
         getPlayers();
     }, []);
 
-    const onAdd = (item : HTMLLIElement, ss ? : boolean) => {
-        item.classList.remove(ss ? 'side-active' : 'active');
-        setAnimInProgress(false);
+    const getRef = useGetRef<HTMLLIElement>();
+    const getSideRef = useGetRef<HTMLLIElement>();
+
+    function NextStep(data: TournamentData, ss?: { undo: boolean }) {
+        if (ss) {
+            dispatch({ type: 'ENTER_SIDESTEP', data, undo: ss.undo });
+            return;
+        }
+        dispatch({ type: 'NEXT_STEP', data });
     }
 
-    const onRemove = (data : TournamentData) => {
-        setStep(data.nextStep);
-        setAnimInProgress(false);
-    }
+    // Exit animation — fires whenever stepIndex changes (a NEXT_STEP was dispatched)
+    useLayoutEffect(() => {
+        if (state.pendingStep === null) return; // nothing pending, don't fire on initial mount
+        const item = getRef(stepIndex - 1).current; // the OUTGOING item, one behind the new stepIndex
+        if (item) {
+            item.classList.add('exiting');
+            const timer = setTimeout(() => {
+                dispatch({ type: 'ANIM_REMOVE_DONE' });
+            }, 200);
+            return () => clearTimeout(timer);
+        }
+    }, [stepIndex]);
 
+    // Enter animation — fires whenever `step` actually commits
     useLayoutEffect(() => {
         const item = getRef(stepIndex).current;
-        console.log(item)
         if (item) {
             item.classList.add('active');
-            setAnimInProgress(true);
-            setTimeout(() => {
-                onAdd(item);
+            const timer = setTimeout(() => {
+                item.classList.remove('active');
+                dispatch({ type: 'ANIM_ADD_DONE', isSideStep: false });
             }, 200);
+            return () => clearTimeout(timer);
         }
-    }, [step, stepIndex])
+    }, [step]);
 
+    // Sidestep enter/undo animation
     useLayoutEffect(() => {
         if (sideStep.nss === '') return;
         if (sideStep.undo) {
-            setSideStepIndex(sideStepIndex - 1)
-            console.log('undo ', sideStepIndex - 1)
+            dispatch({ type: 'SIDESTEP_UNDO' });
             return;
         }
-        // const newIndex = stepIndex === sideStepIndex ? stepIndex + 1 : sideStepIndex + 1;
-        // console.log(newIndex);
-        // const item = getRef(newIndex).current;
-        // setSideStepIndex(newIndex);
-        // console.log("side ", item);
         const item = getSideRef(sideStepIndex).current;
-        setSideStepIndex(sideStepIndex + 1);
-        console.log(item)
+        dispatch({ type: 'SIDESTEP_ADVANCE' });
         if (item) {
             item.classList.add('side-active');
-            setAnimInProgress(true);
-            setTimeout(() => {
-                onAdd(item, true);
+            const timer = setTimeout(() => {
+                item.classList.remove('side-active');
+                dispatch({ type: 'ANIM_ADD_DONE', isSideStep: true });
             }, 200);
+            return () => clearTimeout(timer);
         }
+    }, [sideStep]);
 
-    }, [sideStep])
+    const undoStep = () => {
+        if (!tournament || animInProgress) return;
+        dispatch({ type: 'UNDO_STEP' });
+    };
+
+    useEffect(() => {
+        if (ssSignal) {
+            if (ssSignal.action === 'undo') undoStep();
+            dispatch({ type: 'SIGNAL_HANDLED' });
+        }
+        
+    }, [ssSignal]);
 
     useEffect(() => {
         console.log(tournament);
     }, [tournament])
-
-    const undoStep = () => {
-        if (!tournament || animInProgress) return;
-        if (tournament.isStage) setCurrentStage(currentStage > 0 ? currentStage - 1 : 0);
-        console.log('undo blocked, ', sideStep.nss);
-
-        if (sideStep.nss === step) {
-            setSSSignal({action : 'undo'});
-            return;
-        }
-        
-        setStepIndex(stepIndex - 1);
-        console.log('history: ', history);
-        setStep(history.pop());
-    }
-
-    // Reset signal after being sent
-    useEffect(() => {
-        if (ssSignal) {
-            setSSSignal(null);
-            setSideStep({nss : '', undo : false});
-            setSideStepIndex(0);
-            undoStep();
-        }
-    }, [ssSignal])
-
-    function NextStep ( data : TournamentData, ss ? : { undo : boolean } ) {
-        const mergedData = {...tournament, ...data}
-        setTournament(mergedData)
-
-        if (data.nextStep === '') return;
-        
-        if (ss) {
-            setSideStep({ nss : data.nextStep, undo : ss.undo});
-            return;
-        }
-        // setSideStep({ nss : '', undo : false});
-        // setSideStepIndex(0);
-        setHistory([...history, step]);
-
-        if (data.isStage) {
-            setCurrentStage(currentStage + 1);
-        }
-        
-        const item = getRef(stepIndex).current;
-        setStepIndex(stepIndex + 1);
-        if (item) {
-            item.classList.add('exiting');
-            setAnimInProgress(true);
-            setTimeout(() => {
-                onRemove(mergedData);
-            }, 200);
-        }
-    }
 
     const steps : ProcessStep[] = [
         defineStep({ key : 'Start', Component : CreateStart, props : { transition : NextStep } }),
@@ -316,12 +274,12 @@ export default function CreateTournamentPage() {
             stageNum : currentStage, 
             participants : tournament?.participants
         }, 
-        sidesteps : tournament?.subStages?.map((subStage) => {
+        sidesteps : tournament?.subStages?.map((subStage, index) => {
             return defineSideStep({
                 Component : AddTournamentSets,
                 key : 'AddTournamentSets',
                 parentKey : 'SetGroups',
-                props : { transition : NextStep, animInProgress, subGroup : subStage, parentList : tournament.subStages }
+                props : { transition : NextStep, animInProgress, subGroup : subStage, order : index, parentList : tournament.subStages }
             });
         })}),
         defineStep({ key : 'SetPlayins', Component : SetPlayins, props : {

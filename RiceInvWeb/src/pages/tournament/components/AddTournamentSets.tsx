@@ -67,30 +67,55 @@ interface AddTournamentSetsProps {
     itemRef : RefObject<HTMLLIElement>;
     transition : (data : TournamentData, ss ? : { undo : boolean } ) => void;
     animInProgress : boolean;
+    order : number;
     subGroup : TournamentSubStage;
     data : TournamentData;
     signal : { action ? : string };
 }
 
-export default function AddTournamentSets({ itemRef, transition, animInProgress, subGroup, data, signal } : AddTournamentSetsProps) {
+export default function AddTournamentSets({ itemRef, transition, animInProgress, order, subGroup, data, signal } : AddTournamentSetsProps) {
 
     const [tSets, addTSets] = useState<TournamentSet[]>([]);
 
     const undo = () => {
         const filteredStages = data.subStages.filter(x => x !== subGroup);
-        const filteredSets = data.sets.filter(x => !tSets.includes(x));
+        const filteredSets = data.sets?.filter(x => !tSets.find(
+                y => y.stageOrder === x.stageOrder &&
+                y.subStageOrder === x.subStageOrder &&
+                y.setId === x.setId
+            ));
+        addTSets([]);
         transition({ nextStep : 'AddTournamentSets', subStages : filteredStages, sets : filteredSets }, { undo : true })
     }
 
-    useEffect(() => {
-        if (data.subStages.includes(subGroup)) return;
+    const submit = () => {
         transition({ nextStep : '', sets : [...(data.sets ? data.sets : []), ...tSets]})
-    }, [tSets])
+    }
+
+    // useEffect(() => {
+    //     let setsToAdd = tSets;
+    //     if (data.sets) {
+    //         setsToAdd = tSets.filter(x => !data.sets.find(
+    //             y => y.stageOrder === x.stageOrder &&
+    //             y.subStageOrder === x.subStageOrder &&
+    //             y.setId === x.setId
+    //         ));
+    //     }
+    //     transition({ nextStep : '', sets : [...(data.sets ? data.sets : []), ...setsToAdd]})
+    // }, [tSets]);
 
     useEffect(() => {
         if (!signal) return;
         if (signal.action === 'undo') undo();
-    }, [signal])
+        if (signal.action === 'submit') submit();
+    }, [signal]);
+
+    useEffect(() => {
+        addTSets(tSets.map((set) => {
+            return { ...set, subStageOrder : order }
+        }));
+        console.log("order i will have: ", order);
+    }, [order])
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
@@ -100,16 +125,23 @@ export default function AddTournamentSets({ itemRef, transition, animInProgress,
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-subbox'}>
-                    {!animInProgress && <GroupTable groupSize={subGroup.members.length} members={subGroup.members} setSets={addTSets} interactive={true}/>}
+                    {!animInProgress && 
+                    <GroupTable 
+                    groupSize={subGroup.members.length} 
+                    members={subGroup.members} 
+                    stageNum={subGroup.stage}
+                    tableNum={order}
+                    setSets={addTSets} 
+                    interactive={true}/>}
                 </div>
-                <div className={'tournament-configuration-subbox'}>
+                {/* <div className={'tournament-configuration-subbox'}>
                     <ul style={qualBlockStyle}>
                         {subGroup.members.map((_, i : number) => {
                             const init = i < Math.ceil(subGroup.members.length / 2) ? 'Qualified' : 'Eliminated';
                             return <QualBlock initStatus={init} index={i} transition={transition} subGroup={subGroup} data={data}/>
                         })}
                     </ul>
-                </div>
+                </div> */}
             </div>
         </li>
     )

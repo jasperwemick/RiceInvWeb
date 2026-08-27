@@ -94,6 +94,8 @@ export interface TournamentSet {
     setId : number;
     bestOf : number;
     stage ? : TournamentStage;
+    stageOrder : number;
+    subStageOrder : number;
     setName ? : string;
     participants : Profile[] | Team[];
     participantType : string;
