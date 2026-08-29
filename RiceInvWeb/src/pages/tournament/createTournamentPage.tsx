@@ -20,54 +20,60 @@ interface Placeholders {
     points : number;
 }
 
+interface SideHistoryItem {
+    sideStep : string;
+    step : string;
+    num : number;
+}
+
 interface WizardState {
     step: string;
+    sideSteps: string[];
     stepIndex: number;
     pendingStep: string | null; // the step we're animating TOWARD, set by NEXT_STEP, consumed by ANIM_REMOVE_DONE
-    sideStep: { nss: string; action : string; };
     sideStepIndex: number;
     ssSignal: { action?: string } | null;
     tournament: TournamentData | null;
     currentStage: number;
     placeholders : Placeholders[];
     history: string[];
+    ssHistory : SideHistoryItem[],
     animInProgress: boolean;
     pendingTransition: TournamentData | null; // the NEXT_STEP data, held until sidesteps finish
     expectedSubmissions: number;
     receivedSubmissions: number;
 }
 
-type WizardAction =
-    | { type: 'NEXT_STEP'; data: TournamentData; activeSidestepCount: number }
-    | { type: 'ENTER_SIDESTEP'; data: TournamentData; sideAction : string}
-    | { type: 'ANIM_REMOVE_DONE' } // fired after the exit-animation setTimeout — commits the pending step
-    | { type: 'ANIM_ADD_DONE'; isSideStep: boolean } // fired after the enter-animation setTimeout
-    | { type: 'SIDESTEP_ADVANCE' } // the non-undo branch of the sideStep useLayoutEffect
-    | { type: 'SIDESTEP_UNDO' }
-    | { type: 'SIDESTEP_SUBMIT'; data : TournamentData }
-    | { type: 'UNDO_STEP' }
-    | { type: 'TRIGGER_SIDESTEP_SIGNAL' }
+export type WizardAction =
+    | { type: 'STEP'; data: TournamentData; activeSSCount ? : number }
+    | { type: 'UNDO_STEP'; data : TournamentData; activeSSCount ? : number }
+    | { type: 'SIDESTEP'; data: TournamentData; ss : string }
+    | { type: 'SUBMIT_SIDESTEP'; data : TournamentData; ss : string }
+    | { type: 'UNDO_SIDESTEP'; data : TournamentData; ss : string }
+    | { type: 'ANIM_REMOVE_DONE' }
+    | { type: 'ANIM_ADD_DONE'; isSideStep: boolean }
     | { type: 'SIGNAL_HANDLED' };
 
 const initialWizardState : WizardState = {
     step: 'Start',
+    sideSteps : [],
     stepIndex: 0,
     pendingStep: null,
-    sideStep: { nss: '', action : '' },
     sideStepIndex: 0,
     ssSignal: null,
     tournament: null,
     currentStage: 0,
     placeholders : [],
     history: [],
+    ssHistory : [],
     animInProgress: false,
     pendingTransition : null,
     expectedSubmissions : 0,
-    receivedSubmissions : 0
+    receivedSubmissions : 0,
 };
 
 export interface TournamentData {
-    nextStep : string;
+    step ? : string;
     name ? : string;
     gameMode ? : GameMode;
     participants ? : Profile[] | Team[];
@@ -79,54 +85,42 @@ export interface TournamentData {
     matches ? : TournamentMatch[];
 }
 
+
 function assignField<K extends keyof TournamentData>(
     target: TournamentData,
     key: K,
     value: TournamentData[K]
-): void {
-    target[key] = value;
-}
+): void { target[key] = value; }
 
-const ARRAY_MERGE_KEYS: Partial<Record<keyof TournamentData, string>> = {
-    sets: 'setId',
-    matches: 'matchId', // adjust to your real matches identifier
-    subStages: 'order', // adjust to your real identifier
-};
 
-// Append to specified array fields according to data send by sidestep
-function mergeSidestepData(current: TournamentData | null, incoming: Partial<TournamentData>): TournamentData {
-    const base = current ?? ({} as TournamentData);
-    const result: TournamentData = { ...base };
-    console.log('current, incoming', current, ' ', incoming)
-    for (const key of Object.keys(incoming) as (keyof TournamentData)[]) {
-        const incomingValue = incoming[key];
-        const idKey = ARRAY_MERGE_KEYS[key];
+function removeFields(baseData : TournamentData | null, toRemove : Partial<TournamentData>) : TournamentData {
+    const localData = { ...baseData };
 
-        if (Array.isArray(incomingValue) && idKey && base[key]) {
-            const map = new Map((base[key] as any[]).map(item => [item[idKey], item]));
-            for (const item of incomingValue) {
-                map.set(item[idKey], item);
-            }
-            const val = Array.from(map.values());
-            assignField(result, key, val);
-        } 
-        else {
-            assignField(result, key, incomingValue) // non-array or unconfigured field — plain overwrite is fine
+    for (const key of Object.keys(toRemove) as (keyof TournamentData)[]) {
+        const marked = toRemove[key];
+        
+        if (Array.isArray(marked) && Array.isArray(localData[key])) {
+            assignField(localData, key, localData[key].filter((item) => 
+                !marked.includes(item)
+            ))
+        } else {
+            assignField(localData, key, undefined)
         }
     }
 
-    return result;
+    return localData;
 }
 
 
 function commitNextStep(state: WizardState, data: TournamentData): WizardState {
     const mergedData = { ...state.tournament, ...data };
-    if (data.nextStep === '') {
-        return { ...state, tournament: mergedData, pendingTransition: null };
-    }
     return {
         ...state,
         tournament: mergedData,
+        stepIndex: state.stepIndex + 1,
+        pendingStep: data.step,
+        sideSteps : [],
+        sideStepIndex: 0,
         history: [...state.history, state.step],
         currentStage: data.isStage ? state.currentStage + 1 : state.currentStage,
         placeholders: data.isStage ? mergedData.subStages.flatMap((sStg, i) => {
@@ -145,20 +139,55 @@ function commitNextStep(state: WizardState, data: TournamentData): WizardState {
                 }
             }).sort((a, b) => a.points - b.points).slice(0, sStg.qualificationSlots)
         }) : [],
-        stepIndex: state.stepIndex + 1,
-        pendingStep: data.nextStep,
+        animInProgress: true,
         pendingTransition: null,
         expectedSubmissions: 0,
         receivedSubmissions: 0,
+    };
+}
+
+function commitPrevStep(state: WizardState, data: TournamentData) : WizardState {
+
+    const filteredData = removeFields(state.tournament, data);
+    const prevHistory = [...state.history];
+    const prevStep = prevHistory.pop() ?? state.step;
+    return {
+        ...state,
+        tournament: filteredData,
+        stepIndex: state.stepIndex - 1,
+        pendingStep: prevStep,
+        sideSteps : [],
+        sideStepIndex: 0,
+        history: prevHistory,
+        currentStage: data.isStage ? state.currentStage + 1 : state.currentStage,
+        placeholders: data.isStage ? filteredData.subStages.flatMap((sStg, i) => {
+            const sStgMatches = filteredData.matches ? filteredData.matches.filter((match) => {
+                return filteredData.sets.filter((set) => {
+                    return set.stageOrder === state.currentStage &&
+                    set.subStageOrder === i
+                })?.find(set => set === match.matchSet)
+            }) : [];
+            
+            return sStg.members.map((member) : Placeholders => {
+                return {
+                    subId : i,
+                    subSize : sStg.members.length,
+                    points : sStgMatches.filter(x => x.winner === member).length
+                }
+            }).sort((a, b) => a.points - b.points).slice(0, sStg.qualificationSlots)
+        }) : [],
         animInProgress: true,
+        pendingTransition: null,
+        expectedSubmissions: 0,
+        receivedSubmissions: 0,
     };
 }
 
 function wizardReducer(state: WizardState, action: WizardAction): WizardState {
+
     switch (action.type) {
-        case 'NEXT_STEP': {
-            console.log('count: ', action.activeSidestepCount);
-            if (action.activeSidestepCount === 0) {
+        case 'STEP': {
+            if (!action.activeSSCount) {
                 // no sidesteps to wait for — commit the transition immediately, same as before
                 return commitNextStep(state, action.data);
             }
@@ -167,20 +196,128 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
             return {
                 ...state,
                 pendingTransition: action.data,
-                expectedSubmissions: action.activeSidestepCount,
+                expectedSubmissions: action.activeSSCount,
                 receivedSubmissions: 0,
                 ssSignal: { action: 'submit' },
             };
         }
 
-        case 'ENTER_SIDESTEP': {
+        case 'UNDO_STEP': {
+            if (!action.activeSSCount) {
+                return commitPrevStep(state, action.data);
+            }
+
+            // hold the transition, signal sidesteps to submit, wait for them
+            return {
+                ...state,
+                pendingTransition: action.data,
+                expectedSubmissions: action.activeSSCount,
+                receivedSubmissions: 0,
+                ssSignal: { action: 'undo' },
+            };
+        }
+
+        case 'SIDESTEP': {
             const mergedData = { ...state.tournament, ...action.data };
+            const exists = state.ssHistory.find(x => x.step === state.step);
+            const sideSteps = [...state.sideSteps]
             return {
                 ...state,
                 tournament: mergedData,
-                sideStep: { nss: action.data.nextStep, action: action.sideAction },
+                sideSteps: [...sideSteps, state.step],
+                sideStepIndex : state.sideStepIndex + 1,
+                ssHistory : exists ? state.ssHistory.map(x => 
+                    x.step === state.step
+                    ? {...x, num : x.num + 1}
+                    : x
+                ) : [...state.ssHistory, { sideStep : action.data.step, step : state.step, num : 1 }]
             };
         }
+
+        case 'UNDO_SIDESTEP' : {
+            const newReceivedCount = state.receivedSubmissions + 1;
+
+            const sidesteps = [...state.sideSteps];
+            const localData = removeFields(state.tournament, action.data);
+
+            const history = state.ssHistory.map(
+                x => x.sideStep === action.ss && x.step === state.step
+                ? x.num > 1 ? { ...x, num : x.num - 1 } : undefined : x
+            ).filter(x => x !== undefined);
+
+            // Undo primary step if this is the last side step to undo
+            if (newReceivedCount >= state.expectedSubmissions && state.pendingTransition) {
+                return commitPrevStep(
+                    { 
+                        ...state, 
+                        ssHistory : history,
+                        tournament: localData, 
+                        receivedSubmissions: newReceivedCount 
+                    },
+                    state.pendingTransition
+                );
+            }
+
+            return {
+                ...state,
+                tournament : localData,
+                ssHistory : history,
+                sideSteps : sidesteps.filter(x => x !== action.ss),
+                sideStepIndex : state.sideStepIndex - 1,
+                receivedSubmissions : newReceivedCount
+            }
+        }
+
+        case 'SUBMIT_SIDESTEP':
+            const newReceivedCount = state.receivedSubmissions + 1;
+
+            const toUpsert = action.data
+            const localData = { ...state.tournament };
+
+            const KEYS: Partial<Record<keyof TournamentData, string>> = {
+                participants : 'name',
+                sets: 'setId',
+                matches: 'matchId',
+                stages : 'order',
+                subStages: 'order',
+            };
+
+            const upsertById = <T extends Record<string, any>>(existing: T[] = [], incoming: T[] = [], idKey: string): T[] => {
+                const map = new Map(existing.map(item => [item[idKey], item]));
+                for (const item of incoming) {
+                    map.set(item[idKey], item); // adds new, or updates an existing one submitted twice
+                }
+                return Array.from(map.values());
+            }
+
+            for (const key of Object.keys(toUpsert) as (keyof TournamentData)[]) {
+                const marked = toUpsert[key];
+                const id = KEYS[key]
+                
+                if (Array.isArray(marked) && id) {
+                    assignField(localData, key, upsertById(localData[key] as any[], marked, id))
+                } else {
+                    assignField(localData, key, marked)
+                }
+            }
+
+            if (newReceivedCount >= state.expectedSubmissions && state.pendingTransition) {
+                // last submission arrived — NOW actually commit the held transition
+                return commitNextStep(
+                    { 
+                        ...state, 
+                        tournament: localData, 
+                        receivedSubmissions: newReceivedCount 
+                    },
+                    state.pendingTransition
+                );
+            }
+
+            return {
+                ...state,
+                tournament: localData,
+                receivedSubmissions: newReceivedCount,
+            };
 
         case 'ANIM_REMOVE_DONE':
             return {
@@ -191,63 +328,17 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
             };
 
         case 'ANIM_ADD_DONE':
-            return { ...state, animInProgress: false };
-
-        case 'SIDESTEP_ADVANCE':
-            return { ...state, sideStepIndex: state.sideStepIndex + 1, animInProgress: true };
-
-        case 'SIDESTEP_UNDO':
-            return { ...state, sideStepIndex: Math.max(0, state.sideStepIndex - 1) };
-
-        case 'SIDESTEP_SUBMIT':
-            const mergedTournament = mergeSidestepData(state.tournament, action.data);
-            const newReceivedCount = state.receivedSubmissions + 1;
-
-            if (newReceivedCount >= state.expectedSubmissions && state.pendingTransition) {
-                // last submission arrived — NOW actually commit the held transition
-                return commitNextStep(
-                    { ...state, tournament: mergedTournament, receivedSubmissions: newReceivedCount },
-                    state.pendingTransition
-                );
-            }
-
-            return {
-                ...state,
-                tournament: mergedTournament,
-                receivedSubmissions: newReceivedCount,
+            return { 
+                ...state, 
+                stepIndex : state.stepIndex + 1, 
+                animInProgress: false 
             };
-
-        case 'UNDO_STEP': {
-            if (state.sideStep.nss === state.step) {
-                return { ...state, ssSignal: { action: 'undo' } };
-            }
-            const prevHistory = [...state.history];
-            const prevStep = prevHistory.pop() ?? state.step;
-            return {
-                ...state,
-                history: prevHistory,
-                step: prevStep,
-                stepIndex: Math.max(0, state.stepIndex - 1),
-                currentStage: state.tournament?.isStage ? Math.max(0, state.currentStage - 1) : state.currentStage,
-            };
-        }
 
         case 'SIGNAL_HANDLED':
-            if (state.ssSignal.action === 'undo') {
-                return {
-                    ...state,
-                    ssSignal: null,
-                    sideStep: { nss: '', action : '' },
-                    sideStepIndex: 0,
-                };
+            return {
+                ...state,
+                ssSignal : null
             }
-            else {
-                return {
-                    ...state,
-                    ssSignal : null
-                }
-            }
-
 
         default: {
             const _ = action;
@@ -257,14 +348,23 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
 }
 
 interface ProcessSideStep<S extends object = {}> {
-    Component: React.ComponentType<S & { itemRef : React.RefObject<HTMLLIElement>, data : TournamentData, signal : { action ? : string}}>;
+    Component: React.ComponentType<S & { 
+        itemRef : React.RefObject<HTMLLIElement>, 
+        dispatcher : React.ActionDispatch<[action: WizardAction]>
+        data : TournamentData, 
+        signal : { action ? : string}
+    }>;
     key : string;
     parentKey : string;
     props?: S;
 }
 
 interface ProcessStep<P extends object = {}> {
-    Component : React.ComponentType<P & { itemRef : React.RefObject<HTMLLIElement>, data : TournamentData }>;
+    Component : React.ComponentType<P & { 
+        itemRef : React.RefObject<HTMLLIElement>,
+        dispatcher : React.ActionDispatch<[action: WizardAction]>
+        data : TournamentData,
+    }>;
     key : string;
     props?: P;
     sidesteps?: ProcessSideStep<any>[]
@@ -279,7 +379,7 @@ export default function CreateTournamentPage() {
 
     const [profiles, setProfiles] = useState<Profile[]>([]);
     const [state, dispatch] = useReducer(wizardReducer, initialWizardState);
-    const { placeholders, step, stepIndex, sideStep, sideStepIndex, ssSignal, tournament, currentStage, history, animInProgress } = state;
+    const { placeholders, step, stepIndex, sideSteps, sideStepIndex, ssSignal, tournament, currentStage, history, animInProgress } = state;
 
     const listRef = useRef<HTMLUListElement | null>(null);
 
@@ -301,20 +401,6 @@ export default function CreateTournamentPage() {
     const getRef = useGetRef<HTMLLIElement>();
     const getSideRef = useGetRef<HTMLLIElement>();
 
-    function NextStep(data: TournamentData, ss?: { action : string }) {
-        if (ss) {
-            if (ss.action === 'submit') {
-                dispatch({type : 'SIDESTEP_SUBMIT', data});
-                return;
-            }
-            dispatch({ type: 'ENTER_SIDESTEP', data, sideAction: ss.action });
-            return;
-        }
-        const currentStepConfig = steps.find(s => s.key === step);
-        const activeSidestepCount = sideStepIndex
-        dispatch({ type: 'NEXT_STEP', data, activeSidestepCount });
-    }
-
     useLayoutEffect(() => {
         if (state.pendingStep === null) return; 
         const item = getRef(stepIndex - 1).current; 
@@ -322,7 +408,7 @@ export default function CreateTournamentPage() {
             item.classList.add('exiting');
             const timer = setTimeout(() => {
                 dispatch({ type: 'ANIM_REMOVE_DONE' });
-            }, 200);
+            }, 900);
             return () => clearTimeout(timer);
         }
     }, [stepIndex]);
@@ -335,39 +421,27 @@ export default function CreateTournamentPage() {
             const timer = setTimeout(() => {
                 item.classList.remove('active');
                 dispatch({ type: 'ANIM_ADD_DONE', isSideStep: false });
-            }, 200);
+            }, 900);
             return () => clearTimeout(timer);
         }
     }, [step]);
 
     // Sidestep enter/undo animation
     useLayoutEffect(() => {
-        if (sideStep.nss === '') return;
-        if (sideStep.action === 'undo') {
-            dispatch({ type: 'SIDESTEP_UNDO' });
-            return;
-        }
         const item = getSideRef(sideStepIndex).current;
-        dispatch({ type: 'SIDESTEP_ADVANCE' });
         if (item) {
             item.classList.add('side-active');
             const timer = setTimeout(() => {
                 item.classList.remove('side-active');
                 dispatch({ type: 'ANIM_ADD_DONE', isSideStep: true });
-            }, 200);
+            }, 900);
             return () => clearTimeout(timer);
         }
-    }, [sideStep]);
-
-    const undoStep = () => {
-        if (!tournament || animInProgress) return;
-        dispatch({ type: 'UNDO_STEP' });
-    };
+    }, [sideSteps.length]);
 
     useEffect(() => {
         if (ssSignal) {
             dispatch({ type: 'SIGNAL_HANDLED' });
-            if (ssSignal.action === 'undo') undoStep();
         }
         
     }, [ssSignal]);
@@ -377,22 +451,21 @@ export default function CreateTournamentPage() {
     }, [tournament])
 
     const steps : ProcessStep[] = [
-        defineStep({ key : 'Start', Component : CreateStart, props : { transition : NextStep } }),
-        defineStep({ key : 'SetGame', Component : SetGame, props : { transition : NextStep, animInProgress } }),
-        defineStep({ key : 'AddParticipants', Component : AddParticipants, props : { transition : NextStep, animInProgress, profiles } }),
-        defineStep({ key : 'SetTeams', Component : SetTeams, props : { transition : NextStep }, sidesteps : [
+        defineStep({ key : 'Start', Component : CreateStart }),
+        defineStep({ key : 'SetGame', Component : SetGame, props : { animInProgress } }),
+        defineStep({ key : 'AddParticipants', Component : AddParticipants, props : { animInProgress, profiles } }),
+        defineStep({ key : 'SetTeams', Component : SetTeams, sidesteps : [
             defineSideStep({
                 Component : CreateTeams, 
                 key : 'CreateTeams',
                 parentKey : 'SetTeams',
-                props : { transition : NextStep, animInProgress, participants : tournament?.participants?.filter(x => x.def == 'Profile'), gameMode : tournament?.gameMode }
+                props : { animInProgress, participants : tournament?.participants?.filter(x => x.def == 'Profile'), gameMode : tournament?.gameMode }
             })
         ]}),
-        defineStep({ key : 'SetStages', Component : SetStages, props : { transition : NextStep, animInProgress } }),
+        defineStep({ key : 'SetStages', Component : SetStages, props : { animInProgress } }),
 
         // Not implemented
         defineStep({ key : 'SetGroups', Component : SetGroups, props : { 
-            transition : NextStep, 
             animInProgress, 
             stageNum : currentStage, 
             participants : tournament?.participants
@@ -402,17 +475,15 @@ export default function CreateTournamentPage() {
                 Component : AddTournamentSets,
                 key : 'AddTournamentSets',
                 parentKey : 'SetGroups',
-                props : { transition : NextStep, animInProgress, subGroup : subStage, order : index, parentList : tournament.subStages }
+                props : { animInProgress, subGroup : subStage, order : index, parentList : tournament.subStages }
             });
         })}),
         defineStep({ key : 'SetPlayins', Component : SetPlayins, props : {
-            transition : NextStep, 
             animInProgress, 
             stageNum : currentStage, 
             participants : tournament?.participants
         }}),
         defineStep({ key : 'SetPlayoffs', Component : SetPlayoffs, props : { 
-            transition : NextStep, 
             animInProgress, 
             stageNum : currentStage, 
             participants : currentStage > 0 ? placeholders : tournament?.participants
@@ -421,20 +492,29 @@ export default function CreateTournamentPage() {
 
     return (
         <div className={'tournament-create'}>
-            <button onClick={undoStep}>Back</button>
             <ul className={'tournament-illusion-list'} ref={listRef}>
                 {steps.map((st, i) => {
                     return (
                         <React.Fragment>
                             {
                                 step === st.key && 
-                                <st.Component key={i} itemRef={getRef(i)} data={tournament} {...st.props}/>
+                                <st.Component 
+                                key={i} 
+                                itemRef={getRef(i)} 
+                                data={tournament} 
+                                dispatcher={dispatch}
+                                {...st.props}/>
                             }
                             {
                                 st.sidesteps?.map((sst, j) => {
-                                    console.log(sideStep.nss, ' ', sst.key)
-                                    return sideStep.nss === sst.key && step === sst.parentKey &&
-                                    <sst.Component key={i + j + 1} itemRef={getSideRef(j)} data={tournament} signal={ssSignal} {...sst.props}/>
+                                    return sideSteps.includes(sst.key) && step === sst.parentKey &&
+                                    <sst.Component 
+                                    key={i + j + 1} 
+                                    itemRef={getSideRef(j)} 
+                                    data={tournament} 
+                                    signal={ssSignal} 
+                                    dispatcher={dispatch}
+                                    {...sst.props}/>
                                 })
                             }
                         </React.Fragment>

@@ -8,11 +8,10 @@ import ListImageItem from "../../../components/SelectableList/listImageItem";
 
 interface SetTournamentGameProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { action : string }) => void;
     animInProgress : boolean;
 }
 
-export default function SetTournamentGame({ itemRef, transition, animInProgress } : SetTournamentGameProps) {
+export default function SetTournamentGame({ itemRef, animInProgress } : SetTournamentGameProps) {
 
     const [games, setGames] = useState<Game[]>([]);
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);

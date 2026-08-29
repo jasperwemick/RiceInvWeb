@@ -46,7 +46,7 @@
     border-radius: 1rem;
 }
 
-/* .tournament-illusion-list > li.exiting {
+.tournament-illusion-list > li.exiting {
     animation-name: exitAnim;
     animation-duration: 1s;
 }
@@ -54,7 +54,7 @@
 .tournament-illusion-list > li.active {
     animation-name: enterAnim;
     animation-duration: 1s;
-} */
+}
 
 @keyframes enterAnim {
     from {
@@ -78,7 +78,7 @@
     }
 }
 
-/* .tournament-illusion-list > li.side-exiting {
+.tournament-illusion-list > li.side-exiting {
     animation-name: exitSideAnim;
     animation-duration: 1s;
 }
@@ -86,7 +86,7 @@
 .tournament-illusion-list > li.side-active {
     animation-name: enterSideAnim;
     animation-duration: 1s;
-} */
+}
 
 @keyframes enterSideAnim {
     from {

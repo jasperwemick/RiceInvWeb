@@ -1,18 +1,18 @@
 import { useEffect, useState, type RefObject } from "react";
-import type { TournamentData } from "../createTournamentPage";
+import type { TournamentData, WizardAction } from "../createTournamentPage";
 import type { Profile, Team, TournamentStage } from "../../../data/types";
 import { GenerateBracket } from "../../../components/Bracket/GenerateBracket";
 
 interface SetPlayoffsProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { action : string }) => void;
+    dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
     stageNum : number;
     data : TournamentData;
     participants : Profile[] | Team[]
 }
 
-export default function SetPlayoffs({itemRef, transition, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
+export default function SetPlayoffs({itemRef, dispatcher, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
     
     const [numPlayers, setNumPlayers] = useState(participants.length);
     const [stage, setStage] = useState<TournamentStage>(null);

@@ -1,5 +1,5 @@
-import { useEffect, useReducer, useRef, useState, type RefObject } from "react";
-import type { TournamentData } from "../createTournamentPage";
+import { useEffect, useRef, useState, type RefObject } from "react";
+import type { TournamentData, WizardAction } from "../createTournamentPage";
 import type { Profile, Team, TournamentStage, TournamentSubStage } from "../../../data/types";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 import GroupTable from "./GroupTable";
@@ -7,17 +7,15 @@ import GroupTable from "./GroupTable";
 
 interface SetGroupsProps {
     itemRef : RefObject<HTMLLIElement>;
-    transition : (data : TournamentData, ss ? : { action : string }) => void;
+    dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
     stageNum : number;
     participants : Profile[] | Team[];
     data : TournamentData;
 }
 
-export type GroupActions = { type : 'add'; payload : TournamentSubStage } | { type : 'remove'; payload : TournamentSubStage }
 
-
-export default function SetGroups({ itemRef, transition, animInProgress, stageNum, participants, data } : SetGroupsProps) {
+export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNum, participants, data } : SetGroupsProps) {
     
     const [groupSize, setGroupSize] = useState(4);
     const [groupMembers, setGroupMembers] = useState<Profile[] | Team[]>([]);
@@ -28,28 +26,12 @@ export default function SetGroups({ itemRef, transition, animInProgress, stageNu
 
     const inputRef = useRef<HTMLInputElement | null>(null);
 
-    // function reducer(state : StageGroup[], action : GroupActions) {
-    //     switch (action.type) {
-    //         case 'add':
-    //             return [...state, action.payload];
-    //         case 'remove':
-    //             return state.filter(x => x !== action.payload);
-    //         default : {
-    //             return state;
-    //         }
-    //     }
-    // }
-
-    // const [state, dispatch] = useReducer(reducer, [])
-
     const undo = () => {
-        
+        dispatcher({type : 'UNDO_STEP', data : { isStage : false }})
     }
 
     useEffect(() => {
         if (data.stages) {
-            console.log(data.stages, ' num ', stageNum);
-            console.log('stage ', data.stages.find(x => x.order === stageNum))
             setStage(data.stages.find(x => x.order === stageNum))
         }
     }, [data]);
@@ -78,7 +60,7 @@ export default function SetGroups({ itemRef, transition, animInProgress, stageNu
     const submitGroups = () => {
         const nextStage = data.stages.find(x => x.order === stageNum + 1)
         if (nextStage) {
-            transition({nextStep : `Set${nextStage.stageType}`, isStage : true})
+            dispatcher({type : 'STEP', data : {step : `Set${nextStage.stageType}`, isStage : true}})
         }
     }
 
@@ -87,8 +69,7 @@ export default function SetGroups({ itemRef, transition, animInProgress, stageNu
             const num = getParticipants().length;
             setGroupSize(num < groupSize ? num : groupSize)
             inputRef.current.value = String(num);
-            console.log("lololol");
-            transition({ nextStep : 'AddTournamentSets',  subStages : groups }, { action : '' })
+            dispatcher({type : 'SIDESTEP', data : { subStages : groups }, ss: 'AddTournamentSets'})
         }
     }, [groups.length])
 

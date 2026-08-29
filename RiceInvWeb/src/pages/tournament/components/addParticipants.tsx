@@ -1,29 +1,40 @@
 import { useEffect, useState, type RefObject } from "react";
 import type { Profile } from "../../../data/types";
-import type { TournamentData } from "../createTournamentPage";
+import type { TournamentData, WizardAction } from "../createTournamentPage";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 
 interface CreateStartProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { action : string }) => void;
+    dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
     profiles : Profile[]; 
     data : TournamentData
 }
 
 
-export default function AddParticipants({ itemRef, transition, animInProgress, profiles, data } : CreateStartProps) {
+export default function AddParticipants({ itemRef, dispatcher, animInProgress, profiles, data } : CreateStartProps) {
 
     const [participants, setParticipants] = useState<Profile[]>([]);
     const [errorMsg, setErrorMsg] = useState<string>('');
 
     const submit = () => {
         if (participants.length % data.gameMode.teamSize === 0) {
-            transition({ nextStep : 'SetTeams', participants : participants, particpantType : 'Profile' })
+            dispatcher({
+                type : 'STEP',
+                data : {
+                    step : 'SetTeams',
+                    participants : participants, 
+                    particpantType : 'Profile' 
+                }
+            })
         }
         else {
             setErrorMsg(`Participants must evenly distribute for teams of size ${data.gameMode.teamSize}`)
         }
+    }
+
+    const undo = () => {
+        dispatcher({ type: 'UNDO_STEP', data : { participants : participants }});
     }
 
     useEffect(() => {
@@ -32,6 +43,7 @@ export default function AddParticipants({ itemRef, transition, animInProgress, p
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
+            <button onClick={undo}>Back</button>
             <div className={'tournament-configuration-box-header'} >
                 <p>Who is participating?</p>
             </div>

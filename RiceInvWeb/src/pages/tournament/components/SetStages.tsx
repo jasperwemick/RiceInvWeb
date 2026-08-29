@@ -1,6 +1,6 @@
 import React, { useEffect, useState, type RefObject } from "react";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
-import type { TournamentData } from "../createTournamentPage";
+import type { TournamentData, WizardAction } from "../createTournamentPage";
 import type { Stage, TournamentStage } from "../../../data/types";
 
 interface ComplexListItemProps {
@@ -52,11 +52,11 @@ function ComplexListItem({ item, tournamentData, setTournamentData, index } : Co
 
 interface SetStagesProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { action : string }) => void;
+    dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean
 }
 
-export default function SetStages({ itemRef, transition, animInProgress } : SetStagesProps) {
+export default function SetStages({ itemRef, dispatcher, animInProgress } : SetStagesProps) {
 
     const [stageCount, setStageCount] = useState<number>(0);
 
@@ -78,15 +78,29 @@ export default function SetStages({ itemRef, transition, animInProgress } : SetS
     const [stages, setStages] = useState<Stage[]>(defaultStages);
     const [tournamentStageData, setTournamentStageData] = useState<TournamentStage[]>([]);
 
+    const undo = () => {
+        dispatcher({
+            type : 'UNDO_STEP',
+            data : { stages : tournamentStageData }
+        })
+    }
+
+    const submit = () => {
+        dispatcher({ 
+            type : 'STEP', 
+            data : { 
+                step : `Set${tournamentStageData.find(x => x.order === 0)?.stageType}`, 
+                stages : tournamentStageData 
+            } 
+        });
+    }
+
     useEffect(() => {
-        console.log("bro");
         setStages(defaultStages.filter((_, i) => i < stageCount));
     }, [stageCount])
 
     useEffect(() => {
-        console.log('updato')
         if (tournamentStageData.length === 0) {
-            console.log(stages.length);
             setTournamentStageData(stages.map((stg, index) => {
                 return {
                     order : index,
@@ -172,7 +186,7 @@ export default function SetStages({ itemRef, transition, animInProgress } : SetS
                         {mapFormatSelect()}
                     </ul>
                 </div>
-                {checkStageData() && <button onClick={() => transition({ nextStep : `Set${tournamentStageData.find(x => x.order === 0)?.stageType}`, stages : tournamentStageData })}>Continue</button>}
+                {checkStageData() && <button onClick={submit}>Continue</button>}
             </div>
         </li>
     )

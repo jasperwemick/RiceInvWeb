@@ -1,13 +1,12 @@
 import { useEffect, useState, type RefObject } from "react";
 import type { GameMode, Profile, Team } from "../../../data/types";
-import useGetRef from "../../../hooks/useGetRef";
-import type { TournamentData } from "../createTournamentPage";
+import type { TournamentData, WizardAction } from "../createTournamentPage";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 import ListDropdownItem from "../../../components/SelectableList/listDropdownItem";
 
 interface CreateTeamsProps {
-    itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { action : string }) => void;
+    itemRef : RefObject<HTMLLIElement>;
+    dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
     participants : Profile[];
     gameMode : GameMode;
@@ -15,7 +14,7 @@ interface CreateTeamsProps {
     signal : { action ? : string };
 }
 
-export default function CreateTeams({ itemRef, transition, animInProgress, participants, gameMode, data, signal } : CreateTeamsProps) {
+export default function CreateTeams({ itemRef, dispatcher, animInProgress, participants, gameMode, data, signal } : CreateTeamsProps) {
 
     const [teamMembers, setTeamMembers] = useState<Profile[]>([]);
     const [teamName, setTeamName] = useState<string>('');
@@ -23,15 +22,14 @@ export default function CreateTeams({ itemRef, transition, animInProgress, parti
     const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
 
     const undo = () => {
-        transition({ nextStep : 'CreateTeams' }, { action : 'undo' });
-        setTeams([]);
+        dispatcher({type : 'UNDO_SIDESTEP', data : { participants : [...teams] }, ss : 'CreateTeams'});
         setTeamName('');
         setTeamMembers([]);
-        setSelectedTeams([]);;
+        setSelectedTeams([]);
     }
 
     const submit = () => {
-        transition({ nextStep : ''}, { action : 'submit' })
+        dispatcher({type : 'SUBMIT_SIDESTEP', data : { participants : teams, particpantType : 'Team' }, ss : 'CreateTeams'})
     }
 
     useEffect(() => {
@@ -39,6 +37,7 @@ export default function CreateTeams({ itemRef, transition, animInProgress, parti
         if (signal.action === 'undo') undo();
         if (signal.action === 'submit') submit();
     }, [signal])
+
 
     const saveTeam = () => {
         console.log(teamName.length);
@@ -100,7 +99,7 @@ export default function CreateTeams({ itemRef, transition, animInProgress, parti
                     </div>
                     {selectedTeams.length > 0 && <button onClick={removeTeams}>Remove</button>}
                 </div>
-                <button onClick={() => transition({nextStep : 'SetStages', participants : teams, particpantType : 'Team'})}>Continue</button>
+                <button onClick={submit}>Continue</button>
             </div>
         </li>
     )
