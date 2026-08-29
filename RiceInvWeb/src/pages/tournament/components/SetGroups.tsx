@@ -7,7 +7,7 @@ import GroupTable from "./GroupTable";
 
 interface SetGroupsProps {
     itemRef : RefObject<HTMLLIElement>;
-    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
+    transition : (data : TournamentData, ss ? : { action : string }) => void;
     animInProgress : boolean;
     stageNum : number;
     participants : Profile[] | Team[];
@@ -42,6 +42,10 @@ export default function SetGroups({ itemRef, transition, animInProgress, stageNu
 
     // const [state, dispatch] = useReducer(reducer, [])
 
+    const undo = () => {
+        
+    }
+
     useEffect(() => {
         if (data.stages) {
             console.log(data.stages, ' num ', stageNum);
@@ -61,6 +65,7 @@ export default function SetGroups({ itemRef, transition, animInProgress, stageNu
 
     const confirmGroup = () => {
         setGroups([...groups, {
+            order : groups.length,
             stage : stage?.order,
             name : groupName,
             format : stage?.format,
@@ -83,7 +88,7 @@ export default function SetGroups({ itemRef, transition, animInProgress, stageNu
             setGroupSize(num < groupSize ? num : groupSize)
             inputRef.current.value = String(num);
             console.log("lololol");
-            transition({ nextStep : 'AddTournamentSets',  subStages : groups }, { undo : false })
+            transition({ nextStep : 'AddTournamentSets',  subStages : groups }, { action : '' })
         }
     }, [groups.length])
 

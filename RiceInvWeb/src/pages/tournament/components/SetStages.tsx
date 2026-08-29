@@ -52,7 +52,7 @@ function ComplexListItem({ item, tournamentData, setTournamentData, index } : Co
 
 interface SetStagesProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
+    transition : (data : TournamentData, ss ? : { action : string }) => void;
     animInProgress : boolean
 }
 

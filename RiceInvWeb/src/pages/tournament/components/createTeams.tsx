@@ -7,7 +7,7 @@ import ListDropdownItem from "../../../components/SelectableList/listDropdownIte
 
 interface CreateTeamsProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
+    transition : (data : TournamentData, ss ? : { action : string }) => void;
     animInProgress : boolean;
     participants : Profile[];
     gameMode : GameMode;
@@ -23,16 +23,21 @@ export default function CreateTeams({ itemRef, transition, animInProgress, parti
     const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
 
     const undo = () => {
-        transition({ nextStep : 'CreateTeams' }, { undo : true });
+        transition({ nextStep : 'CreateTeams' }, { action : 'undo' });
         setTeams([]);
         setTeamName('');
         setTeamMembers([]);
         setSelectedTeams([]);;
     }
 
+    const submit = () => {
+        transition({ nextStep : ''}, { action : 'submit' })
+    }
+
     useEffect(() => {
         if (!signal) return;
         if (signal.action === 'undo') undo();
+        if (signal.action === 'submit') submit();
     }, [signal])
 
     const saveTeam = () => {

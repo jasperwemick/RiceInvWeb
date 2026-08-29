@@ -5,7 +5,7 @@ import { GenerateBracket } from "../../../components/Bracket/GenerateBracket";
 
 interface SetPlayoffsProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
+    transition : (data : TournamentData, ss ? : { action : string }) => void;
     animInProgress : boolean;
     stageNum : number;
     data : TournamentData;
@@ -14,7 +14,7 @@ interface SetPlayoffsProps {
 
 export default function SetPlayoffs({itemRef, transition, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
     
-    const [numPlayers, setNumPlayers] = useState(16);
+    const [numPlayers, setNumPlayers] = useState(participants.length);
     const [stage, setStage] = useState<TournamentStage>(null);
 
     useEffect(() => {
@@ -22,6 +22,10 @@ export default function SetPlayoffs({itemRef, transition, animInProgress, stageN
             setStage(data.stages.find(x => x.order === stageNum))
         }
     }, [data]);
+
+    useEffect(() => {
+        console.log(participants);
+    }, [numPlayers])
     
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>

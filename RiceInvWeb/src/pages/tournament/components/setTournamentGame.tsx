@@ -8,7 +8,7 @@ import ListImageItem from "../../../components/SelectableList/listImageItem";
 
 interface SetTournamentGameProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
+    transition : (data : TournamentData, ss ? : { action : string }) => void;
     animInProgress : boolean;
 }
 

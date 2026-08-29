@@ -83,13 +83,6 @@ export interface Tournament {
     participants : string[] | Profile[] | Team[];
 }
 
-export interface TournamentMatch {
-    matchNumber : number;
-    matchSet : string;
-    winningTeam : Team;
-    duration : number;
-}
-
 export interface TournamentSet {
     setId : number;
     bestOf : number;
@@ -102,6 +95,13 @@ export interface TournamentSet {
     parents ? : string[];
     lowerSetID ? : number;
     nextSetID ? : number;
+}
+
+export interface TournamentMatch {
+    matchId : number;
+    matchSet : TournamentSet;
+    winner : Profile[] | Team[];
+    duration : number;
 }
 
 export interface Stage {
@@ -119,6 +119,7 @@ export interface TournamentStage {
 
 export interface TournamentSubStage {
     stage : number;
+    order : number;
     name : string;
     format : string;
     members : Profile[] | Team[];

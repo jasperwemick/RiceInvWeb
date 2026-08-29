@@ -3,7 +3,7 @@ import type { TournamentData } from "../createTournamentPage";
 
 interface SetTeamsProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
+    transition : (data : TournamentData, ss ? : { action : string }) => void;
     data : TournamentData
 }
 
@@ -16,7 +16,7 @@ export default function SetTeams({ itemRef, transition, data } : SetTeamsProps) 
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-button-option'}>
-                    <button onClick={() => transition({ nextStep : 'CreateTeams' }, { undo : false })}>Yes</button>
+                    <button onClick={() => transition({ nextStep : 'CreateTeams' }, { action : 'undo' })}>Yes</button>
                     {data.gameMode.teamSize < 2 && <button onClick={() => transition({ nextStep : 'SetStages' })}>No</button>}
                 </div>
             </div>

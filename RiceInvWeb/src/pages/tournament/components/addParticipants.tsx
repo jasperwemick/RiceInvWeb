@@ -5,7 +5,7 @@ import SelectableItemsList from "../../../components/SelectableList/selectableIt
 
 interface CreateStartProps {
     itemRef : RefObject<HTMLLIElement>
-    transition : (data : TournamentData, ss ? : { undo : boolean }) => void;
+    transition : (data : TournamentData, ss ? : { action : string }) => void;
     animInProgress : boolean;
     profiles : Profile[]; 
     data : TournamentData
