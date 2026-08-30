@@ -71,7 +71,12 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
     }, [subGroup.members.length])
 
     const undo = () => {
-        dispatcher({ type : 'UNDO_SIDESTEP', data : { subStages : [subGroup], sets : tSets }, ss : 'AddTournamentSets'})
+        dispatcher({ 
+            type : 'UNDO_SIDESTEP', 
+            data : { subStages : [subGroup], sets : tSets }, 
+            ss : 'AddTournamentSets',
+            index : order
+        })
     }
 
     const submit = () => {
@@ -98,11 +103,11 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
         if (signal.action === 'submit') submit();
     }, [signal]);
 
-    // useEffect(() => {
-    //     addTSets(tSets.map((set) => {
-    //         return { ...set, subStageOrder : order }
-    //     }));
-    // }, [order])
+    useEffect(() => {
+        addTSets(tSets.map((set) => {
+            return { ...set, subStageOrder : order }
+        }));
+    }, [order])
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>

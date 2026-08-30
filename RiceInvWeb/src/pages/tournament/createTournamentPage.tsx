@@ -50,7 +50,7 @@ export type WizardAction =
     | { type: 'UNDO_STEP'; data : TournamentData; activeSSCount ? : number; isStage ? : boolean }
     | { type: 'SIDESTEP'; data: TournamentData; ss : string }
     | { type: 'SUBMIT_SIDESTEP'; data : TournamentData; ss : string }
-    | { type: 'UNDO_SIDESTEP'; data : TournamentData; ss : string }
+    | { type: 'UNDO_SIDESTEP'; data : TournamentData; ss : string; index : number }
     | { type: 'ANIM_REMOVE_DONE' }
     | { type: 'ANIM_ADD_DONE'; isSideStep: boolean }
     | { type: 'SIGNAL_HANDLED' };
@@ -264,13 +264,15 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
         case 'UNDO_SIDESTEP' : {
             const newReceivedCount = state.receivedSubmissions + 1;
             const sidesteps = [...state.sideSteps];
+            const cleared = sidesteps.filter(x => x === action.ss).splice(action.index, 1);
+            const filtered = sidesteps.filter(x => x !== action.ss).concat(cleared);
+
             const localData = removeFields(state.tournament, action.data);
 
             const history = state.ssHistory.map(
                 x => x.sideStep === action.ss && x.step === state.step
                 ? x.num > 1 ? { ...x, num : x.num - 1 } : undefined : x
             ).filter(x => x !== undefined);
-            console.log("UNDO SIDESTEP LOCAL FILTERED DATA ", localData);
             // Undo primary step if this is the last side step to undo
             if (newReceivedCount >= state.expectedSubmissions && state.pendingTransition) {
                 return commitPrevStep(
@@ -288,7 +290,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
                 ...state,
                 tournament : localData,
                 ssHistory : history,
-                sideSteps : sidesteps.filter(x => x !== action.ss),
+                sideSteps : filtered,
                 sideStepIndex : state.sideStepIndex - 1,
                 receivedSubmissions : newReceivedCount
             }
@@ -534,7 +536,7 @@ export default function CreateTournamentPage() {
                                 st.sidesteps?.map((sst, j) => {
                                     return sideSteps.includes(sst.key) && step === sst.parentKey &&
                                     <sst.Component 
-                                    key={i + j + 30} 
+                                    key={i + j + 999} // Temporary bs
                                     itemRef={getSideRef(j)} 
                                     data={tournament} 
                                     signal={ssSignal} 
