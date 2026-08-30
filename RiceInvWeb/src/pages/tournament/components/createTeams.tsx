@@ -69,6 +69,7 @@ export default function CreateTeams({ itemRef, dispatcher, animInProgress, parti
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
             <div className={'tournament-configuration-box-header'} >
+                <button onClick={undo}>{`X`}</button>
                 <p>Team Builder</p>
             </div>
             <div className={'tournament-configuration-box-body'}>

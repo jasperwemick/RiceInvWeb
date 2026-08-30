@@ -70,7 +70,6 @@ export default function GroupTable({ groupSize, members, stageNum, tableNum, set
             }
             return '';
         }));
-        console.log(setList);
         if (interactive) setSets(setList);
     }, [groupSize])
 

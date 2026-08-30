@@ -81,7 +81,8 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
     const undo = () => {
         dispatcher({
             type : 'UNDO_STEP',
-            data : { stages : tournamentStageData }
+            data : { stages : tournamentStageData },
+            isStage : false
         })
     }
 
@@ -90,8 +91,9 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
             type : 'STEP', 
             data : { 
                 step : `Set${tournamentStageData.find(x => x.order === 0)?.stageType}`, 
-                stages : tournamentStageData 
-            } 
+                stages : tournamentStageData,
+            },
+            isStage : true
         });
     }
 
@@ -153,7 +155,7 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
         
         return stages.map((stage, i) => {
             return (
-                <ComplexListItem item={stage} tournamentData={tournamentStageData} setTournamentData={setTournamentStageData} index={i}/>
+                <ComplexListItem key={i} item={stage} tournamentData={tournamentStageData} setTournamentData={setTournamentStageData} index={i}/>
             )
         });
     }
@@ -165,6 +167,7 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
     
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
+            <button onClick={undo}>Back</button>
             <div className={'tournament-configuration-box-header'} >
                 <p>How many Stages?</p>
             </div>

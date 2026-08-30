@@ -27,7 +27,12 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     const undo = () => {
-        dispatcher({type : 'UNDO_STEP', data : { isStage : false }})
+        dispatcher({
+            type : 'UNDO_STEP', 
+            data : { }, 
+            activeSSCount : groups.length, 
+            isStage : true
+        })
     }
 
     useEffect(() => {
@@ -59,8 +64,16 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
 
     const submitGroups = () => {
         const nextStage = data.stages.find(x => x.order === stageNum + 1)
+        console.log("stage num, ", stageNum);
         if (nextStage) {
-            dispatcher({type : 'STEP', data : {step : `Set${nextStage.stageType}`, isStage : true}})
+            dispatcher({
+                type : 'STEP', 
+                data : {
+                    step : `Set${nextStage.stageType}`, 
+                },
+                activeSSCount : groups.length,
+                isStage : true
+            });
         }
     }
 
@@ -81,6 +94,7 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
 
     return (
     <li className={'tournament-configuration-box'} ref={itemRef}>
+        <button onClick={undo}>Back</button>
         <div className={'tournament-configuration-box-header'} >
             <p>Set Group Size</p>
         </div>

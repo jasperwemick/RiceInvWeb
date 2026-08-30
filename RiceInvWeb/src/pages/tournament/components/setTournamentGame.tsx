@@ -1,5 +1,5 @@
 import { useEffect, useState, type RefObject } from "react";
-import type { TournamentData } from "../createTournamentPage";
+import type { TournamentData, WizardAction } from "../createTournamentPage";
 import type { Game, GameMode } from "../../../data/types";
 import apiFetch from "../../../util/fetch";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
@@ -7,15 +7,20 @@ import ListImageItem from "../../../components/SelectableList/listImageItem";
 
 
 interface SetTournamentGameProps {
-    itemRef : RefObject<HTMLLIElement>
+    itemRef : RefObject<HTMLLIElement>;
+    dispatcher : React.ActionDispatch<[action: WizardAction]>;
+    data : TournamentData
     animInProgress : boolean;
 }
 
-export default function SetTournamentGame({ itemRef, animInProgress } : SetTournamentGameProps) {
+export default function SetTournamentGame({ itemRef, animInProgress, dispatcher, data } : SetTournamentGameProps) {
 
     const [games, setGames] = useState<Game[]>([]);
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);
     const [selectedGameMode, setSelectedGameMode] = useState<GameMode | null>(null);
+
+
+    
 
     useEffect(() => {
 
@@ -34,16 +39,20 @@ export default function SetTournamentGame({ itemRef, animInProgress } : SetTourn
 
     useEffect(() => {
         setSelectedGameMode(null);
-    }, [selectedGame])
+    }, [selectedGame]);
 
-    const submitGame = () => {
-        if (!selectedGameMode) return;
-        transition({nextStep : 'AddParticipants', gameMode : selectedGameMode});
+    const undo = () => {
+        dispatcher({ type : 'UNDO_STEP', data : { gameMode : selectedGameMode } })
+    }
+
+    const submit = () => {
+        dispatcher({type : 'STEP', data : {step : 'AddParticipants', gameMode : selectedGameMode}});
     }
 
     
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
+            <button onClick={undo}>Back</button>
             <div className={'tournament-configuration-box-header'}>
                 <p>Choose a Game</p>
             </div>
@@ -71,7 +80,7 @@ export default function SetTournamentGame({ itemRef, animInProgress } : SetTourn
                     getLabel={(x) => x.mode}/>}
                     </div>
                 </div>}
-                <button onClick={submitGame}>Continue</button>
+                {selectedGameMode && <button onClick={submit}>Continue</button>}
             </div>
         </li>
     )

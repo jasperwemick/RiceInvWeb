@@ -9,15 +9,28 @@ interface SetTeamsProps {
 
 export default function SetTeams({ itemRef, dispatcher, data } : SetTeamsProps) {
     
+    const undo = () => {
+        dispatcher({
+            type : 'UNDO_STEP',
+            data : { }
+        })
+    }
+
+    const submit = (choice : string) => {
+        if (choice === 'Y') dispatcher({type : 'SIDESTEP', data : {}, ss : 'CreateTeams'});
+        else dispatcher({type : 'STEP', data : { step : 'SetStages' }});
+    }
+
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
+            <button onClick={undo}>Back</button>
             <div className={'tournament-configuration-box-header'} >
                 <p>Are there teams?</p>
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-button-option'}>
-                    <button onClick={() => dispatcher({type : 'SIDESTEP', data : {step: 'CreateTeams' }})}>Yes</button>
-                    {data.gameMode.teamSize < 2 && <button onClick={() => dispatcher({type : 'STEP', data : { step : 'SetStages' }})}>No</button>}
+                    <button onClick={() => submit('Y')}>Yes</button>
+                    {data.gameMode.teamSize < 2 && <button onClick={() => submit('N')}>No</button>}
                 </div>
             </div>
         </li>

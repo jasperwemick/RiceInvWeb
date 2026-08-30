@@ -92,7 +92,7 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
     // }, [tSets]);
 
     useEffect(() => {
-        console.log('Add tournamnet sets, signal receiveed', signal)
+        console.log('Add tournamnet sets, signal received', signal)
         if (!signal) return;
         if (signal.action === 'undo') undo();
         if (signal.action === 'submit') submit();

@@ -17,6 +17,18 @@ export default function SetPlayoffs({itemRef, dispatcher, animInProgress, stageN
     const [numPlayers, setNumPlayers] = useState(participants.length);
     const [stage, setStage] = useState<TournamentStage>(null);
 
+    const undo = () => {
+        dispatcher({
+            type : 'UNDO_STEP',
+            data : {},
+            isStage : true
+        })
+    }
+
+    const submit = () => {
+
+    }
+
     useEffect(() => {
         if (data.stages) {
             setStage(data.stages.find(x => x.order === stageNum))
@@ -29,6 +41,7 @@ export default function SetPlayoffs({itemRef, dispatcher, animInProgress, stageN
     
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
+            <button onClick={undo}>Back</button>
             <div className={'tournament-configuration-box-header'} >
                 <p>Set the Playoff Bracket</p>
             </div>
