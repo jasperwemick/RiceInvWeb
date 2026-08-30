@@ -46,7 +46,13 @@ export default function SetPlayoffs({itemRef, dispatcher, animInProgress, stageN
                 <p>Set the Playoff Bracket</p>
             </div>
             <div className={'tournament-configuration-box-body'}>
-                {stage ? <GenerateBracket type={stage.format} numPlayers={numPlayers} gameTag={'placeholder'}/> : <></>}
+                {stage ? 
+                <GenerateBracket 
+                type={stage.format} 
+                players={participants} 
+                gameTag={'placeholder'}
+                sets={data.sets}/> : 
+                <></>}
             </div>
         </li>
     )

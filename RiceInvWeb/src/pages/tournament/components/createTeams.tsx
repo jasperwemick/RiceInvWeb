@@ -22,7 +22,7 @@ export default function CreateTeams({ itemRef, dispatcher, animInProgress, parti
     const [selectedTeams, setSelectedTeams] = useState<Team[]>([]);
 
     const undo = () => {
-        dispatcher({type : 'UNDO_SIDESTEP', data : { participants : [...teams] }, ss : 'CreateTeams'});
+        dispatcher({type : 'UNDO_SIDESTEP', data : { participants : [...teams] }, ss : 'CreateTeams', index : 0});
         setTeamName('');
         setTeamMembers([]);
         setSelectedTeams([]);

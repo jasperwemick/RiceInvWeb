@@ -17,7 +17,7 @@
     display: flex;
     align-items: center;
     justify-content: space-around;
-    width: 970.5px;
+    width: 100vw;
     height: fit-content;
 }
 

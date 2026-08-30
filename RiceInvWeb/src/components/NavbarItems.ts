@@ -24,31 +24,26 @@ export const NavbarItems : NavbarItem[] = [
     },
     {
         class: 'nav-button',
-        pathTo: '/brawl',
-        text: 'Brawlhalla',
-    },
-    {
-        class: 'nav-button',
         pathTo: '/tournament',
         text: 'Tournaments',
     },
-    {
-        class: 'nav-button',
-        pathTo: '/blast',
-        text: 'Bull**** Blast',
-        dropdownItems: [
-            {
-                class: 'nav-drop-button',
-                pathTo: '/blast/jeopardy',
-                text: 'Jeopardy',
-            },
-            {
-                class: 'nav-drop-button',
-                pathTo: '/blast/amongus',
-                text: 'Among Us',
-            },
-        ]
-    }
+    // {
+    //     class: 'nav-button',
+    //     pathTo: '/blast',
+    //     text: 'Bull**** Blast',
+    //     dropdownItems: [
+    //         {
+    //             class: 'nav-drop-button',
+    //             pathTo: '/blast/jeopardy',
+    //             text: 'Jeopardy',
+    //         },
+    //         {
+    //             class: 'nav-drop-button',
+    //             pathTo: '/blast/amongus',
+    //             text: 'Among Us',
+    //         },
+    //     ]
+    // }
 ]
 
 export const LogItems : NavbarItem[] = [

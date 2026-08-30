@@ -12,15 +12,16 @@ interface BracketMapProps {
     highTree : BracketNode | null;
     lowTree : BracketNode | null;
     maxDepth : number;
+    sets : TournamentSet[];
 }
 
-export default function BracketMap({ tid, tag, highTree, lowTree, maxDepth } : BracketMapProps) {
+export default function BracketMap({ tid, tag, highTree, lowTree, maxDepth, sets } : BracketMapProps) {
 
     // const [toggleEditor , setToggleEditor] = useState(false)
 
     // const [editorData, setEditorData] = useState<TournamentSet | null>(null)
 
-    const [sets, setSets] = useState<TournamentSet[]>([])
+    // const [sets, setSets] = useState<TournamentSet[]>([])
 
     const upperBracketArray = highTree ? treeToArray(highTree, maxDepth) : []
     const lowerBracketArray = lowTree ? treeToArray(lowTree, maxDepth) : []
@@ -43,7 +44,6 @@ export default function BracketMap({ tid, tag, highTree, lowTree, maxDepth } : B
     // }, [!toggleEditor])
 
     const getRef = useGetRef<HTMLDivElement>();
-
 
     return (
         <React.Fragment>

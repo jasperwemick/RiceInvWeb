@@ -19,21 +19,21 @@ export default function BracketSet({ setData, ref } : { setData : TournamentSet 
     const [localData, setLocalData] = useState<TournamentSet | null>(null);
     const [teamRecords, setTeamRecords] = useState<Record<string, number>>({});
 
-    useEffect(() => {
-        // if (setData) {
-        //     const matches = setData.matches;
-        //     const wins = matches.reduce((accum, match) => {
-        //         accum[match.winningTeam.name] = (accum[match.winningTeam.name] ?? 0) + 1;
-        //         return accum;
-        //     }, {} as Record<string, number>)
-        //     setTeamRecords(wins);
-        // }
-    }, [setData])
+    // useEffect(() => {
+    //     if (setData) {
+    //         const matches = setData.matches;
+    //         const wins = matches.reduce((accum, match) => {
+    //             accum[match.winner.name] = (accum[match.winner.name] ?? 0) + 1;
+    //             return accum;
+    //         }, {} as Record<string, number>)
+    //         setTeamRecords(wins);
+    //     }
+    // }, [setData])
     
-    if (localData) {
+    if (setData) {
         return (
             <div className="bracket-set-shell" ref={ref}> 
-                <div className={`bracket-set-box open-bracket-slot`}></div>
+                <div className={`bracket-set-box open-bracket-slot`}>{setData.participants.toString()}</div>
                 {/* <MapSetInfo teamRecords={teamRecords} setData={localData}/> */}
             </div>
         );
@@ -41,7 +41,7 @@ export default function BracketSet({ setData, ref } : { setData : TournamentSet 
     else {
         return (
             <div className="bracket-set-shell" ref={ref}>
-                <div className={`bracket-set-box open-bracket-slot`}></div>
+                <div className={`bracket-set-box open-bracket-slot`}>asdf</div>
             </div>
         );
     }

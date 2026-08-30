@@ -14,7 +14,7 @@ import AddTournamentSets from "./components/AddTournamentSets";
 import React from "react";
 import SetPlayoffs from "./components/SetPlayoffs";
 
-interface Placeholders {
+export interface Placeholders {
     subId : number;
     subSize : number;
     points : number;
@@ -459,7 +459,7 @@ export default function CreateTournamentPage() {
         defineStep({ key : 'SetPlayoffs', Component : SetPlayoffs, props : { 
             animInProgress, 
             stageNum : currentStage, 
-            participants : currentStage > 0 ? placeholders : tournament?.participants
+            participants : /*currentStage > 0 ? placeholders : */tournament?.participants
         }})
     ]
 
