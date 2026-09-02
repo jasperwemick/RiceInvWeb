@@ -1,5 +1,6 @@
 import React, { useState, useRef, type Dispatch, type SetStateAction } from "react"
 import type { TournamentSet } from "../../data/types";
+import { ObjectId } from "bson";
 
 interface BracketSetEditorProps {
     editorData : TournamentSet;
@@ -30,15 +31,12 @@ export const BracketSetEditor = ({editorData, setEditorData, toggleEditor, setTo
 
     const resetEditor = () => {
         setEditorData({
-            setId : 0,
-            tournament : '',
+            id : new ObjectId().toHexString(),
+            order : 0,
             bestOf : 3,
-            bracket : false,
-            teams : [],
             parents : [],
             lowerSetID : -1,
             nextSetID : -1,
-            matches : []
         })
     }
 

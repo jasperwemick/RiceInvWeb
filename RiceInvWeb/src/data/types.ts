@@ -85,20 +85,21 @@ export interface Placeholder {
     points : number;
 }
 
+export type TournamentParticipant = Profile | Team | Placeholder;
+
 export interface Tournament {
     name : string;
     gameMode : string;
-    participants : string[] | Profile[] | Team[];
+    participants : TournamentParticipant[];
 }
 
 export interface TournamentSet {
-    setId : number;
+    id : string;
+    order : number;
+    subStageId : string;
     bestOf : number;
-    stage ? : TournamentStage;
-    stageOrder : number;
-    subStageOrder : number;
     setName ? : string;
-    participants : Profile[] | Team[] | Placeholder[];
+    participants : TournamentParticipant[];
     participantType : string;
     parents ? : string[];
     lowerSetID ? : number;
@@ -106,9 +107,10 @@ export interface TournamentSet {
 }
 
 export interface TournamentMatch {
-    matchId : number;
-    matchSet : TournamentSet;
-    winner : Profile[] | Team[];
+    id : string;
+    setId : string;
+    order : number;
+    winner : TournamentParticipant;
     duration : number;
 }
 
@@ -118,19 +120,21 @@ export interface Stage {
 }
 
 export interface TournamentStage {
-    tournament ? : string | Tournament;
+    id : string;
     order : number;
+    tournament ? : string | Tournament;
     stageType : string;
     format : string;
     stageName ? : string;
 }
 
 export interface TournamentSubStage {
-    stage : number;
+    id : string;
     order : number;
+    stage : number;
     name : string;
     format : string;
-    members : Profile[] | Team[];
+    members : TournamentParticipant[];
     qualificationSlots ? : number;
 }
 

@@ -63,7 +63,7 @@ interface AddTournamentSetsProps {
 
 export default function AddTournamentSets({ itemRef, dispatcher, animInProgress, order, subGroup, data, signal } : AddTournamentSetsProps) {
 
-    const [tSets, addTSets] = useState<TournamentSet[]>([]);
+    const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStageId === subGroup.id) : []);
     const [slots, setSlots] = useState<number>(0);
 
     useEffect(() => {
@@ -71,6 +71,7 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
     }, [subGroup.members.length])
 
     const undo = () => {
+        console.log('Remove these sets: ', tSets.flatMap(x => x.id));
         dispatcher({ 
             type : 'UNDO_SIDESTEP', 
             data : { subStages : [subGroup], sets : tSets }, 
@@ -81,20 +82,9 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
 
     const submit = () => {
         const stg : TournamentSubStage = { ...data.subStages.find(x => x === subGroup), qualificationSlots : slots}
+        console.log('Add these sets: ', tSets.flatMap(x => x.id));
         dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : 'AddTournamentSets' })
     }
-
-    // useEffect(() => {
-    //     let setsToAdd = tSets;
-    //     if (data.sets) {
-    //         setsToAdd = tSets.filter(x => !data.sets.find(
-    //             y => y.stageOrder === x.stageOrder &&
-    //             y.subStageOrder === x.subStageOrder &&
-    //             y.setId === x.setId
-    //         ));
-    //     }
-    //     transition({ nextStep : '', sets : [...(data.sets ? data.sets : []), ...setsToAdd]})
-    // }, [tSets]);
 
     useEffect(() => {
         console.log('Add tournamnet sets, signal received', signal)
@@ -102,6 +92,10 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
         if (signal.action === 'undo') undo();
         if (signal.action === 'submit') submit();
     }, [signal]);
+
+    useEffect(() => {
+        console.log(`${order} sets ${tSets.flatMap(x => x.id)}`)
+    }, [tSets.length]);
 
     // useEffect(() => {
     //     addTSets(tSets.map((set) => {
@@ -121,8 +115,8 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
                     <GroupTable 
                     groupSize={subGroup.members.length} 
                     members={subGroup.members} 
-                    stageNum={subGroup.stage}
-                    tableNum={order}
+                    subId={subGroup.id}
+                    sets={tSets}
                     setSets={addTSets} 
                     interactive={true}/>}
                 </div>

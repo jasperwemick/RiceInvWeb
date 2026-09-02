@@ -1,5 +1,5 @@
 import { createRef, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState, type RefObject } from "react"
-import type { GameMode, Placeholder, Profile, Team, Tournament, TournamentMatch, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types";
+import type { GameMode, Placeholder, Profile, Team, Tournament, TournamentMatch, TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types";
 import CreateStart from "./components/createStart";
 import useGetRef from "../../hooks/useGetRef";
 import AddParticipants from "./components/addParticipants";
@@ -37,6 +37,7 @@ interface WizardState {
     expectedSubmissions: number;
     receivedSubmissions: number;
     stepIsStage : boolean;
+    cache : Record<string, any>;
 }
 
 export type WizardAction =
@@ -65,14 +66,15 @@ const initialWizardState : WizardState = {
     pendingTransition : null,
     expectedSubmissions : 0,
     receivedSubmissions : 0,
-    stepIsStage : false
+    stepIsStage : false,
+    cache : {}
 };
 
 export interface TournamentData {
     step ? : string;
     name ? : string;
     gameMode ? : GameMode;
-    participants ? : Profile[] | Team[];
+    participants ? : TournamentParticipant[];
     particpantType ? : 'Profile' | 'Team';
     stages ? : TournamentStage[];
     subStages ? : TournamentSubStage[];
@@ -89,10 +91,10 @@ function assignField<K extends keyof TournamentData>(
 
 const KEYS: Partial<Record<keyof TournamentData, string>> = {
     participants : 'name',
-    sets: 'setId',
-    matches: 'matchId',
-    stages : 'order',
-    subStages: 'order',
+    sets: 'id',
+    matches: 'id',
+    stages : 'id',
+    subStages: 'id',
 };
 
 function removeFields(baseData : TournamentData | null, toRemove : Partial<TournamentData>) : TournamentData {
@@ -109,9 +111,7 @@ function removeFields(baseData : TournamentData | null, toRemove : Partial<Tourn
     for (const key of Object.keys(toRemove) as (keyof TournamentData)[]) {
         const marked = toRemove[key];
         const id = KEYS[key]
-
         if (Array.isArray(marked) && id) {
-            console.log('REMOVE FIELDS FROM ARRAY ', marked[key]);
             assignField(localData, key, removeById(localData[key] as any[], marked, id))
         } else {
             assignField(localData, key, undefined)
@@ -124,10 +124,7 @@ function removeFields(baseData : TournamentData | null, toRemove : Partial<Tourn
 function mapParticipantPlaceholder(state : WizardState, data : TournamentData) {
     return data.subStages.flatMap((sStg, i) => {
         const sStgMatches = data.matches ? data.matches.filter((match) => {
-            return data.sets.filter((set) => {
-                return set.stageOrder === state.currentStage &&
-                set.subStageOrder === i
-            })?.find(set => set === match.matchSet)
+            return data.sets.find(set => set.id === match.setId)
         }) : [];
         
         return sStg.members.map((member) : Placeholder => {

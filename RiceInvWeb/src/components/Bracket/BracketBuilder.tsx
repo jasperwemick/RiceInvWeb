@@ -2,9 +2,9 @@ import React, { useEffect, useRef, useState } from "react"
 import BracketSet from "./BracketSet"
 import useAuth from "../../hooks/useAuth"
 import type { BracketNode } from "./Auxillery/tree"
-import type { Placeholder, Profile, Team, TournamentSet, TournamentStage } from "../../data/types"
-import useGetRef from "../../hooks/useGetRef";
+import type { Placeholder, Profile, Team, TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types"
 import { useXarrow, Xarrow, Xwrapper } from "../../util/xarrow-compat"
+import { ObjectId } from "bson"
 
 interface BracketBuilderProps {
     nodeArr : BracketNode[][];
@@ -12,10 +12,11 @@ interface BracketBuilderProps {
     sets : TournamentSet[];
     setSets : React.Dispatch<React.SetStateAction<TournamentSet[]>>;
     stage : TournamentStage;
-    players : Profile[] | Team[] | Placeholder[];
+    subStage : TournamentSubStage;
+    players : TournamentParticipant[];
 }
 
-export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, players } : BracketBuilderProps) {
+export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, subStage, players } : BracketBuilderProps) {
 
     const { auth } = useAuth();
 
@@ -27,19 +28,15 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
 
         let realCount = 0;
         let capacity = 0;
-        console.log(sortedSeeds, " SORTED SEEDS");
-        console.log(nodeArr, ' node arr');
-        console.log()
 
         const newSets : TournamentSet[] = [];
 
         nodeArr.reverse().map((level, i) => {
             level.map((node, j) => {
                 const bracketWidth = level.length
-                const setPlayers : (Profile | Team | Placeholder)[] = Array.from({ length: 2 }, () => null);
+                const setPlayers : TournamentParticipant[] = Array.from({ length: 2 }, () => null);
 
                 if (realCount === 0) { // Start of bracket
-                    console.log('what do mean');
                     if (sortedSeeds.length > bracketWidth * 2) {
                         setPlayers[0] = sortedSeeds[bracketWidth + j];
                         setPlayers[1] = sortedSeeds[bracketWidth - 1 - j];
@@ -61,33 +58,42 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                     }
                     capacity += 1
                 }
+                else {
+                    const leftPrev = node.left?.value;
+                    const rightPrev = node.right?.value
+                    setPlayers[0] = {
+                        def : 'Placeholder',
+                        name : `${leftPrev} W`,
+                        points : 0
+                    }
+                    setPlayers[1] = {
+                        def : 'Placeholder',
+                        name : `${rightPrev} W`,
+                        points : 0
+                    }
+                }
 
                 if (stage.format.includes('Single')) {}
 
                 if (!node) {}
 
                 const newSet : TournamentSet = {
-                    setId : node.value,
-                    stage : stage,
-                    stageOrder : stage.order,
-                    subStageOrder : 0,
+                    id : new ObjectId().toHexString(),
+                    order : node.value,
+                    subStageId : subStage.id,
                     bestOf : 5,
                     participants : setPlayers.filter((x): x is Placeholder => x != null && x.def === 'Placeholder'),
                     participantType : 'Placeholder'
                 }
-                realCount += 1;
                 newSets.push(newSet);
             })
+
+            if (level.length > 0) realCount += 1;
         })
 
         setSets(prev => [...prev, ...newSets]);
 
     }, [players.length, nodeArr.length]);
-
-    useEffect(() => {
-        console.log("Let's see those sets!");
-        console.log(sets)
-    }, [sets.length])
 
     return (
         <Xwrapper>
@@ -97,7 +103,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                     { level.length ? level.map((node, j) => {
                         return (
                             <React.Fragment key={j}>
-                                <BracketSet bracketSet={sets.find(x => x.setId === node.value)} ref={refMap(node.value)}/>
+                                <BracketSet bracketSet={sets.find(x => x.order === node.value)} ref={refMap(node.value)}/>
                                 {
                                 node.parent ?
                                 <Xarrow 

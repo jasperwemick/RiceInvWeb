@@ -2,6 +2,7 @@ import React, { useEffect, useState, type RefObject } from "react";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
 import type { Stage, TournamentStage } from "../../../data/types";
+import { ObjectId } from "bson";
 
 interface ComplexListItemProps {
     item : Stage;
@@ -105,6 +106,7 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
         if (tournamentStageData.length === 0) {
             setTournamentStageData(stages.map((stg, index) => {
                 return {
+                    id : new ObjectId().toHexString(),
                     order : index,
                     stageType : stg.stage,
                     format : null
@@ -115,6 +117,7 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
             setTournamentStageData(stages.map((stg, index) => {
                 if (tournamentStageData[index] && stg.stage != tournamentStageData[index].stageType) {
                     return {
+                        id : new ObjectId().toHexString(),
                         order : index,
                         stageType : stg.stage,
                         format : null,

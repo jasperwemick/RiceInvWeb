@@ -3,6 +3,7 @@ import type { TournamentData, WizardAction } from "../createTournamentPage";
 import type { Profile, Team, TournamentStage, TournamentSubStage } from "../../../data/types";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 import GroupTable from "./GroupTable";
+import { ObjectId } from "bson";
 
 
 interface SetGroupsProps {
@@ -52,6 +53,7 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
 
     const confirmGroup = () => {
         setGroups([...groups, {
+            id : new ObjectId().toHexString(),
             order : groups.length,
             stage : stage?.order,
             name : groupName,

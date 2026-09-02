@@ -4,16 +4,17 @@ import './style/Bracket.css'
 import { type BracketNode, GenerateBracketTree, getMaxDepth, treeToArray } from './Auxillery/tree'
 import useAuth from '../../hooks/useAuth'
 import BracketMap from "./BracketMap"
-import type { Placeholder, Profile, Team, TournamentSet, TournamentStage } from "../../data/types"
+import type { TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types"
 
 interface GenerateBracketProps {
     stage : TournamentStage;
-    players : Profile[] | Team[] | Placeholder[];
+    subStage : TournamentSubStage;
+    players : TournamentParticipant[];
     sets : TournamentSet[];
     setSets : React.Dispatch<React.SetStateAction<TournamentSet[]>>
 }
 
-export const GenerateBracket = ({stage, players, sets, setSets} : GenerateBracketProps) => {
+export const GenerateBracket = ({stage, subStage, players, sets, setSets} : GenerateBracketProps) => {
 
     const [highTree, setHighTree] = useState<BracketNode | null>(null);
     const [lowTree, setLowTree] = useState<BracketNode | null>(null);
@@ -49,11 +50,11 @@ export const GenerateBracket = ({stage, players, sets, setSets} : GenerateBracke
             }
         }
 
-        setMaxDepth(depth)
-        setAllNodes(treeArr)
+        setMaxDepth(depth);
+        setAllNodes(treeArr);
 
-        setHighTree(upperBracketTree)
-        setLowTree(lowerBracketTree)
+        setHighTree(upperBracketTree);
+        setLowTree(lowerBracketTree);
 
     }, [stage.format, players.length])
     
@@ -61,6 +62,7 @@ export const GenerateBracket = ({stage, players, sets, setSets} : GenerateBracke
         <div className="bracket-container">
             <BracketMap 
             stage={stage}
+            subStage={subStage}
             highTree={highTree} 
             lowTree={lowTree} 
             maxDepth={maxDepth}

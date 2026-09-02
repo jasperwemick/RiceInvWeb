@@ -1,7 +1,8 @@
 import { useEffect, useState, type RefObject } from "react";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
-import type { Placeholder, Profile, Team, TournamentSet, TournamentStage } from "../../../data/types";
+import type { Placeholder, Profile, Team, TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../../data/types";
 import { GenerateBracket } from "../../../components/Bracket/GenerateBracket";
+import { ObjectId } from "bson";
 
 interface SetPlayoffsProps {
     itemRef : RefObject<HTMLLIElement>
@@ -9,13 +10,14 @@ interface SetPlayoffsProps {
     animInProgress : boolean;
     stageNum : number;
     data : TournamentData;
-    participants : Profile[] | Team[] | Placeholder[];
+    participants : TournamentParticipant[];
 }
 
 export default function SetPlayoffs({itemRef, dispatcher, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
     
     const [numPlayers, setNumPlayers] = useState(participants.length);
     const [stage, setStage] = useState<TournamentStage>(null);
+    const [brackets, setBrackets] = useState<TournamentSubStage[]>([]);
     const [sets, setSets] = useState<TournamentSet[]>([]);
 
     const undo = () => {
@@ -50,6 +52,14 @@ export default function SetPlayoffs({itemRef, dispatcher, animInProgress, stageN
                 {stage ? 
                 <GenerateBracket 
                 stage={stage} 
+                subStage={{
+                    id : new ObjectId().toHexString(),
+                    order : 0,
+                    stage : stage?.order,
+                    name : '',
+                    format : stage?.format,
+                    members : participants
+                }}
                 players={participants} 
                 sets={sets}
                 setSets={setSets}/> : 
