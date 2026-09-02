@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import type { TournamentSet } from "../../data/types";
+import type { Placeholder, Profile, Team, TournamentSet } from "../../data/types";
 import { useXarrow } from "../../util/xarrow-compat";
 
 
@@ -13,8 +13,13 @@ function MapSetInfo({ teamRecords, setData } : { teamRecords : Record<string, nu
     })
 }
 
+interface BracketSetProps {
+    bracketSet : TournamentSet,
+    ref : React.RefObject<HTMLDivElement>
+}
 
-export default function BracketSet({ setData, ref } : { setData : TournamentSet | undefined, ref : React.RefObject<HTMLDivElement> }) {
+
+export default function BracketSet({ bracketSet, ref } : BracketSetProps) {
 
     const [localData, setLocalData] = useState<TournamentSet | null>(null);
     const [teamRecords, setTeamRecords] = useState<Record<string, number>>({});
@@ -30,10 +35,12 @@ export default function BracketSet({ setData, ref } : { setData : TournamentSet 
     //     }
     // }, [setData])
     
-    if (setData) {
+    if (bracketSet) {
         return (
             <div className="bracket-set-shell" ref={ref}> 
-                <div className={`bracket-set-box open-bracket-slot`}>{setData.participants.toString()}</div>
+                <div className={`bracket-set-box open-bracket-slot`}>{bracketSet.participants.map((x : Profile | Team | Placeholder) => {
+                    return x.name + '\n';
+                })}</div>
                 {/* <MapSetInfo teamRecords={teamRecords} setData={localData}/> */}
             </div>
         );

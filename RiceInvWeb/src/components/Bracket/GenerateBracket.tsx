@@ -4,16 +4,16 @@ import './style/Bracket.css'
 import { type BracketNode, GenerateBracketTree, getMaxDepth, treeToArray } from './Auxillery/tree'
 import useAuth from '../../hooks/useAuth'
 import BracketMap from "./BracketMap"
-import type { Profile, Team, TournamentSet } from "../../data/types"
+import type { Placeholder, Profile, Team, TournamentSet, TournamentStage } from "../../data/types"
 
 interface GenerateBracketProps {
-    type : string;
-    players : Profile[] | Team[];
-    gameTag : string;
+    stage : TournamentStage;
+    players : Profile[] | Team[] | Placeholder[];
     sets : TournamentSet[];
+    setSets : React.Dispatch<React.SetStateAction<TournamentSet[]>>
 }
 
-export const GenerateBracket = ({type, players, gameTag, sets} : GenerateBracketProps) => {
+export const GenerateBracket = ({stage, players, sets, setSets} : GenerateBracketProps) => {
 
     const [highTree, setHighTree] = useState<BracketNode | null>(null);
     const [lowTree, setLowTree] = useState<BracketNode | null>(null);
@@ -25,14 +25,14 @@ export const GenerateBracket = ({type, players, gameTag, sets} : GenerateBracket
 
     useEffect(() => {
 
-        const bracketTree = GenerateBracketTree(type, players.length)
+        const bracketTree = GenerateBracketTree(stage.format, players.length)
         const depth = getMaxDepth(bracketTree.parent ? bracketTree.parent : bracketTree)
         const treeArr = treeToArray(bracketTree.parent ? bracketTree.parent : bracketTree, depth).flat()
 
         let lowerBracketTree : BracketNode | null = null
         let upperBracketTree : BracketNode | null = null
 
-        if (type.includes('Single')) {
+        if (stage.format.includes('Single')) {
             upperBracketTree = { ...bracketTree }
         }
         else {
@@ -55,17 +55,18 @@ export const GenerateBracket = ({type, players, gameTag, sets} : GenerateBracket
         setHighTree(upperBracketTree)
         setLowTree(lowerBracketTree)
 
-    }, [type, players.length])
+    }, [stage.format, players.length])
     
     return (
         <div className="bracket-container">
             <BracketMap 
-            tag={gameTag} 
-            tid={""} 
+            stage={stage}
             highTree={highTree} 
             lowTree={lowTree} 
             maxDepth={maxDepth}
-            sets={sets}/>
+            sets={sets}
+            setSets={setSets}
+            players={players}/>
         </div>
     )
 }

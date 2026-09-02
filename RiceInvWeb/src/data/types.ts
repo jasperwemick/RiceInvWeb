@@ -77,6 +77,14 @@ export interface Team {
     members : Profile[]
 }
 
+export interface Placeholder {
+    def : 'Placeholder';
+    name : string;
+    subId ? : number;
+    subSize ? : number;
+    points : number;
+}
+
 export interface Tournament {
     name : string;
     gameMode : string;
@@ -90,7 +98,7 @@ export interface TournamentSet {
     stageOrder : number;
     subStageOrder : number;
     setName ? : string;
-    participants : Profile[] | Team[];
+    participants : Profile[] | Team[] | Placeholder[];
     participantType : string;
     parents ? : string[];
     lowerSetID ? : number;

@@ -1,5 +1,5 @@
 import { createRef, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState, type RefObject } from "react"
-import type { GameMode, Profile, Team, Tournament, TournamentMatch, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types";
+import type { GameMode, Placeholder, Profile, Team, Tournament, TournamentMatch, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types";
 import CreateStart from "./components/createStart";
 import useGetRef from "../../hooks/useGetRef";
 import AddParticipants from "./components/addParticipants";
@@ -13,12 +13,6 @@ import SetPlayins from "./components/SetPlayins";
 import AddTournamentSets from "./components/AddTournamentSets";
 import React from "react";
 import SetPlayoffs from "./components/SetPlayoffs";
-
-export interface Placeholders {
-    subId : number;
-    subSize : number;
-    points : number;
-}
 
 interface SideHistoryItem {
     sideStep : string;
@@ -35,7 +29,7 @@ interface WizardState {
     ssSignal: { action?: string } | null;
     tournament: TournamentData | null;
     currentStage: number;
-    placeholders : Placeholders[];
+    placeholders : Placeholder[];
     history: string[];
     ssHistory : SideHistoryItem[],
     animInProgress: boolean;
@@ -127,6 +121,27 @@ function removeFields(baseData : TournamentData | null, toRemove : Partial<Tourn
     return localData;
 }
 
+function mapParticipantPlaceholder(state : WizardState, data : TournamentData) {
+    return data.subStages.flatMap((sStg, i) => {
+        const sStgMatches = data.matches ? data.matches.filter((match) => {
+            return data.sets.filter((set) => {
+                return set.stageOrder === state.currentStage &&
+                set.subStageOrder === i
+            })?.find(set => set === match.matchSet)
+        }) : [];
+        
+        return sStg.members.map((member) : Placeholder => {
+            return {
+                def : 'Placeholder',
+                name : '',
+                subId : i,
+                subSize : sStg.members.length,
+                points : sStgMatches.filter(x => x.winner === member).length
+            }
+        }).sort((a, b) => a.points - b.points).slice(0, sStg.qualificationSlots)
+    })
+}
+
 
 function commitNextStep(state: WizardState, data: TournamentData): WizardState {
     const mergedData = { ...state.tournament, ...data };
@@ -139,22 +154,7 @@ function commitNextStep(state: WizardState, data: TournamentData): WizardState {
         sideStepIndex: 0,
         history: [...state.history, state.step],
         currentStage: state.stepIsStage ? state.currentStage + 1 : state.currentStage,
-        placeholders: (state.stepIsStage && mergedData.subStages) ? mergedData.subStages.flatMap((sStg, i) => {
-            const sStgMatches = mergedData.matches ? mergedData.matches.filter((match) => {
-                return mergedData.sets.filter((set) => {
-                    return set.stageOrder === state.currentStage &&
-                    set.subStageOrder === i
-                })?.find(set => set === match.matchSet)
-            }) : [];
-            
-            return sStg.members.map((member) : Placeholders => {
-                return {
-                    subId : i,
-                    subSize : sStg.members.length,
-                    points : sStgMatches.filter(x => x.winner === member).length
-                }
-            }).sort((a, b) => a.points - b.points).slice(0, sStg.qualificationSlots)
-        }) : [],
+        placeholders: (state.stepIsStage && mergedData.subStages) ? mapParticipantPlaceholder(state, mergedData) : [],
         animInProgress: true,
         pendingTransition: null,
         expectedSubmissions: 0,
@@ -169,8 +169,8 @@ function commitPrevStep(state: WizardState, data: TournamentData) : WizardState 
     const prevStep = prevHistory.pop() ?? state.step;
 
     const prevSSHistory = [...state.ssHistory]
-    const prevSide = prevSSHistory.filter(x => x.step === prevStep)
-    console.log('prev, stages ', state.stepIsStage, ' ', state.currentStage);
+    const prevSide = prevSSHistory.filter(x => x.step === prevStep);
+
     return {
         ...state,
         tournament: filteredData,
@@ -182,22 +182,7 @@ function commitPrevStep(state: WizardState, data: TournamentData) : WizardState 
         }, 0),
         history: prevHistory,
         currentStage: state.stepIsStage ? state.currentStage - 1 : -1,
-        placeholders: (state.stepIsStage && filteredData.subStages) ? filteredData.subStages.flatMap((sStg, i) => {
-            const sStgMatches = filteredData.matches ? filteredData.matches.filter((match) => {
-                return filteredData.sets.filter((set) => {
-                    return set.stageOrder === state.currentStage &&
-                    set.subStageOrder === i
-                })?.find(set => set === match.matchSet)
-            }) : [];
-            
-            return sStg.members.map((member) : Placeholders => {
-                return {
-                    subId : i,
-                    subSize : sStg.members.length,
-                    points : sStgMatches.filter(x => x.winner === member).length
-                }
-            }).sort((a, b) => a.points - b.points).slice(0, sStg.qualificationSlots)
-        }) : [],
+        placeholders: (state.stepIsStage && filteredData.subStages) ? mapParticipantPlaceholder(state, filteredData) : [],
         animInProgress: true,
         pendingTransition: null,
         expectedSubmissions: 0,
@@ -441,7 +426,7 @@ export default function CreateTournamentPage() {
         defineStep({ key : 'SetGroups', Component : SetGroups, props : { 
             animInProgress, 
             stageNum : currentStage, 
-            participants : tournament?.participants
+            participants : currentStage > 0 ? placeholders : tournament?.participants
         }, 
         sidesteps : tournament?.subStages?.map((subStage, index) => {
             return defineSideStep({
@@ -454,12 +439,12 @@ export default function CreateTournamentPage() {
         defineStep({ key : 'SetPlayins', Component : SetPlayins, props : {
             animInProgress, 
             stageNum : currentStage, 
-            participants : tournament?.participants
+            participants : currentStage > 0 ? placeholders : tournament?.participants
         }}),
         defineStep({ key : 'SetPlayoffs', Component : SetPlayoffs, props : { 
             animInProgress, 
             stageNum : currentStage, 
-            participants : /*currentStage > 0 ? placeholders : */tournament?.participants
+            participants : currentStage > 0 ? placeholders : tournament?.participants
         }})
     ]
 

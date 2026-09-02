@@ -1,6 +1,6 @@
 import { useEffect, useState, type RefObject } from "react";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
-import type { Profile, Team, TournamentStage } from "../../../data/types";
+import type { Placeholder, Profile, Team, TournamentSet, TournamentStage } from "../../../data/types";
 import { GenerateBracket } from "../../../components/Bracket/GenerateBracket";
 
 interface SetPlayoffsProps {
@@ -9,13 +9,14 @@ interface SetPlayoffsProps {
     animInProgress : boolean;
     stageNum : number;
     data : TournamentData;
-    participants : Profile[] | Team[]
+    participants : Profile[] | Team[] | Placeholder[];
 }
 
 export default function SetPlayoffs({itemRef, dispatcher, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
     
     const [numPlayers, setNumPlayers] = useState(participants.length);
     const [stage, setStage] = useState<TournamentStage>(null);
+    const [sets, setSets] = useState<TournamentSet[]>([]);
 
     const undo = () => {
         dispatcher({
@@ -48,10 +49,10 @@ export default function SetPlayoffs({itemRef, dispatcher, animInProgress, stageN
             <div className={'tournament-configuration-box-body'}>
                 {stage ? 
                 <GenerateBracket 
-                type={stage.format} 
+                stage={stage} 
                 players={participants} 
-                gameTag={'placeholder'}
-                sets={data.sets}/> : 
+                sets={sets}
+                setSets={setSets}/> : 
                 <></>}
             </div>
         </li>
