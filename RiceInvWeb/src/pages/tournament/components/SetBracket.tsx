@@ -58,7 +58,8 @@ export default function SetBracket({itemRef, dispatcher, animInProgress, stageNu
                     stage : stage?.order,
                     name : '',
                     format : stage?.format,
-                    members : participants
+                    members : participants,
+                    qualificationSlots : 3
                 }}
                 players={participants} 
                 sets={sets}

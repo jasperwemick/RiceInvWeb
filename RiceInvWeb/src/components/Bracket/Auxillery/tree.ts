@@ -18,7 +18,7 @@ function CreateBracketNode(val : number, lev : number, par : BracketNode | null,
     }
 }
 
-export function GenerateBracketTree(type : string, numPlayers : number) {
+export function GenerateBracketTree(type : string, numPlayers : number) : BracketNode {
     let numUpperSets = numPlayers - 1;
     let numLowerSets = (type.includes('Double')) ? ((numPlayers - 1)) : 0
 
@@ -138,12 +138,12 @@ export function GenerateBracketTree(type : string, numPlayers : number) {
 
     if (!numLowerSets) {
 
-        var upperFinals = CreateBracketNode(0, 0, null, null)
+        var finals = CreateBracketNode(0, 0, null, null)
         
         for (let i = 1; i < numUpperSets; i++) {
-            insertNode(upperFinals, i, nearestPowerOf2(numPlayers) - 1, 'U', [])
+            insertNode(finals, i, nearestPowerOf2(numPlayers) - 1, 'U', [])
         }
-        return upperFinals
+        return finals
     }
     else {
 
@@ -153,8 +153,8 @@ export function GenerateBracketTree(type : string, numPlayers : number) {
 
         bracketReset.right = grandFinals
 
-        const rightNode = CreateBracketNode(numUpperSets + 2, 1, grandFinals, null) //Lower Final
-        grandFinals.right = rightNode
+        const lowerFinal = CreateBracketNode(numUpperSets + 2, 1, grandFinals, null) //Lower Final
+        grandFinals.right = lowerFinal
 
         // Lower Bracket
         for (let i = numUpperSets + 3; i <= numSets; i++) {
@@ -203,13 +203,26 @@ export function getMaxDepth(node : BracketNode | null): number {
     }
 }
 
-export const treeToArray = (node : BracketNode, maxDepth : number) => {
+// export function cullTree(node : BracketNode, bracketType : 'U' | 'UD' | 'UDB' | 'LD' | 'LDB', output : number=1) : BracketNode[] {
+//     if (node) {
+//         var q = [];
+//         q.push(node);
+
+//         while (q.length > 0) {
+
+//         }
+//     }
+// }
+
+export const treeToArray = (node : BracketNode, maxDepth : number, bracketType : 'U' | 'UD' | 'UDB' | 'LD' | 'LDB', output : number=1) => {
 
     var treeMap : BracketNode[][] = Array.from({ length : maxDepth + 1 }, () => []);
 
     if (node && maxDepth > 1) {
         var q = [];
+        const removedVals : number[] = []
 
+        let thresholdBroken = false;
         q.push(node);
 
         while (q.length > 0) {
@@ -225,9 +238,33 @@ export const treeToArray = (node : BracketNode, maxDepth : number) => {
                 q.push(temp.right);
             }
 
-            treeMap[temp.level + 1].push(temp)
+            if (temp.parent ? removedVals.includes(temp.parent.value) : false) {
+                temp.parent = null;
+            }
+
+            if (thresholdBroken) treeMap[temp.level + 1].push(temp);
+            else removedVals.push(temp.value);
+            
+            switch (bracketType) {
+                case 'U' : if (q.length >= output) thresholdBroken = true; break;
+                case 'UD' : if (q.length >= Math.ceil(output / 2)) thresholdBroken = true; break;
+                case 'LD' : if (q.length >= Math.floor(output / 2)) thresholdBroken = true; break;
+            }
+            
         }
     }
 
+    console.log(treeMap);
+
+    // const culled = treeMap.map((x) => {
+    //     switch (bracketType) {
+    //         case 'U': return x.length < output ? [] : x;
+    //         case 'UD' : return x.length < Math.ceil(output / 2) ? [] : x;
+    //         case 'LD' : return x.length < Math.floor(output / 2) ? [] : x;
+    //         default : return x;
+    //     }
+    // });
+
+    // console.log(culled);
     return treeMap
 }

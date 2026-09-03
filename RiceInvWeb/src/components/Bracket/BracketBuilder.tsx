@@ -16,15 +16,6 @@ interface BracketBuilderProps {
     players : TournamentParticipant[];
 }
 
-function BracketArrowUpdater({ deps }: { deps: unknown[] }) {
-    const updateXarrow = useXarrow();
-    useLayoutEffect(() => {
-        console.log('recalculating arrows, sets:', deps);
-        updateXarrow();
-    }, deps);
-    return null;
-}
-
 export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, subStage, players } : BracketBuilderProps) {
 
     const { auth } = useAuth();
@@ -34,7 +25,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                 return { ...p, name : 'placeholder'}
             })
         sortedSeeds.sort((a, b) => a.points - b.points) // Should be ascending order of seeds
-
+            console.log('seeds size, ', sortedSeeds.length);
         let realCount = 0;
         let capacity = 0;
 
@@ -57,9 +48,13 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                     capacity += 2
                 }
                 else if (sortedSeeds.length > capacity) { // Fill top spot of sets following the first column until all are accounted for
-                    setPlayers[0] = sortedSeeds[capacity + j]
+                    console.log(capacity);
+                    console.log(j);
+                    
+                    console.log('cap, ', capacity + j);
+                    setPlayers[0] = sortedSeeds[capacity];
 
-                    const lowerPrev = node.right ? node.right.value : node.left ? node.left.value : 'What'
+                    const lowerPrev = node.right ? node.right.value : node.left ? node.left.value : 'What';
                     setPlayers[1] = {
                         def : 'Placeholder',
                         name : `${lowerPrev} W`,

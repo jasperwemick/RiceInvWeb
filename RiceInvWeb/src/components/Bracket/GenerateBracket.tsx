@@ -19,16 +19,16 @@ export const GenerateBracket = ({stage, subStage, players, sets, setSets} : Gene
     const [highTree, setHighTree] = useState<BracketNode | null>(null);
     const [lowTree, setLowTree] = useState<BracketNode | null>(null);
     const [maxDepth, setMaxDepth] = useState(0);
-    const [allNodes, setAllNodes] = useState<BracketNode[]>([]);
+    // const [allNodes, setAllNodes] = useState<BracketNode[]>([]);
     
     const { auth }  = useAuth();
 
 
     useEffect(() => {
 
-        const bracketTree = GenerateBracketTree(stage.format, players.length)
-        const depth = getMaxDepth(bracketTree.parent ? bracketTree.parent : bracketTree)
-        const treeArr = treeToArray(bracketTree.parent ? bracketTree.parent : bracketTree, depth).flat()
+        const bracketTree = GenerateBracketTree(stage.format, players.length);
+        const depth = getMaxDepth(bracketTree.parent ? bracketTree.parent : bracketTree);
+
 
         let lowerBracketTree : BracketNode | null = null
         let upperBracketTree : BracketNode | null = null
@@ -51,7 +51,6 @@ export const GenerateBracket = ({stage, subStage, players, sets, setSets} : Gene
         }
 
         setMaxDepth(depth);
-        setAllNodes(treeArr);
 
         setHighTree(upperBracketTree);
         setLowTree(lowerBracketTree);
