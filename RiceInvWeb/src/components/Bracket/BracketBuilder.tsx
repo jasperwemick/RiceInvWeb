@@ -14,9 +14,11 @@ interface BracketBuilderProps {
     stage : TournamentStage;
     subStage : TournamentSubStage;
     players : TournamentParticipant[];
+    layer : 'Upper' | 'Lower';
+    buddyReference ? : BracketNode[];
 }
 
-export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, subStage, players } : BracketBuilderProps) {
+export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, subStage, players, layer, buddyReference } : BracketBuilderProps) {
 
     const { auth } = useAuth();
 
@@ -25,7 +27,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                 return { ...p, name : 'placeholder'}
             })
         sortedSeeds.sort((a, b) => a.points - b.points) // Should be ascending order of seeds
-            console.log('seeds size, ', sortedSeeds.length);
+        console.log('seeds size, ', sortedSeeds.length);
         let realCount = 0;
         let capacity = 0;
 
@@ -36,35 +38,51 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                 const bracketWidth = level.length
                 const setPlayers : TournamentParticipant[] = Array.from({ length: 2 }, () => null);
 
-                if (realCount === 0 || (!node.left && !node.right)) { // Start of bracket
-                    if (sortedSeeds.length > bracketWidth * 2) {
-                        setPlayers[0] = sortedSeeds[bracketWidth + j];
-                        setPlayers[1] = sortedSeeds[bracketWidth - 1 - j];
+                if (stage.format.includes('Single') || layer === 'Upper') {
+                    if (realCount === 0 || (!node.left && !node.right)) { // Start of bracket
+                        if (sortedSeeds.length > bracketWidth * 2) {
+                            setPlayers[0] = sortedSeeds[bracketWidth + j];
+                            setPlayers[1] = sortedSeeds[bracketWidth - 1 - j];
+                        }
+                        else {
+                            setPlayers[0] = sortedSeeds[j];
+                            setPlayers[1] = sortedSeeds[bracketWidth * 2 - 1 - j];
+                        }
+                        capacity += 2
+                    }
+                    else if (sortedSeeds.length > capacity) { // Fill top spot of sets following the first column until all are accounted for
+                        setPlayers[0] = sortedSeeds[capacity];
+
+                        const lowerPrev = node.right ? node.right.value : node.left ? node.left.value : 'What';
+                        setPlayers[1] = {
+                            def : 'Placeholder',
+                            name : `${lowerPrev} W`,
+                            points : 0
+                        }
+                        capacity += 1
                     }
                     else {
-                        setPlayers[0] = sortedSeeds[j];
-                        setPlayers[1] = sortedSeeds[bracketWidth * 2 - 1 - j];
+                        const leftPrev = node.left?.value;
+                        const rightPrev = node.right?.value;
+                        setPlayers[0] = {
+                            def : 'Placeholder',
+                            name : `${leftPrev} W`,
+                            points : 0
+                        }
+                        setPlayers[1] = {
+                            def : 'Placeholder',
+                            name : `${rightPrev} W`,
+                            points : 0
+                        }
                     }
-                    capacity += 2
                 }
-                else if (sortedSeeds.length > capacity) { // Fill top spot of sets following the first column until all are accounted for
-                    console.log(capacity);
-                    console.log(j);
-                    
-                    console.log('cap, ', capacity + j);
-                    setPlayers[0] = sortedSeeds[capacity];
+                else if (stage.format.includes('Bias')) {
 
-                    const lowerPrev = node.right ? node.right.value : node.left ? node.left.value : 'What';
-                    setPlayers[1] = {
-                        def : 'Placeholder',
-                        name : `${lowerPrev} W`,
-                        points : 0
-                    }
-                    capacity += 1
                 }
-                else {
-                    const leftPrev = node.left?.value;
-                    const rightPrev = node.right?.value
+                else { // Should only be lower bracket
+                    console.log(node);
+                    const leftPrev = node.left ? node.left.value : buddyReference.find(x => x.buddy ? x.buddy.value === node.value : false)?.value;
+                    const rightPrev = node.right ? node.right.value : buddyReference.findLast(x => x.buddy ? x.buddy.value === node.value : false)?.value;
                     setPlayers[0] = {
                         def : 'Placeholder',
                         name : `${leftPrev} W`,
@@ -76,10 +94,6 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                         points : 0
                     }
                 }
-
-                if (stage.format.includes('Single')) {}
-
-                if (!node) {}
 
                 const newSet : TournamentSet = {
                     id : new ObjectId().toHexString(),

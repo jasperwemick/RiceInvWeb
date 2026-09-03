@@ -1,5 +1,5 @@
 import { type BracketNode, treeToArray } from "./Auxillery/tree"
-import React from "react"
+import React, { useEffect, useState } from "react"
 import BracketBuilder from "./BracketBuilder"
 import type { TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types"
 import useGetRef from "../../hooks/useGetRef"
@@ -23,26 +23,28 @@ export default function BracketMap({ stage, subStage, highTree, lowTree, maxDept
 
     return (
         <React.Fragment>
-            <div><BracketBuilder nodeArr={
-                treeToArray(
+            <div>
+                <BracketBuilder nodeArr={treeToArray(
                     highTree, 
                     maxDepth, 
                     subStage.format.includes('Bias') ? 'UDB' : subStage.format.includes('Double') ? 'UD' : 'U', 
                     subStage.qualificationSlots
-                )
-            } refMap={getRef} sets={sets} setSets={setSets} stage={stage} subStage={subStage} players={
+                )} refMap={getRef} sets={sets} setSets={setSets} stage={stage} subStage={subStage} players={
                 stage.format.includes('Biased') ? ps.filter((_, i) => i < Math.ceil(ps.length / 2)) : players
-            }/></div>
-            <div><BracketBuilder nodeArr={
-                treeToArray(
+            } layer="Upper"/></div>
+            <div><BracketBuilder nodeArr={treeToArray(
                     lowTree, 
                     maxDepth, 
                     subStage.format.includes('Bias') ? 'LDB' : 'LD', 
                     subStage.qualificationSlots
-                )
-            } refMap={getRef} sets={sets} setSets={setSets} stage={stage} subStage={subStage} players={
+                )} refMap={getRef} sets={sets} setSets={setSets} stage={stage} subStage={subStage} players={
                 stage.format.includes('Biased') ? ps.filter((_, i) => i >= Math.ceil(ps.length / 2)) : []
-            }/></div>
+            } layer="Lower" buddyReference={treeToArray(
+                    highTree, 
+                    maxDepth, 
+                    subStage.format.includes('Bias') ? 'UDB' : subStage.format.includes('Double') ? 'UD' : 'U', 
+                    subStage.qualificationSlots
+                ).flat()}/></div>
         </React.Fragment>
     )
 }
