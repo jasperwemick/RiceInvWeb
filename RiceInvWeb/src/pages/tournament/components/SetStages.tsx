@@ -1,23 +1,24 @@
 import React, { useEffect, useState, type RefObject } from "react";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
-import type { Stage, TournamentStage } from "../../../data/types";
+import type { TournamentStage } from "../../../data/types";
 import { ObjectId } from "bson";
 
 interface ComplexListItemProps {
-    item : Stage;
+    item : TournamentStage;
     tournamentData : TournamentStage[];
     setTournamentData : React.Dispatch<React.SetStateAction<TournamentStage[]>>;
     index : number;
 }
 
+const defaultStages : Record<string, string[]> = {
+    'Groups' : ['Round Robin', 'Swiss', 'Random'], 
+    'Bracket' : ['Single Elim', 'Double Elim', 'Biased Double Elim']
+}
+
 
 function ComplexListItem({ item, tournamentData, setTournamentData, index } : ComplexListItemProps) {
     const [selected, setSelected] = useState<string>('');
-
-    useEffect(() => {
-        
-    }, [item.stage]);
 
     useEffect(() => {
         if (selected === '') return;
@@ -26,17 +27,16 @@ function ComplexListItem({ item, tournamentData, setTournamentData, index } : Co
             return i === index ? { ...d, format : selected } : d
         })
         setTournamentData(newData)
-        console.log(newData);
     }, [selected])
     return (
         <li className={'tournament-complex-list-item'}>
             <p>{`(${index + 1})`}</p>
             <div>
                 <div>
-                    <p>{item.stage}</p>
+                    <p>{item.stageType}</p>
                     <div className={'tournament-item-list'}>
                         <SelectableItemsList<string>
-                        list={item.formats}
+                        list={defaultStages[item.stageType]}
                         selection={{ selected : selected, setSelected : setSelected, multiple : false }}
                         removalPredicate={(a, b) => a != b}
                         getLabel={(x) => x}/>
@@ -61,22 +61,6 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
 
     const [stageCount, setStageCount] = useState<number>(0);
 
-    const defaultStages = [
-        {
-            stage : 'Groups',
-            formats : ['Round Robin', 'Swiss', 'Random']
-        }, 
-        {
-            stage : 'Playins',
-            formats : ['Seeding', 'Qualifier Elim']
-        },
-        {
-            stage : 'Playoffs',
-            formats : ['Single Elim', 'Double Elim', 'Biased Double Elim']
-        }
-    ]
-
-    const [stages, setStages] = useState<Stage[]>(defaultStages);
     const [tournamentStageData, setTournamentStageData] = useState<TournamentStage[]>([]);
 
     const undo = () => {
@@ -99,56 +83,34 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
     }
 
     useEffect(() => {
-        setStages(defaultStages.filter((_, i) => i < stageCount));
+        setTournamentStageData(Array.from({ length : stageCount }, (_, i) => {
+            return {
+                id : new ObjectId().toHexString(),
+                order : i,
+                stageType : 'Groups',
+                format : null
+            }}))    
     }, [stageCount])
-
-    useEffect(() => {
-        if (tournamentStageData.length === 0) {
-            setTournamentStageData(stages.map((stg, index) => {
-                return {
-                    id : new ObjectId().toHexString(),
-                    order : index,
-                    stageType : stg.stage,
-                    format : null
-                }
-            }));
-        }
-        else {
-            setTournamentStageData(stages.map((stg, index) => {
-                if (tournamentStageData[index] && stg.stage != tournamentStageData[index].stageType) {
-                    return {
-                        id : new ObjectId().toHexString(),
-                        order : index,
-                        stageType : stg.stage,
-                        format : null,
-                        stageName : ''
-                    }
-                }
-                else {
-                    return {
-                        ...tournamentStageData[index]
-                    }
-                }
-            }))
-        }
-
-    }, [stages]);
-
 
     const mapStageToggler = () => {
 
         const switchStage = (idx : number) => {
-            setStages(stages.map((stage, j) => {
-                const p = defaultStages.find(x => x.stage === stage.stage);
-                return j !== idx ? stage : defaultStages[(defaultStages.indexOf(p) + 1) % defaultStages.length];
+            setTournamentStageData(tournamentStageData.map((stage, j) => {
+                return j !== idx ? stage : {
+                    id : stage.id,
+                    order : j,
+                    stageType : stage.stageType === 'Groups' ? 'Bracket' : 'Groups',
+                    format : null,
+                    stageName : stage.stageName
+                }
             }));
         }
 
-        return stages.map((item, i) => {
+        return tournamentStageData.map((item, i) => {
             return (
                 <div onClick={() => switchStage(i)}>
                     <p>{i + 1}</p>
-                    <button>{item.stage}</button>
+                    <button>{item.stageType}</button>
                 </div>
             )
         })
@@ -156,7 +118,7 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
 
     const mapFormatSelect = () => {
         
-        return stages.map((stage, i) => {
+        return tournamentStageData.map((stage, i) => {
             return (
                 <ComplexListItem key={i} item={stage} tournamentData={tournamentStageData} setTournamentData={setTournamentStageData} index={i}/>
             )

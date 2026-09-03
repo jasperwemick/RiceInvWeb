@@ -68,34 +68,27 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
 
     useEffect(() => {
         // setSlots(Math.ceil(subGroup.members.length / 2));
-    }, [subGroup.members.length])
+    }, [subGroup.members.length]);
 
     const undo = () => {
-        console.log('Remove these sets: ', tSets.flatMap(x => x.id));
         dispatcher({ 
-            type : 'UNDO_SIDESTEP', 
-            data : { subStages : [subGroup], sets : tSets }, 
+            type : 'UNDO_SIDESTEP',
+            data : { subStages : [subGroup], sets : tSets },
             ss : 'AddTournamentSets',
             index : order
-        })
+        });
     }
 
     const submit = () => {
-        const stg : TournamentSubStage = { ...data.subStages.find(x => x === subGroup), qualificationSlots : slots}
-        console.log('Add these sets: ', tSets.flatMap(x => x.id));
-        dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : 'AddTournamentSets' })
+        const stg : TournamentSubStage = { ...data.subStages.find(x => x === subGroup), qualificationSlots : slots};
+        dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : 'AddTournamentSets' });
     }
 
     useEffect(() => {
-        console.log('Add tournamnet sets, signal received', signal)
         if (!signal) return;
         if (signal.action === 'undo') undo();
         if (signal.action === 'submit') submit();
     }, [signal]);
-
-    useEffect(() => {
-        console.log(`${order} sets ${tSets.flatMap(x => x.id)}`)
-    }, [tSets.length]);
 
     // useEffect(() => {
     //     addTSets(tSets.map((set) => {
@@ -105,7 +98,7 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
-            <div className={'tournament-configuration-box-header'} >
+            <div className={'tournament-configuration-box-header'}>
                 <button onClick={undo}>{`X`}</button>
                 <p>{subGroup.name}</p>
             </div>

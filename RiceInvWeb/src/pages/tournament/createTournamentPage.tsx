@@ -1,5 +1,5 @@
-import { createRef, useCallback, useEffect, useLayoutEffect, useReducer, useRef, useState, type RefObject } from "react"
-import type { GameMode, Placeholder, Profile, Team, Tournament, TournamentMatch, TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types";
+import { useEffect, useLayoutEffect, useReducer, useRef, useState } from "react"
+import type { GameMode, Placeholder, Profile, TournamentMatch, TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types";
 import CreateStart from "./components/createStart";
 import useGetRef from "../../hooks/useGetRef";
 import AddParticipants from "./components/addParticipants";
@@ -9,10 +9,9 @@ import CreateTeams from "./components/createTeams";
 import SetGame from "./components/setTournamentGame";
 import SetStages from "./components/SetStages";
 import SetGroups from "./components/SetGroups";
-import SetPlayins from "./components/SetPlayins";
 import AddTournamentSets from "./components/AddTournamentSets";
 import React from "react";
-import SetPlayoffs from "./components/SetPlayoffs";
+import SetBracket from "./components/SetBracket";
 
 interface SideHistoryItem {
     sideStep : string;
@@ -24,7 +23,7 @@ interface WizardState {
     step: string;
     sideSteps: string[];
     stepIndex: number;
-    pendingStep: string | null; // the step we're animating TOWARD, set by NEXT_STEP, consumed by ANIM_REMOVE_DONE
+    pendingStep: string | null;
     sideStepIndex: number;
     ssSignal: { action?: string } | null;
     tournament: TournamentData | null;
@@ -33,7 +32,7 @@ interface WizardState {
     history: string[];
     ssHistory : SideHistoryItem[],
     animInProgress: boolean;
-    pendingTransition: TournamentData | null; // the NEXT_STEP data, held until sidesteps finish
+    pendingTransition: TournamentData | null;
     expectedSubmissions: number;
     receivedSubmissions: number;
     stepIsStage : boolean;
@@ -75,7 +74,7 @@ export interface TournamentData {
     name ? : string;
     gameMode ? : GameMode;
     participants ? : TournamentParticipant[];
-    particpantType ? : 'Profile' | 'Team';
+    particpantType ? : 'Profile' | 'Team' | 'Placeholder';
     stages ? : TournamentStage[];
     subStages ? : TournamentSubStage[];
     sets ? : TournamentSet[];
@@ -208,7 +207,6 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
         }
 
         case 'UNDO_STEP': {
-            console.log('active SScount ', action.activeSSCount)
             if (!action.activeSSCount || action.activeSSCount === 0) {
                 return commitPrevStep({
                     ...state,
@@ -433,12 +431,7 @@ export default function CreateTournamentPage() {
                 props : { animInProgress, subGroup : subStage, order : index, parentList : tournament.subStages }
             });
         })}),
-        defineStep({ key : 'SetPlayins', Component : SetPlayins, props : {
-            animInProgress, 
-            stageNum : currentStage, 
-            participants : currentStage > 0 ? placeholders : tournament?.participants
-        }}),
-        defineStep({ key : 'SetPlayoffs', Component : SetPlayoffs, props : { 
+        defineStep({ key : 'SetBracket', Component : SetBracket, props : { 
             animInProgress, 
             stageNum : currentStage, 
             participants : currentStage > 0 ? placeholders : tournament?.participants

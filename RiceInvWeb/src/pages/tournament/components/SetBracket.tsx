@@ -13,7 +13,7 @@ interface SetPlayoffsProps {
     participants : TournamentParticipant[];
 }
 
-export default function SetPlayoffs({itemRef, dispatcher, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
+export default function SetBracket({itemRef, dispatcher, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
     
     const [numPlayers, setNumPlayers] = useState(participants.length);
     const [stage, setStage] = useState<TournamentStage>(null);
