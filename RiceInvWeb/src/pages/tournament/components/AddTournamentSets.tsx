@@ -64,7 +64,7 @@ interface AddTournamentSetsProps {
 export default function AddTournamentSets({ itemRef, dispatcher, animInProgress, order, subGroup, data, signal } : AddTournamentSetsProps) {
 
     const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStageId === subGroup.id) : []);
-    const [slots, setSlots] = useState<number>(0);
+    const [slots, setSlots] = useState<number>(subGroup.qualificationSlots ? subGroup.qualificationSlots : 0);
 
     useEffect(() => {
         // setSlots(Math.ceil(subGroup.members.length / 2));

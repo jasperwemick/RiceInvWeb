@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react"
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
 import BracketSet from "./BracketSet"
 import useAuth from "../../hooks/useAuth"
 import type { BracketNode } from "./Auxillery/tree"
@@ -14,6 +14,15 @@ interface BracketBuilderProps {
     stage : TournamentStage;
     subStage : TournamentSubStage;
     players : TournamentParticipant[];
+}
+
+function BracketArrowUpdater({ deps }: { deps: unknown[] }) {
+    const updateXarrow = useXarrow();
+    useLayoutEffect(() => {
+        console.log('recalculating arrows, sets:', deps);
+        updateXarrow();
+    }, deps);
+    return null;
 }
 
 export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, subStage, players } : BracketBuilderProps) {
@@ -36,7 +45,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                 const bracketWidth = level.length
                 const setPlayers : TournamentParticipant[] = Array.from({ length: 2 }, () => null);
 
-                if (realCount === 0) { // Start of bracket
+                if (realCount === 0 || (!node.left && !node.right)) { // Start of bracket
                     if (sortedSeeds.length > bracketWidth * 2) {
                         setPlayers[0] = sortedSeeds[bracketWidth + j];
                         setPlayers[1] = sortedSeeds[bracketWidth - 1 - j];
@@ -107,6 +116,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                                 {
                                 node.parent ?
                                 <Xarrow 
+                                key={`${node.value}-${sets.length}`}
                                 start={refMap(node.value)} 
                                 end={refMap(node.parent.value)}
                                 headSize={0}

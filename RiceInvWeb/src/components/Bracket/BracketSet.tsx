@@ -24,6 +24,8 @@ export default function BracketSet({ bracketSet, ref } : BracketSetProps) {
     const [localData, setLocalData] = useState<TournamentSet | null>(null);
     const [teamRecords, setTeamRecords] = useState<Record<string, number>>({});
 
+    const updateXarrow = useXarrow();
+
     // useEffect(() => {
     //     if (setData) {
     //         const matches = setData.matches;
