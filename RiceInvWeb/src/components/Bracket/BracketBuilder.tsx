@@ -77,7 +77,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                     }
                 }
                 else if (stage.format.includes('Bias')) {
-
+                    
                 }
                 else { // Should only be lower bracket
                     console.log(node);
