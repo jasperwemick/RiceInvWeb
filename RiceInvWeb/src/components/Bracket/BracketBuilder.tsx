@@ -62,16 +62,16 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                         capacity += 1
                     }
                     else {
-                        const leftPrev = node.left?.value;
-                        const rightPrev = node.right?.value;
+                        const leftPrev = node.left ? `${node.left.value} W` : ((!node.parent && node.right) ? `${node.right.value} L` : `Wrong!`); // Backup is check for grand finals reset
+                        const rightPrev = node.right ? `${node.right.value} W` : `${buddyReference?.find(x => x.parent?.value === node.value)?.value} W` ; // Backup is check for grand finals
                         setPlayers[0] = {
                             def : 'Placeholder',
-                            name : `${leftPrev} W`,
+                            name : leftPrev,
                             points : 0
                         }
                         setPlayers[1] = {
                             def : 'Placeholder',
-                            name : `${rightPrev} W`,
+                            name : rightPrev,
                             points : 0
                         }
                     }
@@ -81,16 +81,16 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                 }
                 else { // Should only be lower bracket
                     console.log(node);
-                    const leftPrev = node.left ? node.left.value : buddyReference.find(x => x.buddy ? x.buddy.value === node.value : false)?.value;
-                    const rightPrev = node.right ? node.right.value : buddyReference.findLast(x => x.buddy ? x.buddy.value === node.value : false)?.value;
+                    const leftPrev = node.left ? `${node.left.value} W` : `${buddyReference.find(x => x.buddy ? x.buddy.value === node.value : false)?.value} L`;
+                    const rightPrev = node.right ? `${node.right.value} W` : `${buddyReference.findLast(x => x.buddy ? x.buddy.value === node.value : false)?.value} L`;
                     setPlayers[0] = {
                         def : 'Placeholder',
-                        name : `${leftPrev} W`,
+                        name : leftPrev,
                         points : 0
                     }
                     setPlayers[1] = {
                         def : 'Placeholder',
-                        name : `${rightPrev} W`,
+                        name : rightPrev,
                         points : 0
                     }
                 }

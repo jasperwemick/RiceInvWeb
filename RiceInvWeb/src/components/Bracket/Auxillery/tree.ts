@@ -222,7 +222,7 @@ export const treeToArray = (node : BracketNode, maxDepth : number, bracketType :
         var q = [];
         const removedVals : number[] = []
 
-        let thresholdBroken = false;
+        let thresholdBroken = output <= 1 ? true : false;
         q.push(node);
 
         while (q.length > 0) {
@@ -242,15 +242,31 @@ export const treeToArray = (node : BracketNode, maxDepth : number, bracketType :
                 temp.parent = null;
             }
 
-            if (thresholdBroken) treeMap[temp.level + 1].push(temp);
-            else removedVals.push(temp.value);
-            
             switch (bracketType) {
-                case 'U' : if (q.length >= output) thresholdBroken = true; break;
-                case 'UD' : if (q.length >= Math.ceil(output / 2)) thresholdBroken = true; break;
-                case 'LD' : if (q.length >= Math.floor(output / 2)) thresholdBroken = true; break;
+                case 'U' : {
+                    if (thresholdBroken) treeMap[temp.level + 1].push(temp);
+                    else removedVals.push(temp.value);   
+
+                    if (q.length >= output) thresholdBroken = true;
+                    break;
+                }
+                case 'UD' : {
+                    if (thresholdBroken && temp.level > 1) treeMap[temp.level + 1].push(temp);
+                    else removedVals.push(temp.value);   
+
+                    if (q.length >= Math.ceil(output / 2)) thresholdBroken = true; 
+                    break;
+                }
+                case 'LD' : {
+                    if (q.length >= Math.floor(output / 2)) thresholdBroken = true; 
+
+                    if (thresholdBroken) treeMap[temp.level + 1].push(temp);
+                    else removedVals.push(temp.value);   
+                    break;
+                }
             }
-            
+
+         
         }
     }
 
