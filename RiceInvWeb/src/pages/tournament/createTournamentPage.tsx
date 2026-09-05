@@ -9,14 +9,19 @@ import CreateTeams from "./components/createTeams";
 import SetGame from "./components/setTournamentGame";
 import SetStages from "./components/SetStages";
 import SetGroups from "./components/SetGroups";
-import AddTournamentSets from "./components/AddTournamentSets";
 import React from "react";
 import SetBracket from "./components/SetBracket";
+import SubGroupsSets from "./components/SubGroupsSets";
 
 interface SideHistoryItem {
     sideStep : string;
     step : string;
     num : number;
+}
+
+interface SideStep {
+    step : string;
+    order : number;
 }
 
 interface WizardState {
@@ -120,8 +125,34 @@ function removeFields(baseData : TournamentData | null, toRemove : Partial<Tourn
     return localData;
 }
 
+function appendFields(baseData : TournamentData | null, toUpsert : Partial<TournamentData>) : TournamentData {
+    const localData = { ...baseData };
+
+
+    const upsertById = <T extends Record<string, any>>(existing: T[] = [], incoming: T[] = [], idKey: string): T[] => {
+        const map = new Map(existing.map(item => [item[idKey], item]));
+        for (const item of incoming) {
+            map.set(item[idKey], item); // adds new, or updates an existing one submitted twice
+        }
+        return Array.from(map.values());
+    }
+
+    for (const key of Object.keys(toUpsert) as (keyof TournamentData)[]) {
+        const marked = toUpsert[key];
+        const id = KEYS[key]
+        
+        if (Array.isArray(marked) && id) {
+            assignField(localData, key, upsertById(localData[key] as any[], marked, id))
+        } else {
+            assignField(localData, key, marked)
+        }
+    }
+
+    return localData;
+}
+
 function mapParticipantPlaceholder(state : WizardState, data : TournamentData) {
-    return data.subStages.flatMap((sStg, i) => {
+    return data.subStages.filter(x => x.stage === state.currentStage).flatMap((sStg, i) => {
         const sStgMatches = data.matches ? data.matches.filter((match) => {
             return data.sets.find(set => set.id === match.setId)
         }) : [];
@@ -134,7 +165,12 @@ function mapParticipantPlaceholder(state : WizardState, data : TournamentData) {
                 subSize : sStg.members.length,
                 points : sStgMatches.filter(x => x.winner === member).length
             }
-        }).sort((a, b) => a.points - b.points).slice(0, sStg.qualificationSlots)
+        }).sort((a, b) => a.points - b.points).slice(0, sStg.qualificationSlots).map((member, i) => {
+            return {
+                ...member,
+                name : `S${member.subId} Seed ${i + 1}`
+            }
+        })
     })
 }
 
@@ -166,6 +202,7 @@ function commitPrevStep(state: WizardState, data: TournamentData) : WizardState 
 
     const prevSSHistory = [...state.ssHistory]
     const prevSide = prevSSHistory.filter(x => x.step === prevStep);
+    console.log("side history, ", prevSide);
 
     return {
         ...state,
@@ -207,6 +244,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
         }
 
         case 'UNDO_STEP': {
+            console.log(action.activeSSCount)
             if (!action.activeSSCount || action.activeSSCount === 0) {
                 return commitPrevStep({
                     ...state,
@@ -225,16 +263,16 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
         }
 
         case 'SIDESTEP': {
-            const mergedData = { ...state.tournament, ...action.data };
-            const exists = state.ssHistory.find(x => x.step === state.step);
-            const sideSteps = [...state.sideSteps]
+            const mergedData = appendFields(state.tournament, action.data);
+            const exists = state.ssHistory.find(x => x.step === state.step && x.sideStep === action.ss);
+            const sideSteps = [...state.sideSteps];
             return {
                 ...state,
                 tournament: mergedData,
                 sideSteps: [...sideSteps, action.ss],
                 sideStepIndex : state.sideStepIndex + 1,
                 ssHistory : exists ? state.ssHistory.map(x => 
-                    x.step === state.step
+                    x.step === state.step && x.sideStep === action.ss
                     ? {...x, num : x.num + 1}
                     : x
                 ) : [...state.ssHistory, { sideStep : action.ss, step : state.step, num : 1 }]
@@ -244,8 +282,10 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
         case 'UNDO_SIDESTEP' : {
             const newReceivedCount = state.receivedSubmissions + 1;
             const sidesteps = [...state.sideSteps];
-            const cleared = sidesteps.filter(x => x === action.ss).splice(action.index, 1);
-            const filtered = sidesteps.filter(x => x !== action.ss).concat(cleared);
+            console.log('undo sidestep')
+            console.log(sidesteps)
+            const filtered = sidesteps.filter(x => x !== action.ss)
+            console.log(filtered)
 
             const localData = removeFields(state.tournament, action.data);
 
@@ -279,35 +319,13 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
         case 'SUBMIT_SIDESTEP': {
             const newReceivedCount = state.receivedSubmissions + 1;
 
-            const toUpsert = action.data
-            const localData = { ...state.tournament };
-
-
-            const upsertById = <T extends Record<string, any>>(existing: T[] = [], incoming: T[] = [], idKey: string): T[] => {
-                const map = new Map(existing.map(item => [item[idKey], item]));
-                for (const item of incoming) {
-                    map.set(item[idKey], item); // adds new, or updates an existing one submitted twice
-                }
-                return Array.from(map.values());
-            }
-
-            for (const key of Object.keys(toUpsert) as (keyof TournamentData)[]) {
-                const marked = toUpsert[key];
-                const id = KEYS[key]
-                
-                if (Array.isArray(marked) && id) {
-                    assignField(localData, key, upsertById(localData[key] as any[], marked, id))
-                } else {
-                    assignField(localData, key, marked)
-                }
-            }
+            const localData = appendFields(state.tournament, action.data);
             if (newReceivedCount >= state.expectedSubmissions && state.pendingTransition) {
                 // last submission arrived — NOW actually commit the held transition
                 return commitNextStep(
                     { 
                         ...state, 
                         tournament: localData, 
-                        // receivedSubmissions: newReceivedCount 
                     },
                     state.pendingTransition
                 );
@@ -374,6 +392,23 @@ interface ProcessStep<P extends object = {}> {
 function defineStep<P extends object>(process : ProcessStep<P>) : ProcessStep<P> { return process };
 function defineSideStep<S extends object>(process : ProcessSideStep<S>) : ProcessSideStep<S> { return process };
 
+interface StageComponent {
+    component : React.ComponentType<any>,
+    sides ? : Record<string, React.ComponentType<any>>
+}
+
+const stageComponentRecord : Record<string, StageComponent> = {
+    'Groups' : {
+        component : SetGroups,
+        sides : {
+            'Sets' : SubGroupsSets
+        }
+    },
+    'Bracket' : {
+        component : SetBracket
+    }
+}
+
 
 export default function CreateTournamentPage() {
 
@@ -409,41 +444,41 @@ export default function CreateTournamentPage() {
         defineStep({ key : 'AddParticipants', Component : AddParticipants, props : { animInProgress, profiles } }),
         defineStep({ key : 'SetTeams', Component : SetTeams, sidesteps : [
             defineSideStep({
-                Component : CreateTeams, 
                 key : 'CreateTeams',
+                Component : CreateTeams, 
                 parentKey : 'SetTeams',
                 props : { animInProgress, participants : tournament?.participants?.filter(x => x.def == 'Profile'), gameMode : tournament?.gameMode }
             })
         ]}),
         defineStep({ key : 'SetStages', Component : SetStages, props : { animInProgress } }),
-
-        // Not implemented
-        defineStep({ key : 'SetGroups', Component : SetGroups, props : { 
-            animInProgress, 
-            stageNum : currentStage, 
-            participants : currentStage > 0 ? placeholders : tournament?.participants
-        }, 
-        sidesteps : tournament?.subStages?.map((subStage, index) => {
-            return defineSideStep({
-                Component : AddTournamentSets, 
-                key : 'AddTournamentSets', 
-                parentKey : 'SetGroups', 
-                props : { animInProgress, subGroup : subStage, order : index, parentList : tournament.subStages }
-            });
-        })}),
-        defineStep({ key : 'SetBracket', Component : SetBracket, props : { 
-            animInProgress, 
-            stageNum : currentStage, 
-            participants : currentStage > 0 ? placeholders : tournament?.participants
-        }})
-    ]
+    ].concat(
+        tournament?.stages ? 
+        tournament.stages.map((stage, i) => {
+            return defineStep({ 
+                key : `Set${stage.stageType}-${i}`, 
+                Component : stageComponentRecord[stage.stageType].component, 
+                props : { 
+                    animInProgress,
+                    stageNum : i,
+                    participants : currentStage > 0 ? placeholders : tournament?.participants
+                },
+                sidesteps : stageComponentRecord[stage.stageType].sides ? tournament?.subStages?.filter(x => x.stage === i).map((subStage, j) => {
+                    return  defineSideStep({
+                        key : `Sub${stage.stageType}${subStage.subType}-${i}-${j}`,
+                        Component :  stageComponentRecord[stage.stageType].sides[subStage.subType],
+                        parentKey : `Set${stage.stageType}-${i}`,
+                        props : { animInProgress, subGroup : subStage, order : j, parentList : tournament.subStages }
+                    })
+                }) : []
+            })
+        }) : []
+    )
 
     useLayoutEffect(() => {
         if (state.pendingStep === null || stepIndex < 0) return; 
 
         const idx = steps.indexOf(steps.find(x => x.key === step));
         const item = getRef(idx).current;
-        console.log('exiting, ', item);
         if (item) {
             item.classList.add('exiting');
             const timer = setTimeout(() => {
@@ -482,7 +517,6 @@ export default function CreateTournamentPage() {
 
     useEffect(() => {
         if (ssSignal) {
-            console.log('handle signal, ', ssSignal);
             dispatch({ type: 'SIGNAL_HANDLED' });
         }
         
@@ -497,11 +531,10 @@ export default function CreateTournamentPage() {
             <ul className={'tournament-illusion-list'} ref={listRef}>
                 {steps.map((st, i) => {
                     return (
-                        <React.Fragment>
+                        <React.Fragment key={i}>
                             {
                                 step === st.key && 
                                 <st.Component 
-                                key={i} 
                                 itemRef={getRef(i)} 
                                 data={tournament} 
                                 dispatcher={dispatch}
@@ -509,9 +542,10 @@ export default function CreateTournamentPage() {
                             }
                             {
                                 st.sidesteps?.map((sst, j) => {
+                                    if (sideSteps.includes(sst.key) && step === sst.parentKey) console.log(sst.key, ' ', sst.parentKey);
                                     return sideSteps.includes(sst.key) && step === sst.parentKey &&
                                     <sst.Component 
-                                    key={i + j + 999} // Temporary bs
+                                    key={j} // Temporary bs
                                     itemRef={getSideRef(j)} 
                                     data={tournament} 
                                     signal={ssSignal} 

@@ -51,7 +51,7 @@ function QualBlock({slots, setSlots, index, subGroup, data} : QualBlockProps) {
     )
 }
 
-interface AddTournamentSetsProps {
+interface SubGroupsSetsProps {
     itemRef : RefObject<HTMLLIElement>;
     dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
@@ -61,7 +61,7 @@ interface AddTournamentSetsProps {
     signal : { action ? : string };
 }
 
-export default function AddTournamentSets({ itemRef, dispatcher, animInProgress, order, subGroup, data, signal } : AddTournamentSetsProps) {
+export default function SubGroupsSets({ itemRef, dispatcher, animInProgress, order, subGroup, data, signal } : SubGroupsSetsProps) {
 
     const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStageId === subGroup.id) : []);
     const [slots, setSlots] = useState<number>(subGroup.qualificationSlots ? subGroup.qualificationSlots : 0);
@@ -74,14 +74,14 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
         dispatcher({ 
             type : 'UNDO_SIDESTEP',
             data : { subStages : [subGroup], sets : tSets },
-            ss : 'AddTournamentSets',
+            ss : `SubGroupsSets-${subGroup.stage}-${order}`,
             index : order
         });
     }
 
     const submit = () => {
         const stg : TournamentSubStage = { ...data.subStages.find(x => x === subGroup), qualificationSlots : slots};
-        dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : 'AddTournamentSets' });
+        dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : `SubGroupsSets-${subGroup.stage}-${order}` });
     }
 
     useEffect(() => {
@@ -90,16 +90,9 @@ export default function AddTournamentSets({ itemRef, dispatcher, animInProgress,
         if (signal.action === 'submit') submit();
     }, [signal]);
 
-    // useEffect(() => {
-    //     addTSets(tSets.map((set) => {
-    //         return { ...set, subStageOrder : order }
-    //     }));
-    // }, [order])
-
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
             <div className={'tournament-configuration-box-header'}>
-                <button onClick={undo}>{`X`}</button>
                 <p>{subGroup.name}</p>
             </div>
             <div className={'tournament-configuration-box-body'}>

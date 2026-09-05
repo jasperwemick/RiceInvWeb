@@ -75,7 +75,7 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
         dispatcher({ 
             type : 'STEP', 
             data : { 
-                step : `Set${tournamentStageData.find(x => x.order === 0)?.stageType}`, 
+                step : `Set${tournamentStageData.find(x => x.order === 0)?.stageType}-0`, 
                 stages : tournamentStageData,
             },
             isStage : true
@@ -117,7 +117,6 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
     }
 
     const mapFormatSelect = () => {
-        
         return tournamentStageData.map((stage, i) => {
             return (
                 <ComplexListItem key={i} item={stage} tournamentData={tournamentStageData} setTournamentData={setTournamentStageData} index={i}/>

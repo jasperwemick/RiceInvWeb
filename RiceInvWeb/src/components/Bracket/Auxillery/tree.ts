@@ -242,31 +242,35 @@ export const treeToArray = (node : BracketNode, maxDepth : number, bracketType :
                 temp.parent = null;
             }
 
-            switch (bracketType) {
-                case 'U' : {
-                    if (thresholdBroken) treeMap[temp.level + 1].push(temp);
-                    else removedVals.push(temp.value);   
+            if (output > 1) {
+                switch (bracketType) {
+                    case 'U' : {
+                        if (thresholdBroken) treeMap[temp.level + 1].push(temp);
+                        else removedVals.push(temp.value);   
 
-                    if (q.length >= output) thresholdBroken = true;
-                    break;
-                }
-                case 'UD' : {
-                    if (thresholdBroken && temp.level > 1) treeMap[temp.level + 1].push(temp);
-                    else removedVals.push(temp.value);   
+                        if (q.length >= output) thresholdBroken = true;
+                        break;
+                    }
+                    case 'UD' : {
+                        if (thresholdBroken && temp.level > 1) treeMap[temp.level + 1].push(temp);
+                        else removedVals.push(temp.value);   
 
-                    if (q.length >= Math.ceil(output / 2)) thresholdBroken = true; 
-                    break;
-                }
-                case 'LD' : {
-                    if (q.length >= Math.floor(output / 2)) thresholdBroken = true; 
+                        if (q.length >= Math.ceil(output / 2)) thresholdBroken = true; 
+                        break;
+                    }
+                    case 'LD' : {
+                        if (q.length >= Math.floor(output / 2)) {
+                            thresholdBroken = true;
+                            temp.parent = null;
+                        }
 
-                    if (thresholdBroken) treeMap[temp.level + 1].push(temp);
-                    else removedVals.push(temp.value);   
-                    break;
+                        if (thresholdBroken) treeMap[temp.level + 1].push(temp);
+                        else removedVals.push(temp.value);   
+                        break;
+                    }
                 }
             }
-
-         
+            else treeMap[temp.level + 1].push(temp);
         }
     }
 

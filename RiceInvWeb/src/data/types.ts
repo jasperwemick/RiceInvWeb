@@ -123,7 +123,7 @@ export interface TournamentStage {
     id : string;
     order : number;
     tournament ? : string | Tournament;
-    stageType : string;
+    stageType : 'Groups' | 'Bracket';
     format : string;
     stageName ? : string;
 }
@@ -132,6 +132,7 @@ export interface TournamentSubStage {
     id : string;
     order : number;
     stage : number;
+    subType : 'Sets';
     name : string;
     format : string;
     members : TournamentParticipant[];

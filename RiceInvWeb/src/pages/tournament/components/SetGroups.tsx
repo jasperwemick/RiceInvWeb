@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
-import type { Profile, Team, TournamentStage, TournamentSubStage } from "../../../data/types";
+import type { Profile, Team, TournamentParticipant, TournamentStage, TournamentSubStage } from "../../../data/types";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 import GroupTable from "./GroupTable";
 import { ObjectId } from "bson";
@@ -11,7 +11,7 @@ interface SetGroupsProps {
     dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
     stageNum : number;
-    participants : Profile[] | Team[];
+    participants : TournamentParticipant[];
     data : TournamentData;
 }
 
@@ -19,7 +19,7 @@ interface SetGroupsProps {
 export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNum, participants, data } : SetGroupsProps) {
     
     const [groupSize, setGroupSize] = useState(4);
-    const [groupMembers, setGroupMembers] = useState<Profile[] | Team[]>([]);
+    const [groupMembers, setGroupMembers] = useState<TournamentParticipant[]>([]);
     const [groupName, setGroupName] = useState<string>('');
     const [groups, setGroups] = useState<TournamentSubStage[]>([]);
 
@@ -28,6 +28,8 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     const undo = () => {
+        console.log(groups);
+        console.log(stageNum);
         dispatcher({
             type : 'UNDO_STEP', 
             data : { }, 
@@ -36,13 +38,31 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
         })
     }
 
+    const sideUndo = () => {
+        
+    }
+
+    const submitGroups = () => {
+        const nextStage = data.stages.find(x => x.order === stageNum + 1)
+        if (nextStage) {
+            dispatcher({
+                type : 'STEP', 
+                data : {
+                    step : `Set${nextStage.stageType}-${stageNum + 1}`, 
+                },
+                activeSSCount : groups.length,
+                isStage : true
+            });
+        }
+    }
+
     useEffect(() => {
         if (data.stages) {
             setStage(data.stages.find(x => x.order === stageNum))
         }
     }, [data]);
 
-    const isParticipantAvailable = (participant : Profile | Team) => {
+    const isParticipantAvailable = (participant : TournamentParticipant) => {
         const assignedMembers : string[] = groups.flatMap(x => x.members.flatMap(y => y.name));
         return !assignedMembers.includes(participant.name)
     }
@@ -55,48 +75,37 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
         setGroups([...groups, {
             id : new ObjectId().toHexString(),
             order : groups.length,
-            stage : stage?.order,
+            stage : stageNum,
             name : groupName,
             format : stage?.format,
+            subType : 'Sets',
             members : groupMembers,
         }]);
         setGroupMembers([]);
         setGroupName('');
     }
 
-    const submitGroups = () => {
-        const nextStage = data.stages.find(x => x.order === stageNum + 1)
-        console.log("stage num, ", stageNum);
-        if (nextStage) {
-            dispatcher({
-                type : 'STEP', 
-                data : {
-                    step : `Set${nextStage.stageType}`, 
-                },
-                activeSSCount : groups.length,
-                isStage : true
-            });
-        }
-    }
-
     useEffect(() => {
-        if (groups.length > (data.subStages ? data.subStages.length : 0)) {
+        if (groups.length > (data.subStages ? data.subStages.filter(x => x.stage === stageNum).length : 0)) {
             const num = getParticipants().length;
             setGroupSize(num < groupSize ? num : groupSize)
             inputRef.current.value = String(num);
-            dispatcher({type : 'SIDESTEP', data : { subStages : groups }, ss: 'AddTournamentSets'})
+            dispatcher({type : 'SIDESTEP', data : { subStages : groups }, ss: `SubGroupsSets-${stageNum}-${groups.length - 1}`})
         }
     }, [groups.length])
 
     useEffect(() => {
         if (data?.subStages && data.subStages.length !== groups.length) {
-            setGroups(data.subStages)
+            setGroups(data.subStages.filter(x => x.stage === stageNum));
         }
     }, [data?.subStages?.length])
 
     return (
     <li className={'tournament-configuration-box'} ref={itemRef}>
-        <button onClick={undo}>Back</button>
+        <div>
+            <button onClick={undo}>Back</button>
+            <button onClick={sideUndo}>Undo</button>
+        </div>
         <div className={'tournament-configuration-box-header'} >
             <p>Set Group Size</p>
         </div>
@@ -112,7 +121,7 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
                 <p>{`Select Group Members`}</p>
                 <div className={'tournament-participants-grid'}>
                     {!animInProgress && 
-                    <SelectableItemsList<Profile | Team> 
+                    <SelectableItemsList<TournamentParticipant> 
                     list={getParticipants()} 
                     selection={{ selected : groupMembers, setSelected : setGroupMembers, multiple : true }} 
                     limit={groupSize}
