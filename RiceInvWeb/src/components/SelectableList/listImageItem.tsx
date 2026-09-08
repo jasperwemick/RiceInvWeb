@@ -1,9 +1,9 @@
 import type { ListItemProps } from "./listItem";
 
 interface ImageListItemProps<T> extends ListItemProps<T> {
-    imgWidth ? : number;
-    imgHeight ? : number;
-    getImgSrc ? : (x : T) => string;
+    imgWidth ? : number | string;
+    imgHeight ? : number | string;
+    getImgSrc : (x : T) => string;
 }
 
 export default function ListImageItem<T>({item, topRef, imgWidth=200, imgHeight=200, clickAction=(() => {}), getImgSrc, getLabel} : ImageListItemProps<T>) {

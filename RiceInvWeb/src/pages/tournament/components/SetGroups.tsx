@@ -23,7 +23,7 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
     const [groupName, setGroupName] = useState<string>('');
     const [groups, setGroups] = useState<TournamentSubStage[]>([]);
 
-    const [stage, setStage] = useState<TournamentStage>(null);
+    const [stage, setStage] = useState<TournamentStage | null>(null);
 
     const inputRef = useRef<HTMLInputElement | null>(null);
 
@@ -58,7 +58,7 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
 
     useEffect(() => {
         if (data.stages) {
-            setStage(data.stages.find(x => x.order === stageNum))
+            setStage(data.stages.find(x => x.order === stageNum) ?? null)
         }
     }, [data]);
 
@@ -72,12 +72,14 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
     }
 
     const confirmGroup = () => {
+        if (!stage) return;
+        
         setGroups([...groups, {
             id : new ObjectId().toHexString(),
             order : groups.length,
             stage : stageNum,
             name : groupName,
-            format : stage?.format,
+            format : stage.format,
             subType : 'Sets',
             members : groupMembers,
         }]);
@@ -86,7 +88,7 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
     }
 
     useEffect(() => {
-        if (groups.length > (data.subStages ? data.subStages.filter(x => x.stage === stageNum).length : 0)) {
+        if (groups.length > (data.subStages ? data.subStages.filter(x => x.stage === stageNum).length : 0) && inputRef.current) {
             const num = getParticipants().length;
             setGroupSize(num < groupSize ? num : groupSize)
             inputRef.current.value = String(num);

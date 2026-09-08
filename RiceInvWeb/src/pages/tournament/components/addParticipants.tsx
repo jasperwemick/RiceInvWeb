@@ -18,6 +18,8 @@ export default function AddParticipants({ itemRef, dispatcher, animInProgress, p
     const [errorMsg, setErrorMsg] = useState<string>('');
 
     const submit = () => {
+        if (!data.gameMode) return;
+
         if (participants.length % data.gameMode.teamSize === 0) {
             dispatcher({
                 type : 'STEP',

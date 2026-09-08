@@ -1,7 +1,7 @@
 import { Switch, Route } from "wouter";
 
 import Navbar from "./components/Navbar";
-import Home from "./pages/homePage";
+import Home from "./pages/home/homePage";
 import Add from "./pages/addProfilePage";
 import Edit from "./pages/editProfilePage";
 import Description from "./pages/profilePage";

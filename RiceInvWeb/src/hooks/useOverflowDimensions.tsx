@@ -7,7 +7,7 @@ function subscribe(callback : () => void) {
     }
 }
 
-function useOverflowDimensions(ref : RefObject<HTMLUListElement>) {
+function useOverflowDimensions(ref : RefObject<HTMLUListElement | null>) {
     const dimensions = useSyncExternalStore(
         subscribe,
         () => JSON.stringify({

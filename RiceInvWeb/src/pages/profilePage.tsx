@@ -33,7 +33,7 @@ export default function Description() {
             <h2>
                 {profile?.name}
             </h2>
-            <img src={profile?.imageURL} alt="Player Profile"></img>
+            <img src={profile?.imageUrl} alt="Player Profile"></img>
             <h4>
                 {profile?.description}
             </h4>

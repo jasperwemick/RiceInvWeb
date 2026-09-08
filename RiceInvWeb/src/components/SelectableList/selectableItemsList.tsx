@@ -19,10 +19,12 @@ interface SelectableItemsListProps<T, P extends object = {}> {
     limit ? : number;
     removalPredicate : (a : T, b : T) => boolean;
     getLabel : (x : T) => string;
-    ComponentItem ? : (
-        { item, topRef, clickAction, getLabel } : { 
-            item : T, topRef : React.RefObject<HTMLDivElement>, clickAction ? : () => void, getLabel : (x : T) => string 
-        } & P) => React.JSX.Element;
+    ComponentItem ? : React.ComponentType<P & {
+        item : T, 
+        topRef : React.RefObject<HTMLDivElement>, 
+        clickAction ? : () => void, 
+        getLabel : (x : T) => string 
+    }>
     ExtraProps ? : P;
 }
 

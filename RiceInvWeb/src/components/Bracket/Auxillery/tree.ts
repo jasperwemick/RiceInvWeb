@@ -214,7 +214,7 @@ export function getMaxDepth(node : BracketNode | null): number {
 //     }
 // }
 
-export const treeToArray = (node : BracketNode, maxDepth : number, bracketType : 'U' | 'UD' | 'UDB' | 'LD' | 'LDB', output : number=1) => {
+export const treeToArray = (node : BracketNode | null, maxDepth : number, bracketType : 'U' | 'UD' | 'UDB' | 'LD' | 'LDB', output : number=1) => {
 
     var treeMap : BracketNode[][] = Array.from({ length : maxDepth + 1 }, () => []);
 

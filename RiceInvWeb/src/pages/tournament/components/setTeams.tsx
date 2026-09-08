@@ -30,7 +30,7 @@ export default function SetTeams({ itemRef, dispatcher, data } : SetTeamsProps) 
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-button-option'}>
                     <button onClick={() => submit('Y')}>Yes</button>
-                    {data.gameMode.teamSize < 2 && <button onClick={() => submit('N')}>No</button>}
+                    {data.gameMode && data.gameMode.teamSize < 2 && <button onClick={() => submit('N')}>No</button>}
                 </div>
             </div>
         </li>

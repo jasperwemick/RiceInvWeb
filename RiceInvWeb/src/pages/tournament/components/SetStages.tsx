@@ -18,10 +18,10 @@ const defaultStages : Record<string, string[]> = {
 
 
 function ComplexListItem({ item, tournamentData, setTournamentData, index } : ComplexListItemProps) {
-    const [selected, setSelected] = useState<string>('');
+    const [selected, setSelected] = useState<string | null>('');
 
     useEffect(() => {
-        if (selected === '') return;
+        if (selected === '' || selected === null) return;
         const newData : TournamentStage[] = tournamentData.map((d, i) => {
 
             return i === index ? { ...d, format : selected } : d
@@ -59,7 +59,7 @@ interface SetStagesProps {
 
 export default function SetStages({ itemRef, dispatcher, animInProgress } : SetStagesProps) {
 
-    const [stageCount, setStageCount] = useState<number>(0);
+    const [stageCount, setStageCount] = useState<number | null>(0);
 
     const [tournamentStageData, setTournamentStageData] = useState<TournamentStage[]>([]);
 
@@ -83,12 +83,14 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
     }
 
     useEffect(() => {
+        if (!stageCount) return;
+        
         setTournamentStageData(Array.from({ length : stageCount }, (_, i) => {
             return {
                 id : new ObjectId().toHexString(),
                 order : i,
                 stageType : 'Groups',
-                format : null
+                format : ''
             }}))    
     }, [stageCount])
 
@@ -100,7 +102,7 @@ export default function SetStages({ itemRef, dispatcher, animInProgress } : SetS
                     id : stage.id,
                     order : j,
                     stageType : stage.stageType === 'Groups' ? 'Bracket' : 'Groups',
-                    format : null,
+                    format : '',
                     stageName : stage.stageName
                 }
             }));

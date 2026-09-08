@@ -36,7 +36,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
         nodeArr.reverse().map((level, i) => {
             level.map((node, j) => {
                 const bracketWidth = level.length
-                const setPlayers : TournamentParticipant[] = Array.from({ length: 2 }, () => null);
+                const setPlayers : (TournamentParticipant | null)[] = Array.from({ length: 2 }, () => null);
 
                 if (stage.format.includes('Single') || layer === 'Upper') {
                     if (realCount === 0 || (!node.left && !node.right)) { // Start of bracket
@@ -81,8 +81,8 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                 }
                 else { // Should only be lower bracket
                     console.log(node);
-                    const leftPrev = node.left ? `${node.left.value} W` : `${buddyReference.find(x => x.buddy ? x.buddy.value === node.value : false)?.value} L`;
-                    const rightPrev = node.right ? `${node.right.value} W` : `${buddyReference.findLast(x => x.buddy ? x.buddy.value === node.value : false)?.value} L`;
+                    const leftPrev = node.left ? `${node.left.value} W` : `${buddyReference?.find(x => x.buddy ? x.buddy.value === node.value : false)?.value} L`;
+                    const rightPrev = node.right ? `${node.right.value} W` : `${buddyReference?.findLast(x => x.buddy ? x.buddy.value === node.value : false)?.value} L`;
                     setPlayers[0] = {
                         def : 'Placeholder',
                         name : leftPrev,
@@ -121,7 +121,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                     { level.length ? level.map((node, j) => {
                         return (
                             <React.Fragment key={j}>
-                                <BracketSet bracketSet={sets.find(x => x.order === node.value)} ref={refMap(node.value)}/>
+                                <BracketSet bracketSet={sets.find(x => x.order === node.value) ?? null} ref={refMap(node.value)}/>
                                 {
                                 node.parent ?
                                 <Xarrow 

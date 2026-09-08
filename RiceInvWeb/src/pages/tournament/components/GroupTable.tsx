@@ -57,7 +57,7 @@ export default function GroupTable({ groupSize, members, subId, sets, setSets, i
             if (interactive && index !== Math.floor(index / matrixSize) * (matrixSize + 1)) { // set
                 const row = Math.floor(index / matrixSize);
                 const col = index % matrixSize;
-                if (row > col && sets && sets.length === 0) {
+                if (row > col && sets && sets.length === 0 && subId) {
                     const setMembers = castMixedMembers([members[row % groupSize], members[col % groupSize]]);
                     setList.push({
                         id : new ObjectId().toHexString(),
@@ -73,7 +73,7 @@ export default function GroupTable({ groupSize, members, subId, sets, setSets, i
             }
             return '';
         }));
-        if (interactive && setList.length) {
+        if (interactive && setList.length && setSets) {
             console.log('adding new sets');
             console.log(setList);
             setSets(setList);
@@ -100,7 +100,7 @@ export default function GroupTable({ groupSize, members, subId, sets, setSets, i
                     backgroundColor : greyArea ? '#616161ff' : '#68849eff',
                     textAlign : 'center',
                     alignContent : 'center'
-                }} text={cell} index={index} interactive={interactive}/>
+                }} text={cell} index={index} interactive={interactive ?? false}/>
             )
         })
     }

@@ -1,5 +1,5 @@
 import { useEffect, useState, type RefObject } from "react";
-import type { GameMode, Profile, Team } from "../../../data/types";
+import type { GameMode, Profile, Team, TournamentParticipant } from "../../../data/types";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 import ListDropdownItem from "../../../components/SelectableList/listDropdownItem";
@@ -8,8 +8,8 @@ interface CreateTeamsProps {
     itemRef : RefObject<HTMLLIElement>;
     dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
-    participants : Profile[];
-    gameMode : GameMode;
+    participants : TournamentParticipant[];
+    gameMode : GameMode | null;
     data : TournamentData;
     signal : { action ? : string };
 }
@@ -63,7 +63,7 @@ export default function CreateTeams({ itemRef, dispatcher, animInProgress, parti
 
     const getUnlockedProfiles = () => {
         const locked = teams.flatMap(x => x.members.flatMap(x => x._id));
-        return participants.filter((x) => !locked.includes(x._id));
+        return participants.filter((x) => x.def === 'Profile' && !locked.includes(x._id)) as Profile[];
     }
 
     return (
@@ -74,14 +74,14 @@ export default function CreateTeams({ itemRef, dispatcher, animInProgress, parti
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-subbox'}>
-                    <p>{`Team Size : ${gameMode.teamSize}`}</p>
+                    <p>{`Team Size : ${gameMode?.teamSize}`}</p>
                     <div className={'tournament-participants-grid'}>
-                        {!animInProgress && 
+                        {!animInProgress && gameMode && 
                         <SelectableItemsList<Profile> 
                         list={getUnlockedProfiles()} 
                         selection={{ selected : teamMembers, setSelected : setTeamMembers, multiple : true }} 
                         limit={gameMode.teamSize}
-                        removalPredicate={(a, b) => a._id != b._id} 
+                        removalPredicate={(a, b) => a.name != b.name} 
                         getLabel={(x) => x.name}/>}
                     </div>
                     <input value={teamName} onChange={(e) => setTeamName(e.target.value)}/>
@@ -90,7 +90,7 @@ export default function CreateTeams({ itemRef, dispatcher, animInProgress, parti
                 <div className={'tournament-configuration-subbox'}>
                     <div className={'tournament-participants-grid'}>
                         {!animInProgress && 
-                        <SelectableItemsList<Team> 
+                        <SelectableItemsList<Team, { subItems : (x : Team) => string[] }> 
                         list={teams} 
                         selection={{ selected : selectedTeams, setSelected : setSelectedTeams, multiple : true }} 
                         removalPredicate={(a, b) => a.name != b.name} 

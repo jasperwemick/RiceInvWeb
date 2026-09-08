@@ -80,7 +80,12 @@ export default function SubGroupsSets({ itemRef, dispatcher, animInProgress, ord
     }
 
     const submit = () => {
-        const stg : TournamentSubStage = { ...data.subStages.find(x => x === subGroup), qualificationSlots : slots};
+        const cachedSubStage = data.subStages.find(x => x === subGroup);
+        if (!cachedSubStage) {
+            // Throw some error
+            return;
+        }
+        const stg : TournamentSubStage = { ...cachedSubStage, qualificationSlots : slots};
         dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : `SubGroupsSets-${subGroup.stage}-${order}` });
     }
 

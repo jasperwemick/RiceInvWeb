@@ -16,7 +16,7 @@ interface SetPlayoffsProps {
 export default function SetBracket({itemRef, dispatcher, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
     
     const [numPlayers, setNumPlayers] = useState(participants.length);
-    const [stage, setStage] = useState<TournamentStage>(null);
+    const [stage, setStage] = useState<TournamentStage | null>(null);
     const [brackets, setBrackets] = useState<TournamentSubStage[]>([]);
     const [sets, setSets] = useState<TournamentSet[]>([]);
 
@@ -34,7 +34,7 @@ export default function SetBracket({itemRef, dispatcher, animInProgress, stageNu
 
     useEffect(() => {
         if (data.stages) {
-            setStage(data.stages.find(x => x.order === stageNum))
+            setStage(data.stages.find(x => x.order === stageNum) ?? null)
         }
     }, [data]);
 

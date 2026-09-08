@@ -14,7 +14,7 @@ function MapSetInfo({ teamRecords, setData } : { teamRecords : Record<string, nu
 }
 
 interface BracketSetProps {
-    bracketSet : TournamentSet,
+    bracketSet : TournamentSet | null,
     ref : React.RefObject<HTMLDivElement>
 }
 

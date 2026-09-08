@@ -12,7 +12,7 @@ interface DraggableListProps {
 }
 
 export default function DraggableList({items, infinite=true, animate=false, children} : DraggableListProps) {
-    const sliderRef = useRef<HTMLUListElement>(null);
+    const sliderRef = useRef<HTMLUListElement | null>(null);
     const animationFrameId = useRef<number>(0);
 
     const [isMouseDown, setIsMouseDown] = useState(false);

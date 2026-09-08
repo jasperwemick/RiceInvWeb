@@ -24,6 +24,30 @@ interface SideStep {
     order : number;
 }
 
+export interface TournamentData {
+    step : string;
+    name : string;
+    gameMode : GameMode | null;
+    participants : TournamentParticipant[];
+    particpantType : 'Profile' | 'Team' | 'Placeholder';
+    stages : TournamentStage[];
+    subStages : TournamentSubStage[];
+    sets : TournamentSet[];
+    matches : TournamentMatch[];
+}
+
+const initialTournamentData : TournamentData = {
+    step : '',
+    name : '',
+    gameMode : null,
+    participants : [],
+    particpantType : 'Profile',
+    stages : [],
+    subStages : [],
+    sets : [],
+    matches : []
+}
+
 interface WizardState {
     step: string;
     sideSteps: string[];
@@ -31,13 +55,13 @@ interface WizardState {
     pendingStep: string | null;
     sideStepIndex: number;
     ssSignal: { action?: string } | null;
-    tournament: TournamentData | null;
+    tournament: TournamentData;
     currentStage: number;
     placeholders : Placeholder[];
     history: string[];
     ssHistory : SideHistoryItem[],
     animInProgress: boolean;
-    pendingTransition: TournamentData | null;
+    pendingTransition: Partial<TournamentData> | null;
     expectedSubmissions: number;
     receivedSubmissions: number;
     stepIsStage : boolean;
@@ -45,11 +69,11 @@ interface WizardState {
 }
 
 export type WizardAction =
-    | { type: 'STEP'; data: TournamentData; activeSSCount ? : number; isStage ? : boolean}
-    | { type: 'UNDO_STEP'; data : TournamentData; activeSSCount ? : number; isStage ? : boolean }
-    | { type: 'SIDESTEP'; data: TournamentData; ss : string }
-    | { type: 'SUBMIT_SIDESTEP'; data : TournamentData; ss : string }
-    | { type: 'UNDO_SIDESTEP'; data : TournamentData; ss : string; index : number }
+    | { type: 'STEP'; data: Partial<TournamentData>; activeSSCount ? : number; isStage ? : boolean}
+    | { type: 'UNDO_STEP'; data : Partial<TournamentData>; activeSSCount ? : number; isStage ? : boolean }
+    | { type: 'SIDESTEP'; data: Partial<TournamentData>; ss : string }
+    | { type: 'SUBMIT_SIDESTEP'; data : Partial<TournamentData>; ss : string }
+    | { type: 'UNDO_SIDESTEP'; data : Partial<TournamentData>; ss : string; index : number }
     | { type: 'ANIM_REMOVE_DONE' }
     | { type: 'ANIM_ADD_DONE'; isSideStep: boolean }
     | { type: 'SIGNAL_HANDLED' };
@@ -61,7 +85,7 @@ const initialWizardState : WizardState = {
     pendingStep: null,
     sideStepIndex: 0,
     ssSignal: null,
-    tournament: null,
+    tournament: initialTournamentData,
     currentStage: -1,
     placeholders : [],
     history: [],
@@ -73,18 +97,6 @@ const initialWizardState : WizardState = {
     stepIsStage : false,
     cache : {}
 };
-
-export interface TournamentData {
-    step ? : string;
-    name ? : string;
-    gameMode ? : GameMode;
-    participants ? : TournamentParticipant[];
-    particpantType ? : 'Profile' | 'Team' | 'Placeholder';
-    stages ? : TournamentStage[];
-    subStages ? : TournamentSubStage[];
-    sets ? : TournamentSet[];
-    matches ? : TournamentMatch[];
-}
 
 
 function assignField<K extends keyof TournamentData>(
@@ -101,7 +113,7 @@ const KEYS: Partial<Record<keyof TournamentData, string>> = {
     subStages: 'id',
 };
 
-function removeFields(baseData : TournamentData | null, toRemove : Partial<TournamentData>) : TournamentData {
+function removeFields(baseData : TournamentData, toRemove : Partial<TournamentData>) : TournamentData {
     const localData = { ...baseData };
 
     const removeById = <T extends Record<string, any>>(existing: T[] = [], incoming: T[] = [], idKey: string): T[] => {
@@ -114,20 +126,23 @@ function removeFields(baseData : TournamentData | null, toRemove : Partial<Tourn
 
     for (const key of Object.keys(toRemove) as (keyof TournamentData)[]) {
         const marked = toRemove[key];
+        if (!marked) continue;
+
         const id = KEYS[key]
         if (Array.isArray(marked) && id) {
             assignField(localData, key, removeById(localData[key] as any[], marked, id))
         } else {
-            assignField(localData, key, undefined)
+            assignField(localData, key, null)
         }
     }
 
     return localData;
 }
 
-function appendFields(baseData : TournamentData | null, toUpsert : Partial<TournamentData>) : TournamentData {
+function appendFields(baseData : TournamentData, toUpsert : Partial<TournamentData>) : TournamentData {
     const localData = { ...baseData };
 
+    if (!toUpsert) return localData;
 
     const upsertById = <T extends Record<string, any>>(existing: T[] = [], incoming: T[] = [], idKey: string): T[] => {
         const map = new Map(existing.map(item => [item[idKey], item]));
@@ -139,6 +154,8 @@ function appendFields(baseData : TournamentData | null, toUpsert : Partial<Tourn
 
     for (const key of Object.keys(toUpsert) as (keyof TournamentData)[]) {
         const marked = toUpsert[key];
+        if (!marked) continue;
+
         const id = KEYS[key]
         
         if (Array.isArray(marked) && id) {
@@ -152,9 +169,12 @@ function appendFields(baseData : TournamentData | null, toUpsert : Partial<Tourn
 }
 
 function mapParticipantPlaceholder(state : WizardState, data : TournamentData) {
+
+    if (!data.subStages) return [];
+
     return data.subStages.filter(x => x.stage === state.currentStage).flatMap((sStg, i) => {
         const sStgMatches = data.matches ? data.matches.filter((match) => {
-            return data.sets.find(set => set.id === match.setId)
+            return data.sets?.find(set => set.id === match.setId)
         }) : [];
         
         return sStg.members.map((member) : Placeholder => {
@@ -175,13 +195,13 @@ function mapParticipantPlaceholder(state : WizardState, data : TournamentData) {
 }
 
 
-function commitNextStep(state: WizardState, data: TournamentData): WizardState {
+function commitNextStep(state: WizardState, data: Partial<TournamentData>): WizardState {
     const mergedData = { ...state.tournament, ...data };
     return {
         ...state,
         tournament: mergedData,
         stepIndex: state.stepIndex + 1,
-        pendingStep: data.step,
+        pendingStep: mergedData.step,
         sideSteps : [],
         sideStepIndex: 0,
         history: [...state.history, state.step],
@@ -194,7 +214,7 @@ function commitNextStep(state: WizardState, data: TournamentData): WizardState {
     };
 }
 
-function commitPrevStep(state: WizardState, data: TournamentData) : WizardState {
+function commitPrevStep(state: WizardState, data: Partial<TournamentData>) : WizardState {
 
     const filteredData = removeFields(state.tournament, data);
     const prevHistory = [...state.history];
@@ -230,7 +250,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
             if (!action.activeSSCount || action.activeSSCount === 0) {
                 return commitNextStep({
                     ...state,
-                    stepIsStage : action.isStage
+                    stepIsStage : action.isStage ?? false
                 }, action.data);
             }
             // hold the transition, signal sidesteps to submit, wait for them
@@ -248,7 +268,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
             if (!action.activeSSCount || action.activeSSCount === 0) {
                 return commitPrevStep({
                     ...state,
-                    stepIsStage : action.isStage
+                    stepIsStage : action.isStage ?? false
                 }, action.data);
             }
 
@@ -393,19 +413,20 @@ function defineStep<P extends object>(process : ProcessStep<P>) : ProcessStep<P>
 function defineSideStep<S extends object>(process : ProcessSideStep<S>) : ProcessSideStep<S> { return process };
 
 interface StageComponent {
-    component : React.ComponentType<any>,
-    sides ? : Record<string, React.ComponentType<any>>
+    Component : React.ComponentType<any>,
+    sides : Record<string, React.ComponentType<any>>
 }
 
 const stageComponentRecord : Record<string, StageComponent> = {
     'Groups' : {
-        component : SetGroups,
+        Component : SetGroups,
         sides : {
             'Sets' : SubGroupsSets
         }
     },
     'Bracket' : {
-        component : SetBracket
+        Component : SetBracket,
+        sides : {}
     }
 }
 
@@ -425,7 +446,7 @@ export default function CreateTournamentPage() {
         const getPlayers = async () =>  {
             try {
                 const profs = await apiFetch<Profile[]>('/api/profiles/noimg');
-                setProfiles(profs.map((prof) => {return {def : 'Profile', ...prof}}));
+                setProfiles(profs.map((prof) => {return {...prof, def : 'Profile'}}));
             }
             catch(e) {
                 console.log('Failed to fetch: ', e);
@@ -438,7 +459,7 @@ export default function CreateTournamentPage() {
     const getRef = useGetRef<HTMLLIElement>();
     const getSideRef = useGetRef<HTMLLIElement>();
 
-    const steps : ProcessStep[] = [
+    const steps = [
         defineStep({ key : 'Start', Component : CreateStart }),
         defineStep({ key : 'SetGame', Component : SetGame, props : { animInProgress } }),
         defineStep({ key : 'AddParticipants', Component : AddParticipants, props : { animInProgress, profiles } }),
@@ -447,37 +468,37 @@ export default function CreateTournamentPage() {
                 key : 'CreateTeams',
                 Component : CreateTeams, 
                 parentKey : 'SetTeams',
-                props : { animInProgress, participants : tournament?.participants?.filter(x => x.def == 'Profile'), gameMode : tournament?.gameMode }
+                props : { animInProgress, participants : tournament.participants, gameMode : tournament.gameMode }
             })
         ]}),
         defineStep({ key : 'SetStages', Component : SetStages, props : { animInProgress } }),
     ].concat(
-        tournament?.stages ? 
-        tournament.stages.map((stage, i) => {
+        tournament.stages.map<ProcessStep<any>>((stage, i) => {
             return defineStep({ 
                 key : `Set${stage.stageType}-${i}`, 
-                Component : stageComponentRecord[stage.stageType].component, 
+                Component : stageComponentRecord[stage.stageType].Component, 
                 props : { 
                     animInProgress,
                     stageNum : i,
-                    participants : currentStage > 0 ? placeholders : tournament?.participants
+                    participants : currentStage > 0 ? placeholders : tournament.participants
                 },
-                sidesteps : stageComponentRecord[stage.stageType].sides ? tournament?.subStages?.filter(x => x.stage === i).map((subStage, j) => {
+                sidesteps : tournament.subStages.filter(x => x.stage === i).map((subStage, j) => {
                     return  defineSideStep({
                         key : `Sub${stage.stageType}${subStage.subType}-${i}-${j}`,
                         Component :  stageComponentRecord[stage.stageType].sides[subStage.subType],
                         parentKey : `Set${stage.stageType}-${i}`,
                         props : { animInProgress, subGroup : subStage, order : j, parentList : tournament.subStages }
                     })
-                }) : []
+                })
             })
-        }) : []
+        })
     )
 
     useLayoutEffect(() => {
         if (state.pendingStep === null || stepIndex < 0) return; 
-
-        const idx = steps.indexOf(steps.find(x => x.key === step));
+        const stepListItem = steps.find(x => x.key === step);
+        if (!stepListItem) return;
+        const idx = steps.indexOf(stepListItem);
         const item = getRef(idx).current;
         if (item) {
             item.classList.add('exiting');
@@ -490,7 +511,9 @@ export default function CreateTournamentPage() {
 
     // Enter animation — fires whenever `step` actually commits
     useLayoutEffect(() => {
-        const idx = steps.indexOf(steps.find(x => x.key === step));
+        const stepListItem = steps.find(x => x.key === step);
+        if (!stepListItem) return;
+        const idx = steps.indexOf(stepListItem);
         const item = getRef(idx).current;
         if (item) {
             item.classList.add('active');
@@ -529,7 +552,7 @@ export default function CreateTournamentPage() {
     return (
         <div className={'tournament-create'}>
             <ul className={'tournament-illusion-list'} ref={listRef}>
-                {steps.map((st, i) => {
+                {(steps as ProcessStep<any>[]).map((st, i) => {
                     return (
                         <React.Fragment key={i}>
                             {

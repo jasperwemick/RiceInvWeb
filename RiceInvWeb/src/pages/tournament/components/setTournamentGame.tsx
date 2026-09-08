@@ -60,13 +60,13 @@ export default function SetTournamentGame({ itemRef, animInProgress, dispatcher,
                 <div className={'tournament-configuration-subbox'}>
                     <div className={'tournament-participants-grid'}>
                         {!animInProgress && 
-                        <SelectableItemsList<Game>
+                        <SelectableItemsList<Game, { getImgSrc : (x : Game) => string, imgWidth ? : string, imgHeight ? : string }>
                         list={games} 
                         selection={{selected : selectedGame, setSelected : setSelectedGame, multiple : false}}
                         removalPredicate={(a, b) => (a.name != b.name)}
                         getLabel={(x) => x.fullName}
                         ComponentItem={ListImageItem}
-                        ExtraProps={{ getImgSrc : (x : Game) => '/', imgWidth : '6rem', imgHeight : '6rem' }}/>}
+                        ExtraProps={{ getImgSrc : (x) => '/', imgWidth : '6rem', imgHeight : '6rem' }}/>}
                     </div>
                 </div>
                 {selectedGame && 
