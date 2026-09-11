@@ -1,5 +1,8 @@
-# Rice Invitational Webpage
+# The Rice Invitational Webpage
 
-The Rice Invitational is a tournament I made for my friends and I where everyone is competing in a multitude of games to determine which of us is the GREATEST GAMER
+The Rice Invitational is a gaming tournament I made for my friends. The website was originally a tool for recording/showcasing things related to it, but now
+has also become a personal space of mine for other projects.
 
-I continue to work on this webpage as an educational experience and to use as a tool for data records and scheduling
+I've decided to keep the name Rice Invitational for the webpage since the domain I own is similarly named.
+
+I continue to work on this webpage as a fun educational experience for myself.
