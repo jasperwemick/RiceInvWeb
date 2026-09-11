@@ -1,12 +1,12 @@
-*{
+/* *{
     margin: 0;
     padding: 0;
     font-family: Arial, Helvetica, sans-serif;
     box-sizing: border-box;
-}
+} */
 
 /* Header Stuff */
-.header{
+/* .header{
     min-height: 100vh;
     width: 100%;
     background-color: rgba(45, 45, 53, 1.0);
@@ -84,11 +84,11 @@ nav img {
 
 nav .fa{
     display: none;
-}
+} */
 
 /* Visible - Player Select Page */
 
-.players {
+/* .players {
     width: 100%;
     height: 2840px;
     margin: auto;
@@ -140,18 +140,18 @@ h3 {
     background: #30324b;
     box-shadow: 0 0 30px 0px rgba(0, 0, 0, 0.7);
     
-}
+} */
 
 
 /* content canvas */
-.content-canvas {
+/* .content-canvas {
     width: 100%;
     height: 1400px;
-}
+} */
 
 
 /* Hidden - Player Info*/
-.content-wrapper .pages {
+/* .content-wrapper .pages {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%) ;
@@ -207,12 +207,12 @@ h3 {
 .blur-bg {
     pointer-events: none;
     filter: blur(5px);
-}
+} */
 
 
 
 /* Folder and File - Objects*/
-.folder-object {
+/* .folder-object {
     width: 500px;
     height: 500px;
     position: absolute;
@@ -294,10 +294,10 @@ h3 {
 .folder-object .folder-animation:hover .file {
     height: 500px;
     top: -150px;
-}
+} */
 
 /* Television - on and off */
-.tv-object {
+/* .tv-object {
     width: 500px;
     height: 500px;
     position: absolute;
@@ -381,10 +381,10 @@ h3 {
 }
 .vent {
     
-}
+} */
 
 /* Charts */
-.chart-object {
+/* .chart-object {
     width: 500px;
     height: 500px;
     position: absolute;
@@ -434,11 +434,11 @@ h3 {
     height: 250px;
     top: 100px;
     left: 320px;
-}
+} */
    
 
 /* Standings - Leaderboard and stuff*/
-.standings {
+/* .standings {
     height: 100%;
     width: 100%;
     background-color: rgba(45, 45, 53, 1.0);
@@ -575,12 +575,12 @@ tbody tr td:hover {
 }
 .exit-button:hover {
     background-color: #1e1f2e;
-}
+} */
 
 /* Mobile View */
-@media(max-width: 720px) {
+/* @media(max-width: 720px) { */
     /* Header Stuff */
-    .text-box h1 {
+    /* .text-box h1 {
         font-size: 20px;
     }
     .nav-links ul li {
@@ -606,10 +606,10 @@ tbody tr td:hover {
     }
     .nav-links ul{
         padding: 20px;
-    }
+    } */
 
     /* Player Stuff */
-    .row_index_one{
+    /* .row_index_one{
         flex-direction: column;
     }
-}
+} */

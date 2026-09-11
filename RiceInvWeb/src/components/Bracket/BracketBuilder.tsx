@@ -1,0 +1,146 @@
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
+import BracketSet from "./BracketSet"
+import useAuth from "../../hooks/useAuth"
+import type { BracketNode } from "./Auxillery/tree"
+import type { Placeholder, Profile, Team, TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types"
+import { useXarrow, Xarrow, Xwrapper } from "../../util/xarrow-compat"
+import { ObjectId } from "bson"
+
+interface BracketBuilderProps {
+    nodeArr : BracketNode[][];
+    refMap : (idx : number) => React.RefObject<HTMLDivElement>;
+    sets : TournamentSet[];
+    setSets : React.Dispatch<React.SetStateAction<TournamentSet[]>>;
+    stage : TournamentStage;
+    subStage : TournamentSubStage;
+    players : TournamentParticipant[];
+    layer : 'Upper' | 'Lower';
+    buddyReference ? : BracketNode[];
+}
+
+export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, subStage, players, layer, buddyReference } : BracketBuilderProps) {
+
+    const { auth } = useAuth();
+
+    useEffect(() => {
+        const sortedSeeds = players.filter(x => x.def === 'Placeholder').map((p) => {
+                return { ...p, name : 'placeholder'}
+            })
+        sortedSeeds.sort((a, b) => a.points - b.points) // Should be ascending order of seeds
+        console.log('seeds size, ', sortedSeeds.length);
+        let realCount = 0;
+        let capacity = 0;
+
+        const newSets : TournamentSet[] = [];
+
+        nodeArr.reverse().map((level, i) => {
+            level.map((node, j) => {
+                const bracketWidth = level.length
+                const setPlayers : (TournamentParticipant | null)[] = Array.from({ length: 2 }, () => null);
+
+                if (stage.format.includes('Single') || layer === 'Upper') {
+                    if (realCount === 0 || (!node.left && !node.right)) { // Start of bracket
+                        if (sortedSeeds.length > bracketWidth * 2) {
+                            setPlayers[0] = sortedSeeds[bracketWidth + j];
+                            setPlayers[1] = sortedSeeds[bracketWidth - 1 - j];
+                        }
+                        else {
+                            setPlayers[0] = sortedSeeds[j];
+                            setPlayers[1] = sortedSeeds[bracketWidth * 2 - 1 - j];
+                        }
+                        capacity += 2
+                    }
+                    else if (sortedSeeds.length > capacity) { // Fill top spot of sets following the first column until all are accounted for
+                        setPlayers[0] = sortedSeeds[capacity];
+
+                        const lowerPrev = node.right ? node.right.value : node.left ? node.left.value : 'What';
+                        setPlayers[1] = {
+                            def : 'Placeholder',
+                            name : `${lowerPrev} W`,
+                            points : 0
+                        }
+                        capacity += 1
+                    }
+                    else {
+                        const leftPrev = node.left ? `${node.left.value} W` : ((!node.parent && node.right) ? `${node.right.value} L` : `Wrong!`); // Backup is check for grand finals reset
+                        const rightPrev = node.right ? `${node.right.value} W` : `${buddyReference?.find(x => x.parent?.value === node.value)?.value} W` ; // Backup is check for grand finals
+                        setPlayers[0] = {
+                            def : 'Placeholder',
+                            name : leftPrev,
+                            points : 0
+                        }
+                        setPlayers[1] = {
+                            def : 'Placeholder',
+                            name : rightPrev,
+                            points : 0
+                        }
+                    }
+                }
+                else if (stage.format.includes('Bias')) {
+                    
+                }
+                else { // Should only be lower bracket
+                    console.log(node);
+                    const leftPrev = node.left ? `${node.left.value} W` : `${buddyReference?.find(x => x.buddy ? x.buddy.value === node.value : false)?.value} L`;
+                    const rightPrev = node.right ? `${node.right.value} W` : `${buddyReference?.findLast(x => x.buddy ? x.buddy.value === node.value : false)?.value} L`;
+                    setPlayers[0] = {
+                        def : 'Placeholder',
+                        name : leftPrev,
+                        points : 0
+                    }
+                    setPlayers[1] = {
+                        def : 'Placeholder',
+                        name : rightPrev,
+                        points : 0
+                    }
+                }
+
+                const newSet : TournamentSet = {
+                    id : new ObjectId().toHexString(),
+                    order : node.value,
+                    subStageId : subStage.id,
+                    bestOf : 5,
+                    participants : setPlayers.filter((x): x is Placeholder => x != null && x.def === 'Placeholder'),
+                    participantType : 'Placeholder'
+                }
+                newSets.push(newSet);
+            })
+
+            if (level.length > 0) realCount += 1;
+        })
+
+        setSets(prev => [...prev, ...newSets]);
+
+    }, [players.length, nodeArr.length]);
+
+    return (
+        <Xwrapper>
+        {nodeArr.map((level, i) => {
+            return (
+                <div key={i}>
+                    { level.length ? level.map((node, j) => {
+                        return (
+                            <React.Fragment key={j}>
+                                <BracketSet bracketSet={sets.find(x => x.order === node.value) ?? null} ref={refMap(node.value)}/>
+                                {
+                                node.parent ?
+                                <Xarrow 
+                                key={`${node.value}-${sets.length}`}
+                                start={refMap(node.value)} 
+                                end={refMap(node.parent.value)}
+                                headSize={0}
+                                startAnchor={'right'}
+                                endAnchor={'left'}/> : 
+                                null
+                                }
+                            </React.Fragment>
+                        )
+
+                    }) : <div className={`bracket-ghost-shell`}/>}
+                </div>
+            )
+        })}
+        </Xwrapper>
+    )
+}
+
