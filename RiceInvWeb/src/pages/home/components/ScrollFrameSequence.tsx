@@ -6,7 +6,7 @@ interface ScrollFrameSequenceProps {
     scrollHeightVh?: number; // how many viewport-heights tall the scrollable wrapper is — more = slower/longer scrub
 }
 
-export default function ScrollFrameSequence({ frames, scrollHeightVh = 200 }: ScrollFrameSequenceProps) {
+export default function ScrollFrameSequence({ frames, scrollHeightVh = 300 }: ScrollFrameSequenceProps) {
     const wrapperRef = useRef<HTMLDivElement | null>(null);
     const progress = useScrollProgress(wrapperRef);
 
@@ -15,7 +15,7 @@ export default function ScrollFrameSequence({ frames, scrollHeightVh = 200 }: Sc
     const currentIndex = Math.floor(rawIndex); // clamp so currentIndex+1 stays valid
 
     return (
-        <div ref={wrapperRef} style={{ height: `${scrollHeightVh}vh`, position: 'relative', background: 'linear-gradient(#6998e9ff, #4071c5)' }}>
+        <div ref={wrapperRef} style={{ height: `${scrollHeightVh}vh`, position: 'relative' }}>
             <div
                 style={{
                     position: 'sticky',

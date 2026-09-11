@@ -13,7 +13,7 @@ export default function ProfileListItem({profile, width=200, height=200, clickAc
         <li>
             <div onDoubleClick={() => clickAction ? clickAction(): null} style={styleOptions}>
                 <img src={profile.imageUrl} width={width} height={height} alt="Player Profile" draggable={`false`}></img>
-                <p>{profile.name}</p>
+                <p>{''}</p>
             </div>
         </li>
     )

@@ -1,10 +1,11 @@
 import type { CSSProperties } from "react";
 import useProfiles from "../../../components/Profile/hooks/useProfiles";
 import DrawableImage from "./DrawableImage";
+import { Link } from "wouter";
 
 const passageTextStyle : CSSProperties = {
     fontFamily : 'sans-serif',
-    fontSize : '1.5pc',
+    fontSize : '20pt',
     color : '#252c33ff'
 }
 
@@ -16,6 +17,8 @@ const pageButton : CSSProperties = {
     fontSize : '2pc',
     color : '#252c33ff',
     alignContent : 'center',
+    textDecoration : 'none',
+    textAlign : 'center'
 }
 
 export default function MeInfo({ stage, progress, localProgress } : { stage : number, progress : number, localProgress : number }) {
@@ -33,7 +36,7 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
                         padding : '1rem',
                         textAlign : 'center',
                         fontSize : '3pc'
-                    }}>{`The Host`}</p>
+                    }}>{`Me!`}</p>
                 </div>
                 <div className={`me-base-grid-block`}>
                     <p style={{
@@ -53,19 +56,24 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
                     border : '0.5rem solid #091c50', 
                     borderRadius : '2rem', 
                     background : 'linear-gradient(#aabbcc, #6f70c9)',
-                    padding : '1rem'}}>
-                    <p style={{ ...passageTextStyle, textAlign : 'left', margin : '0 0 1rem 0'}}>
-                        {`Hello! Welcome to my website. This is a place where I compile things I've created or plan on creating.
-                        This is the new future direction for this site. Up until this point it was primarily focused on the Rice Inviational, 
-                        hence the domain name`}
+                    padding : '2rem',
+                    display : 'flex',
+                    flexDirection : 'column', 
+                    gap : '2rem'}}>
+                    <p style={{ ...passageTextStyle, textAlign : 'center', fontSize : '32pt'}}>
+                        {`Hello! Welcome to my website!`}
                     </p>
-                    <p style={{ ...passageTextStyle, textAlign : 'left', margin : '0 0 1rem 0'}}>
+                    <p style={{ ...passageTextStyle, textAlign : 'left'}}>
+                        {`This is a place where I compile things I've created or plan on creating. Up until this point it was primarily focused on the Rice Inviational, 
+                        hence the domain name. Now it also serves as my personal space for other projects and whatnot.`}
+                    </p>
+                    <p style={{ ...passageTextStyle, textAlign : 'left'}}>
                         {`The Rice Invitational was originally a gaming tournament I made up with about twenty or so of my friends that we regularly participated
                         in for about two years. It wasn't really all that organized; rather, it was just something to do for fun and bring us all together. 
                         Even though it might all seem a bit silly, especially since it didn't really officially conclude in any way, I believe it was a 
                         worthwhile experience as long as there was fun had together.`}
                     </p>
-                    <p style={{ ...passageTextStyle, textAlign : 'left', margin : '0 0 1rem 0'}}>
+                    <p style={{ ...passageTextStyle, textAlign : 'left'}}>
                         {`If you want more information regarding any of this stuff consider clicking one of the buttons below`}
                     </p>
                 </div>
@@ -74,9 +82,9 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
                     display : 'grid',
                     gridTemplateColumns : 'subgrid',
                     gridColumn : '1 / -1'}}>
-                    <button style={{...pageButton, gridColumn : '1 / 3'}}><p>{`More Rice Invitational`}</p></button>
-                    <button style={{...pageButton, gridColumn : '3 / 5'}}><p>{`Other Projects`}</p></button>
-                    <button style={{...pageButton, gridColumn : '5 / 7'}}><p>{`For Employers`}</p></button>
+                    <Link style={{...pageButton, gridColumn : '1 / 3'}} to={`/`}><p>{`Rice Invitational`}</p></Link>
+                    <Link style={{...pageButton, gridColumn : '3 / 5'}} to={`/`}><p>{`Other Projects`}</p></Link>
+                    <Link style={{...pageButton, gridColumn : '5 / 7'}} to={`/`}><p>{`For Employers`}</p></Link>
                 </div>
             </div>
         </div>
