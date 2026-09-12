@@ -1,13 +1,6 @@
-import React, { useState, useEffect } from "react";
 import "../style/brawlPage.css"
-import { GenerateBracket } from "../components/Bracket/GenerateBracket";
-
 
 export default function BrawlTwosPage() {
-    const [groupSets, setGroupSets] = useState([]);
-    const [gauntletSets, setGauntletSets] = useState([]);
-    const [upperPlayoffSets, setUpperPlayoffSets] = useState([]);
-    const [lowerPlayoffSets, setLowerPlayoffSets] = useState([]);
 
     // useEffect(() => {
     //     async function getData() {
@@ -104,7 +97,7 @@ export default function BrawlTwosPage() {
             <GroupTable listFunc={mapList(groupSets, GroupSet, 6, 12)} groupName={"Group B"}/> */}
             <h3>GAUNTLET</h3>
             <div>
-            <GenerateBracket type={'Double'} numPlayers={14} format={'full'} gameTag={'brawlhalla-allstar-qualifier'}/>
+            {/* <GenerateBracket type={'Double'} numPlayers={14} format={'full'} gameTag={'brawlhalla-allstar-qualifier'}/> */}
             </div>
         </div>
     )

@@ -17,7 +17,7 @@ export default function SchedulePage() {
     const [entryDate, setEntryDate] = useState<Date>(new Date())
 
     return (
-        <div>
+        <div style={{ minHeight : '100vh' }}>
             <SchedulePopUpToggleProvider>
             <EventContextProvider>
                 <TimeEditor date={entryDate}/>

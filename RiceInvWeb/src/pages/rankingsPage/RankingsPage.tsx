@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import "../../style/brawlPage.css"
 import { Link } from "wouter";
 import apiFetch from "../../util/fetch";

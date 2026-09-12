@@ -1,5 +1,5 @@
 import { useState, type RefObject } from "react";
-import type { TournamentData, WizardAction } from "../createTournamentPage";
+import type { WizardAction } from "../createTournamentPage";
 
 interface CreateStartProps {
     itemRef : RefObject<HTMLLIElement>;

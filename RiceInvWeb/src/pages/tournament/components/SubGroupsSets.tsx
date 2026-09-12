@@ -1,7 +1,7 @@
-import { useEffect, useReducer, useState, type CSSProperties, type RefObject } from "react";
+import { useEffect, useState, type CSSProperties, type RefObject } from "react";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
 import GroupTable from "./GroupTable";
-import type { TournamentSubStage, TournamentSet, Profile, Team } from "../../../data/types";
+import type { TournamentSubStage, TournamentSet } from "../../../data/types";
 
 
 
@@ -17,7 +17,7 @@ interface QualBlockProps {
     data : TournamentData;
 }
 
-function QualBlock({slots, setSlots, index, subGroup, data} : QualBlockProps) {
+function QualBlock({slots, setSlots, index} : QualBlockProps) {
     
     const [status, setStatus] = useState<QualStatus>(index < slots ? 'Qualified' : 'Eliminated');
     const [qualStyle, setQualStyle] = useState<CSSProperties>({

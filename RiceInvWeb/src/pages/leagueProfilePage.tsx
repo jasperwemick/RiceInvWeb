@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import "../style/leagueProfile.css"
-import { Link, useParams } from "wouter";
+import { useParams } from "wouter";
 
 // const Game = (props) => {
 //     const [gameDropdown, setGameDropdown] = useState(false)
@@ -33,16 +33,11 @@ import { Link, useParams } from "wouter";
 // };
 
 export default function LeagueProfilePage() {
- 
-    const [leagueProfile, setLeagueProfile] = useState({})
-    const [games, setGames] = useState([])
 
     const params = useParams<"/league/:id">();
 
     useEffect(() => {
         async function getLeagueProfile() {
-            const id = params.id;
-
             // function ascendingOrder(a, b) {
             //     if (a.gameNumber > b.gameNumber) {
             //         return 1;

@@ -4,7 +4,7 @@ import TimeInterval from "./TimeInterval";
 
 interface TimeEntryProps {
     timeIntervalData : boolean[];
-    setTimeIntervalData : React.Dispatch<React.SetStateAction<boolean[]>>;
+    setTimeIntervalData : React.Dispatch<React.SetStateAction<boolean[]>> | null;
 }
 
 export default function TimeEntry({ timeIntervalData, setTimeIntervalData } : TimeEntryProps) {
@@ -26,6 +26,8 @@ export default function TimeEntry({ timeIntervalData, setTimeIntervalData } : Ti
     },[lockedClick])
 
     const toggleRange = (index : number) => {
+
+        if (!setTimeIntervalData) return;
 
         let newIntervalArr = [...timeIntervalData]
 
@@ -50,18 +52,17 @@ export default function TimeEntry({ timeIntervalData, setTimeIntervalData } : Ti
     }
 
     const updateRange = (index : number) => {
-        if (lockedClick) {
+        if (lockedClick && setTimeIntervalData) {
 
             let left = startInterval <= index ? startInterval : index
             let right = left === startInterval ? index : startInterval
 
-            setTimeIntervalData(timeIntervalData.map((interval : boolean, i : number) => {
+            setTimeIntervalData(timeIntervalData.map((_ : boolean, i : number) => {
                 if (i >= left && i <= right) {
                     return mode
                 }
                 return oldData[i]
             }))
-
         }
     }
 

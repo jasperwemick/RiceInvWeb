@@ -1,6 +1,6 @@
 import React, { useEffect, useState, type RefObject } from "react";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
-import type { TournamentData, WizardAction } from "../createTournamentPage";
+import type { WizardAction } from "../createTournamentPage";
 import type { TournamentStage } from "../../../data/types";
 import { ObjectId } from "bson";
 
@@ -57,7 +57,7 @@ interface SetStagesProps {
     animInProgress : boolean
 }
 
-export default function SetStages({ itemRef, dispatcher, animInProgress } : SetStagesProps) {
+export default function SetStages({ itemRef, dispatcher } : SetStagesProps) {
 
     const [stageCount, setStageCount] = useState<number | null>(0);
 

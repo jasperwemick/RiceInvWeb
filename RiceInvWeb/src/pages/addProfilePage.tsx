@@ -10,7 +10,7 @@ export default function Add() {
     const [gamertag, setGamertag] = useState<string>("")
     const [user, setUser] = useState<string>("")
 
-    const [location, navigate] = useLocation();
+    const [_, navigate] = useLocation();
     
     // This function will handle the submission.
     async function onSubmit(e : React.FormEvent) {
@@ -37,19 +37,19 @@ export default function Add() {
         navigate("/");
     }
 
-    function validateNumber(e : React.ChangeEvent<HTMLInputElement>, setter : React.Dispatch<React.SetStateAction<number>>) {
-        if (e.target.value.includes('-')) {
-            if (e.target.value[0] !== '-') {
-                e.preventDefault();
-                return;
-            }
-        }
-        else if (! /^[0-9]+$/.test(e.target.value) && e.target.value.length > 0) {
-            e.preventDefault();
-            return;
-        }
-        setter(Number(e.target.value));
-    }
+    // function validateNumber(e : React.ChangeEvent<HTMLInputElement>, setter : React.Dispatch<React.SetStateAction<number>>) {
+    //     if (e.target.value.includes('-')) {
+    //         if (e.target.value[0] !== '-') {
+    //             e.preventDefault();
+    //             return;
+    //         }
+    //     }
+    //     else if (! /^[0-9]+$/.test(e.target.value) && e.target.value.length > 0) {
+    //         e.preventDefault();
+    //         return;
+    //     }
+    //     setter(Number(e.target.value));
+    // }
     
     return (
     <div>
@@ -77,7 +77,7 @@ export default function Add() {
             type="text"
             placeholder="User" />
             <input 
-            onChange={e => setFile(e.target.files ? e.target.files[0] : null)} 
+            onChange={e => setFile(e.target.files ? e.target.files[0] : file)} 
             type="file" 
             accept="image/*" />
             <button type="submit">Submit</button>

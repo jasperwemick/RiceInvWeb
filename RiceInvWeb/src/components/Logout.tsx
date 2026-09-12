@@ -4,7 +4,7 @@ import { useLocation } from "wouter";
 
 export default function Logout() {
 
-    const [location, navigate] = useLocation();
+    const [_, navigate] = useLocation();
 
     const { setAuth } = useAuth();
 

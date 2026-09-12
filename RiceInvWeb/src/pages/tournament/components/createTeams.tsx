@@ -14,7 +14,7 @@ interface CreateTeamsProps {
     signal : { action ? : string };
 }
 
-export default function CreateTeams({ itemRef, dispatcher, animInProgress, participants, gameMode, data, signal } : CreateTeamsProps) {
+export default function CreateTeams({ itemRef, dispatcher, animInProgress, participants, gameMode, signal } : CreateTeamsProps) {
 
     const [teamMembers, setTeamMembers] = useState<Profile[]>([]);
     const [teamName, setTeamName] = useState<string>('');

@@ -13,7 +13,7 @@ interface SetTournamentGameProps {
     animInProgress : boolean;
 }
 
-export default function SetTournamentGame({ itemRef, animInProgress, dispatcher, data } : SetTournamentGameProps) {
+export default function SetTournamentGame({ itemRef, animInProgress, dispatcher } : SetTournamentGameProps) {
 
     const [games, setGames] = useState<Game[]>([]);
     const [selectedGame, setSelectedGame] = useState<Game | null>(null);
@@ -66,7 +66,7 @@ export default function SetTournamentGame({ itemRef, animInProgress, dispatcher,
                         removalPredicate={(a, b) => (a.name != b.name)}
                         getLabel={(x) => x.fullName}
                         ComponentItem={ListImageItem}
-                        ExtraProps={{ getImgSrc : (x) => '/', imgWidth : '6rem', imgHeight : '6rem' }}/>}
+                        ExtraProps={{ getImgSrc : () => '/', imgWidth : '6rem', imgHeight : '6rem' }}/>}
                     </div>
                 </div>
                 {selectedGame && 

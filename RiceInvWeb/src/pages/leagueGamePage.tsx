@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import "../style/leagueGame.css"
 import { useParams } from "wouter";
 
@@ -14,20 +14,11 @@ import { useParams } from "wouter";
 // );
 
 export default function LeagueGamePage() {
- 
-    const [winners, setWinners] = useState([]);
-    const [losers, setLosers] = useState([]);
-    const [game, setGame] = useState({});
-
-    const [hasNextGame, setHasNextGame] = useState(false);
-    const [hasPrevGame, setHasPrevGame] = useState(false);
 
     const params = useParams<'/league/games/:num'>();
 
     useEffect(() => {
         async function getPlayerStats() {
-            const num = params.num;
-
             try {
                 // const responseGame = await fetch(`${GetUrl}/api/games/league/${num}`);
                 // const game = await responseGame.json();

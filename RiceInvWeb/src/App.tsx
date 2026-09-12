@@ -29,7 +29,6 @@ import { Account } from "./components/Account";
 import RankingsPage from "./pages/rankingsPage/RankingsPage";
 import TournamentPage from "./pages/tournament/tournamentPage";
 import CreateTournamentPage from "./pages/tournament/createTournamentPage";
-import { TournamentProvider } from "./pages/tournament/context/TournamentProvider";
 import RiceFooter from "./components/RiceFooter";
  
 const App = () => {

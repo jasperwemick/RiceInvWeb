@@ -1,5 +1,5 @@
-import React, { createRef, useCallback, useEffect, useRef, useState } from 'react'
-import type { Dispatch, RefObject, SetStateAction } from 'react';
+import React, { useEffect, useRef, useState } from 'react'
+import type { Dispatch, SetStateAction } from 'react';
 import useAuth from '../../hooks/useAuth'
 // import useAlert from '../../hooks/useAlert'
 // import { DayOverview } from './DayOverview'
@@ -39,7 +39,7 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate} : Cale
         toggleTimeEntry, setToggleTimeEntry, 
         toggleDayOverview, setToggleDayOverview, 
         monthlyTimeEntries, setMonthlyTimeEntries, 
-        toggleTimeOverview, setToggleTimeOverview 
+        setToggleTimeOverview 
     } = useSchedulePopUp()
 
     const { events, setSelectedDayEvents } = useRiceEvent();
@@ -114,10 +114,6 @@ export const CalendarDays = ({currentDay, changeCurrentDay, setEntryDate} : Cale
 
         setCurrentDays(temp)
     }, [currentDay])
-
-    const handleGridboxClick = (e : React.ChangeEvent) => {
-        
-    }
 
     const handleCalendarDayClick = (calDay : CalendarDay, dayEventList : RiceEvent[]) => {
         if (calDay.date.getDate() === currentDay.getDate() && calDay.date.getMonth() === currentDay.getMonth()) {

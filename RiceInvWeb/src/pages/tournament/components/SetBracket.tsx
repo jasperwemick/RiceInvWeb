@@ -1,6 +1,6 @@
 import { useEffect, useState, type RefObject } from "react";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
-import type { Placeholder, Profile, Team, TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../../data/types";
+import type { TournamentParticipant, TournamentSet, TournamentStage } from "../../../data/types";
 import { GenerateBracket } from "../../../components/Bracket/GenerateBracket";
 import { ObjectId } from "bson";
 
@@ -13,11 +13,11 @@ interface SetPlayoffsProps {
     participants : TournamentParticipant[];
 }
 
-export default function SetBracket({itemRef, dispatcher, animInProgress, stageNum, data, participants} : SetPlayoffsProps) {
+export default function SetBracket({itemRef, dispatcher, stageNum, data, participants} : SetPlayoffsProps) {
     
-    const [numPlayers, setNumPlayers] = useState(participants.length);
+    const [numPlayers] = useState(participants.length);
     const [stage, setStage] = useState<TournamentStage | null>(null);
-    const [brackets, setBrackets] = useState<TournamentSubStage[]>([]);
+    // const [brackets, setBrackets] = useState<TournamentSubStage[]>([]);
     const [sets, setSets] = useState<TournamentSet[]>([]);
 
     const undo = () => {
@@ -28,9 +28,9 @@ export default function SetBracket({itemRef, dispatcher, animInProgress, stageNu
         })
     }
 
-    const submit = () => {
+    // const submit = () => {
 
-    }
+    // }
 
     useEffect(() => {
         if (data.stages) {

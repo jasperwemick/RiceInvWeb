@@ -13,7 +13,7 @@ export const Login = () => {
 
     const { setAuth } = useAuth();
  
-    const [location, navigate] = useLocation();
+    const [_, navigate] = useLocation();
 
     const userRef = useRef<HTMLInputElement>(null);
     const errRef = useRef<HTMLParagraphElement>(null);

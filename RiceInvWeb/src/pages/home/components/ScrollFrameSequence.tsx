@@ -1,4 +1,4 @@
-import { useRef, type ComponentType, type CSSProperties } from "react";
+import { useRef, type ComponentType } from "react";
 import useScrollProgress from "../../../hooks/useScrollProgres";
 
 interface ScrollFrameSequenceProps {
@@ -12,7 +12,6 @@ export default function ScrollFrameSequence({ frames, scrollHeightVh = 300 }: Sc
 
     const frameCount = frames.length;
     const rawIndex = progress * (frameCount - 1);
-    const currentIndex = Math.floor(rawIndex); // clamp so currentIndex+1 stays valid
 
     return (
         <div ref={wrapperRef} style={{ height: `${scrollHeightVh}vh`, position: 'relative' }}>

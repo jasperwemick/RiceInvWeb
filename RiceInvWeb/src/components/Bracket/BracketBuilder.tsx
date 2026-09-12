@@ -1,9 +1,8 @@
-import React, { useEffect, useLayoutEffect, useRef, useState } from "react"
+import React, { useEffect } from "react"
 import BracketSet from "./BracketSet"
-import useAuth from "../../hooks/useAuth"
 import type { BracketNode } from "./Auxillery/tree"
-import type { Placeholder, Profile, Team, TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types"
-import { useXarrow, Xarrow, Xwrapper } from "../../util/xarrow-compat"
+import type { Placeholder, TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types"
+import { Xarrow, Xwrapper } from "../../util/xarrow-compat"
 import { ObjectId } from "bson"
 
 interface BracketBuilderProps {
@@ -20,8 +19,6 @@ interface BracketBuilderProps {
 
 export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, subStage, players, layer, buddyReference } : BracketBuilderProps) {
 
-    const { auth } = useAuth();
-
     useEffect(() => {
         const sortedSeeds = players.filter(x => x.def === 'Placeholder').map((p) => {
                 return { ...p, name : 'placeholder'}
@@ -33,7 +30,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
 
         const newSets : TournamentSet[] = [];
 
-        nodeArr.reverse().map((level, i) => {
+        nodeArr.reverse().map((level) => {
             level.map((node, j) => {
                 const bracketWidth = level.length
                 const setPlayers : (TournamentParticipant | null)[] = Array.from({ length: 2 }, () => null);

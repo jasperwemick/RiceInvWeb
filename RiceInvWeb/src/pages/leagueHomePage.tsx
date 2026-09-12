@@ -1,8 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import "../style/leaguePage.css"
-import Placement from "../components/Placement";
-import useProfiles from "../components/Profile/hooks/useProfiles";
-import { Link } from "wouter";
 
 // const Game = (props) => (
 //     <li className="game-item">
@@ -15,8 +12,7 @@ import { Link } from "wouter";
 
 export default function LeaguePage() {
 
-    const [games, setGames] = useState([]);
-    const [places, setPlaces] = useState([]);
+    const [games] = useState([]);
 
     useEffect(() => {
         async function getGames() {

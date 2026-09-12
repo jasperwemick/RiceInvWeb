@@ -6,7 +6,7 @@ import EventView from "./EventView";
 export default function EventInfo() {
 
     const { toggleEventInfo, setToggleEventInfo } = useSchedulePopUp();
-    const { auth, setAuth } = useAuth()
+    const { auth } = useAuth()
 
     const [eventView, setEventView] = useState<'view' | 'schedule' | 'editor'>('view')
 

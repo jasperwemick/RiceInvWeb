@@ -11,7 +11,7 @@ interface NavigationProfileProps {
 
 export const NavigationProfile = ({profile, currentLocation, styleOptions} : NavigationProfileProps) => {
 
-    const [location, useNavigate] = useLocation();
+    const [_, useNavigate] = useLocation();
 
     const handleClick = () => {
         useNavigate(`${currentLocation}${profile._id}`)
