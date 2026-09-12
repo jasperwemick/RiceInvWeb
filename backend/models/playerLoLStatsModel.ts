@@ -70,7 +70,7 @@ playerLoLStatsSchema.methods.calculateMatchRating = function (doc : PlayerLoLSta
 
     const t = doc.match.time;
     if (doc.gameMode === 'Rift') {
-        return 2 * (0.336 - 1.437 * (doc.deaths / t) + 0.000117 * (doc.gold / t) + 0.443 * ((doc.kills + doc.assists) / t) + 0.264 * (doc.level / t) + 0.000013 * (doc.damage / t));
+        return 2 * (0.336 - 1.437 * (doc.deaths / t) + 0.000117 * (doc.gold / t) + 0.443 * ((doc.kills + doc.assists) / t) + 0.264 * (doc.level / t) + 0.000013 * (doc.damage ? doc.damage : 0 / t));
     }
     else {
         return 2 * (0.35 - 1.437 * (doc.deaths / t) + 0.000117 * (doc.gold / t) + 0.443 * ((doc.kills + doc.assists) / t) + 0.264 * (doc.level / t));

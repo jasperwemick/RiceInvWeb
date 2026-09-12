@@ -58,6 +58,8 @@ playerStatsSchema.pre('save', async function(next) {
     try {
         const game = await gameModel.findOne<GameDoc>({ name : stats.game });
 
+        if (!game) throw Error('No game? Why!')
+
         session.startTransaction();
 
         const gamePush = await profileModel.updateOne(
