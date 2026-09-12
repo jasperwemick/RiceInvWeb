@@ -14,6 +14,8 @@ RUN npm install --silent
 # Copy other files to my current directory
 COPY . .
 
+RUN npm run build 
+
 # Open the port for the express server
 EXPOSE 4000
 
