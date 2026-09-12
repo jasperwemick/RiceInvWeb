@@ -1,6 +1,6 @@
 # Dockerfile for React client
 
-FROM node:20.9.0
+FROM node:22.16.0
 
 # Create a directory  and go to the directory 
 WORKDIR /usr/src/app
@@ -18,7 +18,7 @@ COPY . .
 RUN npm run build
 
 # # Copy the static file to my Nginx folder to serve static contain
-# COPY --from=builder /usr/src/app/build /usr/share/nginx/html
+# COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
 
 RUN npm install -g serve
 
@@ -27,4 +27,4 @@ EXPOSE 3000
 # # Run nginx in the foreground
 # CMD ["nginx", "-g", "daemon off;"]
 
-CMD ["serve", "-s", "build", "-l", "3000"]
+CMD ["serve", "-s", "dist", "-l", "3000"]

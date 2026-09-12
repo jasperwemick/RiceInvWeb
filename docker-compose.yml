@@ -1,4 +1,4 @@
-version: '1.1'
+version: '1.2'
 
 services:
   backend:
@@ -23,7 +23,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./RiceInvWeb
       dockerfile: Dockerfile
     image: react-client
     container_name: frontend
@@ -42,7 +42,7 @@ services:
   nginx:
     container_name: nginx
     restart: unless-stopped
-    image: nginx:1.15-alpine
+    image: nginx:1.30.4-alpine
     ports:
       - 80:80
       - 443:443
