@@ -1,9 +1,6 @@
 services:
   backend:
-    build:
-      context: ./backend
-      dockerfile: Dockerfile
-    image: express-server
+    image: 681525782943.dkr.ecr.us-east-2.amazonaws.com/riceinvserver:latest
     container_name: backend
     # command: node server.js
     # volumes:
@@ -18,10 +15,7 @@ services:
       - app-network
 
   frontend:
-    build:
-      context: ./RiceInvWeb
-      dockerfile: Dockerfile
-    image: react-client
+    image: 681525782943.dkr.ecr.us-east-2.amazonaws.com/riceinvweb:latest
     container_name: frontend
     # command: npm start
     # volumes:
