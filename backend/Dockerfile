@@ -1,23 +1,16 @@
 #  Dockerfile for Node Express Backend
 
-FROM node:22.16.0
-
-# Create a directory  and go to the directory 
+FROM node:22.16.0 AS builder
 WORKDIR /usr/src/backend
-
-# Copy the package.json file to my current directory to install the necessary dependence  
 COPY package*.json ./
-
-# Install the dependence
 RUN npm install --silent
-
-# Copy other files to my current directory
 COPY . .
+RUN npm run build
 
-RUN npm run build 
-
-# Open the port for the express server
+FROM node:22.16.0
+WORKDIR /usr/src/backend
+COPY package*.json ./
+RUN npm install --omit=dev
+COPY --from=builder /usr/src/app/dist ./dist
 EXPOSE 4000
-
-# Run express rum in the foreground
 CMD ["node", "dist/server.js"]
