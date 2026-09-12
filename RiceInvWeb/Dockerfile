@@ -1,30 +1,21 @@
 # Dockerfile for React client
 
-FROM node:22.16.0
-
-# Create a directory and go to the directory 
+FROM node:22.16.0 AS builder
 WORKDIR /usr/src/frontend
-
-# Copy the package.json file to my current directory to install the necessary dependence  
 COPY package*.json ./
-
-# Install the dependence
-RUN npm install
-
-# Copy other files to my current directory
+RUN npm install --silent
 COPY . .
-
-# Build and optimize static file
 RUN npm run build
 
-# # Copy the static file to my Nginx folder to serve static contain
-# COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
+
+FROM node:22.16.0-alpine
+WORKDIR /usr/src/frontend
+COPY package*.json ./
+RUN npm install --omit=dev
+COPY --from=builder /usr/src/frontend/dist ./dist
 
 RUN npm install -g serve
 
 EXPOSE 3000
-
-# # Run nginx in the foreground
-# CMD ["nginx", "-g", "daemon off;"]
 
 CMD ["serve", "-s", "dist", "-l", "3000"]
