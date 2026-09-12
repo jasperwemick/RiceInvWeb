@@ -19,7 +19,7 @@ services:
 
   frontend:
     build:
-      context: ./frontend
+      context: ./RiceInvWeb
       dockerfile: Dockerfile
     image: react-client
     container_name: frontend

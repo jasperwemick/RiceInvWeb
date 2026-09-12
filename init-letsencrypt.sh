@@ -5,7 +5,7 @@ if ! [ -x "$(command -v docker-compose)" ]; then
   exit 1
 fi
 
-domains=(riceinvitational.org rice.riceinvitational.org)
+domains=(riceinvitational.org www.riceinvitational.org)
 rsa_key_size=4096
 data_path="./certbot"
 email="jasper.emick@gmail.com" # Adding a valid address is strongly recommended
