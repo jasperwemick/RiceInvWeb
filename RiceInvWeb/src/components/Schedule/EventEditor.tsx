@@ -13,7 +13,7 @@ interface EventEditorProps {
 }
 
 
-export function EventEditor({eventData, setEventData, toggleEventInfo, setToggleEventInfo} : EventEditorProps) {
+export function EventEditor({eventData, setEventData, setToggleEventInfo} : EventEditorProps) {
 
     const setEventParticipants = (arr : Profile[]) => {
         setEventData({...eventData, participants: arr})

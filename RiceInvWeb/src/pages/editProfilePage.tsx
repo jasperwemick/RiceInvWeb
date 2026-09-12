@@ -21,7 +21,7 @@ export default function Edit() {
 
                 setName(profile.name);
                 setDescription(profile.description);
-                setUrl(profile.imageURL)
+                setUrl(profile.imageUrl)
 
             }
             catch(err) {

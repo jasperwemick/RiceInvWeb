@@ -5,14 +5,26 @@
     justify-content: center;
     background-color: darkgrey;
     min-width: max-content;
-    min-height: 4rem;
+    min-height: 100vh;
 }
 
 .go-to-create-button > a {
-    flex: 1;
-    position: relative;
-    min-height: 2rem;
-    background-color: cornflowerblue;
+    width: 60%;
+    min-height: 20vh;
+    background-color: #496cb8;
+    text-align: center;
+    align-items: center;
+    justify-content: center;
+    align-content: center;
+    text-decoration: none;
+    color: aliceblue;
+    border-radius: 10rem;
+    font-size: 48pt;
+}
+
+.go-to-create-button > a:hover {
+    background-color: #1b55d1;
+    transition: 0.4s;
 }
 
 .tournament-create {
@@ -235,10 +247,6 @@
     aspect-ratio: 1 / 1;
 }
 
-.tournament-participants-grid > div:hover {
-
-}
-
 .list-dropdown-item {
     display: flex;
     flex-direction: column;
@@ -297,10 +305,6 @@
 
 .tournament-switchlist > div > p {
     font-size: 2pc;
-}
-
-.tournament-switchlist > div > button {
-
 }
 
 .tournament-complex-list-item {

@@ -1,14 +1,11 @@
-import React, { useState, useEffect } from "react";
+import { useEffect } from "react";
 import "../style/brawlPage.css"
-import { GenerateBracket } from "../components/Bracket/GenerateBracket";
 
 export default function BrawlOnesPage() {
     // const [groupSets, setGroupSets] = useState([]);
     // const [gauntletSets, setGauntletSets] = useState([]);
     // const [upperPlayoffSets, setUpperPlayoffSets] = useState([]);
     // const [lowerPlayoffSets, setLowerPlayoffSets] = useState([]);
-
-    const [numPlayers, setNumPlayers] = useState(16);
 
     useEffect(() => {
         // async function getData() {
@@ -110,7 +107,7 @@ export default function BrawlOnesPage() {
             </section>
             <section>
                 <h3>Playoffs</h3>
-                <GenerateBracket type={'Double'} numPlayers={numPlayers} gameTag={'brawlhalla-playoff-ones'}/>
+                {/* <GenerateBracket type={'Double'} numPlayers={numPlayers} gameTag={'brawlhalla-playoff-ones'}/> */}
             </section>
         </div>
     )

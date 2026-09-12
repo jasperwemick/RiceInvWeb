@@ -13,7 +13,7 @@ export const Account = () => {
 
     const { auth, setAuth } = useAuth();
 
-    const [location, navigate] = useLocation();
+    const [_, navigate] = useLocation();
     // const from = location.state?.from?.pathname || '/';
 
     const errRef = useRef<HTMLParagraphElement>(null);

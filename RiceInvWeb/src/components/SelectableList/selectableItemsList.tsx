@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import useGetRef from "../../hooks/useGetRef";
 import ListItem from "./listItem";
 
@@ -47,7 +47,7 @@ export default function SelectableItemsList<T, P extends object = {}>({
 
     // If the parent modifies the length of the list, unselect all
     useEffect(() => {
-        list.forEach((value, i) => {
+        list.forEach((_, i) => {
             getRef(i).current.classList.remove('selected');
         })
         if (selection.multiple === true) selection.setSelected([]);

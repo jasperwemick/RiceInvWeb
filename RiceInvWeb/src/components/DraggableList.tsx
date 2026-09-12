@@ -126,7 +126,7 @@ export default function DraggableList({items, infinite=true, animate=false, chil
     }
 
     const handleWheel = (e : React.WheelEvent<HTMLUListElement>) => {
-
+        e.preventDefault();
     }
 
     const updateScroll = () => {

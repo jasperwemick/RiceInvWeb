@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type CSSProperties } from "react";
+import { useState } from "react";
 import type { ListItemProps } from "./listItem";
 
 interface ListDropDownItemProps<T> extends ListItemProps<T> {

@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react"
 
 import './style/Bracket.css'
-import { type BracketNode, GenerateBracketTree, getMaxDepth, treeToArray } from './Auxillery/tree'
-import useAuth from '../../hooks/useAuth'
+import { type BracketNode, GenerateBracketTree, getMaxDepth } from './Auxillery/tree'
 import BracketMap from "./BracketMap"
 import type { TournamentParticipant, TournamentSet, TournamentStage, TournamentSubStage } from "../../data/types"
 
@@ -20,8 +19,6 @@ export const GenerateBracket = ({stage, subStage, players, sets, setSets} : Gene
     const [lowTree, setLowTree] = useState<BracketNode | null>(null);
     const [maxDepth, setMaxDepth] = useState(0);
     // const [allNodes, setAllNodes] = useState<BracketNode[]>([]);
-    
-    const { auth }  = useAuth();
 
 
     useEffect(() => {

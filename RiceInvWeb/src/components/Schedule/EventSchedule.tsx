@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import { useState } from "react";
 import type { Dispatch, SetStateAction } from 'react';
 import TimeEntry from "./TimeEntry"
 import type { RiceEvent, TimeRange } from "../../data/types";

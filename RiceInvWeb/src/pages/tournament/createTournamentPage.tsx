@@ -19,11 +19,6 @@ interface SideHistoryItem {
     num : number;
 }
 
-interface SideStep {
-    step : string;
-    order : number;
-}
-
 export interface TournamentData {
     step : string;
     name : string;
@@ -379,7 +374,6 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
             }
 
         default: {
-            const _ = action;
             return state;
         }
     }

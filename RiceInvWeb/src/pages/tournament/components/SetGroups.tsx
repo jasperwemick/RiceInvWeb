@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, type RefObject } from "react";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
-import type { Profile, Team, TournamentParticipant, TournamentStage, TournamentSubStage } from "../../../data/types";
+import type { TournamentParticipant, TournamentStage, TournamentSubStage } from "../../../data/types";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
 import GroupTable from "./GroupTable";
 import { ObjectId } from "bson";

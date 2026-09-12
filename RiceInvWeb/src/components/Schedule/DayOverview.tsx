@@ -5,7 +5,7 @@ export const DayOverview = ({date} : { date : Date }) => {
 
     const { selectedDayEvents, setCurrentEvent } = useRiceEvent()
     
-    const { toggleEventInfo, setToggleEventInfo, toggleDayOverview, setToggleDayOverview } = useSchedulePopUp();
+    const { setToggleEventInfo, toggleDayOverview, setToggleDayOverview } = useSchedulePopUp();
 
     const mapEvents = () => {
         return (

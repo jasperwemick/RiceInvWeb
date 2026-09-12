@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import useAuth from "../../hooks/useAuth";
 import TimeEntry from "./TimeEntry";
 import TimeInterval from "./TimeInterval";
@@ -49,7 +49,7 @@ export default function TimeEditor({ date } : { date : Date }) {
 
     const [eastAlignment, setEastAlignment] = useState(0)
 
-    const { auth, setAuth } = useAuth()
+    const { auth } = useAuth()
 
     const dateFormatted = date.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3/$1/$2')
 

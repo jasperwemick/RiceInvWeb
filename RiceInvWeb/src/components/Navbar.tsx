@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import "./style/navbar.css"
 import useAuth from "../hooks/useAuth";
 import { Link } from "wouter";
 import { AccountItems, LogItems, type NavbarItem, NavbarItems } from "./NavbarItems";
 import apiFetch from "../util/fetch";
-import type { User, UserAuth } from "../data/types";
+import type { UserAuth } from "../data/types";
 
 interface NavItemProps {
     item : NavbarItem;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import { useState, useEffect } from "react";
 import type { Dispatch, SetStateAction } from 'react';
 import TimeInterval from "./TimeInterval";
 import type { TimeEntry, TimeEntryConfig, TimeIntervalData } from "../../data/types";
@@ -39,14 +39,14 @@ export const TimeOverview = ({ date } : { date : Date }) => {
         return Array.from({ length : 48 }, () => ({ strength: 0, players: [] }))
     }
     
-    const [prevPMIntervalData, setPrevPMIntervalData] = useState<TimeIntervalData[]>(initEmptyRange())
+    const [prevPMIntervalData] = useState<TimeIntervalData[]>(initEmptyRange())
     const [timeInvervalData, setTimeIntervalData] = useState<TimeIntervalData[]>(initEmptyRange())
-    const [nextAMIntervalData, setNextAMIntervalData] = useState<TimeIntervalData[]>(initEmptyRange())
+    const [nextAMIntervalData] = useState<TimeIntervalData[]>(initEmptyRange())
 
     const [currentIndex, setCurrentIndex] = useState<number>(-1)
     const [entrants, setEntrants] = useState<string[]>([])
 
-    const dateFormatted = date.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3/$1/$2')
+    // const dateFormatted = date.toLocaleString('en-us', {year: 'numeric', month: '2-digit', day: '2-digit'}).replace(/(\d+)\/(\d+)\/(\d+)/, '$3/$1/$2')
 
     useEffect(() => {
 

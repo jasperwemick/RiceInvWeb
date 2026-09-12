@@ -1,7 +1,4 @@
-import React, { useState, useEffect } from "react";
 import "../style/brawlProfile.css"
-import { useParams } from "wouter";
-import type { TournamentSet } from "../data/types";
 
 // Game Profile page
 // Objectives:
@@ -12,41 +9,34 @@ import type { TournamentSet } from "../data/types";
 // 
 
 
-const SetItem = ({ set } : { set : TournamentSet }) => {
+// const SetItem = ({ set } : { set : TournamentSet }) => {
 
-    const [gameDropdown, setGameDropdown] = useState(false)
-    // const [opponent, setOpponent] = useState({})
+//     const [gameDropdown, setGameDropdown] = useState(false)
+//     // const [opponent, setOpponent] = useState({})
 
-    const toggle = () => {
-        setGameDropdown(!gameDropdown)
-    }
+//     const toggle = () => {
+//         setGameDropdown(!gameDropdown)
+//     }
 
-    return (
-        <React.Fragment>
-            {/* <li className={`list-row ${props.set.personalStats.winner ? 'list-win': 'list-lose'}`} onClick={() => {toggle();}}>   
-                <span>{`${(props.set.formatType === 'Uppers' || props.set.formatType === 'Lowers') ? 'Playoffs': props.set.formatType}`}</span>
-                <span>{`${props.set.personalStats.winner ? 'Win': 'Loss'}`}</span>
-                <span>{props.set.personalStats.matchesWon} - {set.opponentStats.matchesWon}</span>
-            </li>
-            <li>
-                <div className={`${gameDropdown ? 'list-details-expand-brawl': 'list-details-shrink-brawl'}`}>
-                    <div className={`${gameDropdown ? '': 'hidden'}`}>
-                        <span>Vs: {props.set.opponentName.join(' / ')}</span>
-                    </div>
-                </div>
-            </li> */}
-        </React.Fragment>
-    )
-}
+//     return (
+//         <React.Fragment>
+//             {/* <li className={`list-row ${props.set.personalStats.winner ? 'list-win': 'list-lose'}`} onClick={() => {toggle();}}>   
+//                 <span>{`${(props.set.formatType === 'Uppers' || props.set.formatType === 'Lowers') ? 'Playoffs': props.set.formatType}`}</span>
+//                 <span>{`${props.set.personalStats.winner ? 'Win': 'Loss'}`}</span>
+//                 <span>{props.set.personalStats.matchesWon} - {set.opponentStats.matchesWon}</span>
+//             </li>
+//             <li>
+//                 <div className={`${gameDropdown ? 'list-details-expand-brawl': 'list-details-shrink-brawl'}`}>
+//                     <div className={`${gameDropdown ? '': 'hidden'}`}>
+//                         <span>Vs: {props.set.opponentName.join(' / ')}</span>
+//                     </div>
+//                 </div>
+//             </li> */}
+//         </React.Fragment>
+//     )
+// }
 
 export default function BrawlProfilePage() {
-    const [profile, setProfile] = useState({});
-    const [brawlProfile, setBrawlProfile] = useState({});
-    const [onesSets, setOnesSets] = useState([]);
-    const [twosSets, setTwosSets] = useState([]);
-
-
-    const params = useParams();
 
     // useEffect(() => {
  

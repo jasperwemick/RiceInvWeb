@@ -2,7 +2,7 @@ import type { CSSProperties } from "react"
 
 const footerStyle : CSSProperties = {
     width : '100%',
-    height : '30vh',
+    height : '20vh',
     background : 'linear-gradient(rgb(15, 34, 54), #203a55)',
     borderTop : '2rem solid rgb(15, 34, 54)'
 }

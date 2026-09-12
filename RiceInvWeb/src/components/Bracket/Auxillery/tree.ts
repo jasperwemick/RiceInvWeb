@@ -181,13 +181,13 @@ export function GenerateBracketTree(type : string, numPlayers : number) : Bracke
     }
 }
 
-function traverse(node : BracketNode | null): void {
-    if (node) {
-        console.log(`${node.value} : ${node.level}`)
-        traverse(node.left)
-        traverse(node.right)
-    }
-}
+// function traverse(node : BracketNode | null): void {
+//     if (node) {
+//         console.log(`${node.value} : ${node.level}`)
+//         traverse(node.left)
+//         traverse(node.right)
+//     }
+// }
 
 export function getMaxDepth(node : BracketNode | null): number {
     if (node == null)
