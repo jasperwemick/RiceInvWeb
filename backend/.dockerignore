@@ -1,4 +1,6 @@
-/node_modules
-/scripts
-
+node_modules
+scripts
+.git
 .env
+dist
+build

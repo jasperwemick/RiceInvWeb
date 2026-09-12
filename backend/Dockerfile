@@ -3,8 +3,7 @@
 FROM node:22.16.0
 
 # Create a directory  and go to the directory 
-RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+WORKDIR /usr/src/backend
 
 # Copy the package.json file to my current directory to install the necessary dependence  
 COPY package*.json ./

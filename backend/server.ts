@@ -27,14 +27,14 @@ const app = express();
 //     );
 // }
 
-if (process.env.NODE_ENV === "production") {
-    app.use(
-        cors({
-            origin: "https://www.riceinvitational.org",
-            credentials: true,
-        })
-    );
-}
+// if (process.env.NODE_ENV === "production") {
+//     app.use(
+//         cors({
+//             origin: "https://www.riceinvitational.org",
+//             credentials: true,
+//         })
+//     );
+// }
 
 app.use(cookieParser());
 

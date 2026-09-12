@@ -2,8 +2,8 @@
 
 FROM node:22.16.0
 
-# Create a directory  and go to the directory 
-WORKDIR /usr/src/app
+# Create a directory and go to the directory 
+WORKDIR /usr/src/frontend
 
 # Copy the package.json file to my current directory to install the necessary dependence  
 COPY package*.json ./
