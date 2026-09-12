@@ -85,6 +85,7 @@
 .me-left {
     grid-column: 1 / 2;
     background: linear-gradient(#b8b09b, #b37416);
+    pointer-events: all;
 }
 
 .me-img-container {
@@ -109,6 +110,7 @@
     background: linear-gradient(#b8b09b, #b37416);
     gap : 1rem;
     padding: 1rem;
+    pointer-events: all;
 }
 
 @keyframes ActiveMeLeft {
@@ -133,7 +135,6 @@
 }
 
 .me-hidden { 
-    pointer-events: none;
     visibility: hidden;
     opacity: 0;
 }
