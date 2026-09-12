@@ -3,8 +3,8 @@ import react, { reactCompilerPreset } from '@vitejs/plugin-react'
 import babel from '@rolldown/plugin-babel'
 
 // https://vite.dev/config/
-export default defineConfig({
-  server : {
+export default defineConfig(({ command }) => ({
+  server : command === 'serve' ? {
     host : '127.0.0.1',
     proxy : {
       '/api' : {
@@ -16,9 +16,12 @@ export default defineConfig({
         changeOrigin : true
       }
     }
+  } : undefined,
+  build: {
+    sourcemap: false,
   },
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] })
   ],
-})
+}))

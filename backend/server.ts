@@ -54,6 +54,10 @@ app.use('/api/games', gameRoutes)
 app.use('/api/events', eventRoutes)
 app.use('/api/tournament', tournamentRoutes)
 
+if (process.env.NODE_ENV === "production") {
+    app.set('trust proxy', 1);
+}
+
 // Serve frontend
 // if (process.env.NODE_ENV === "production") {
 //     const clientBuildPath = path.join(__dirname, '../client/dist');
@@ -83,7 +87,7 @@ mongoose.connect(process.env.MONGO_URI)
         })
     })
     .catch((error) => {
-        console.log(error)
+        console.log(error);
     })
 
 

@@ -18,4 +18,4 @@ COPY . .
 EXPOSE 4000
 
 # Run express rum in the foreground
-CMD ["npm", "start"]
+CMD ["node", "dist/server.js"]
