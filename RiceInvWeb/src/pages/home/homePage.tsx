@@ -3,6 +3,7 @@ import './home.css'
 import ProfileList from "../../components/Profile/ProfileList";
 import MeInfo from "./components/MeInfo";
 import ScrollFrameSequence from "./components/ScrollFrameSequence";
+import logImg from '../../assets/rice.png'
 
 export default function Home() { 
 
@@ -16,7 +17,7 @@ export default function Home() {
                         <div className={`home-title-text`}>
                             <p>The Rice Invitational</p>
                         </div>
-                        <img src={`src/assets/rice.png`}></img>
+                        <img src={logImg}></img>
                     </div>
                     <div style={{display: "flex", justifyContent: 'center', width: '100%', height: 'fit-content'}}>
                         <ProfileList 
