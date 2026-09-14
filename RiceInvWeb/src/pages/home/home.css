@@ -38,7 +38,7 @@
 .home-title-text {
     position: relative;
     height: 10vh;
-    max-height: 10vh;
+    max-height: 20vh;
     align-content: center;
     width: 100%;
     margin: 0 0 2vh 0;
@@ -127,7 +127,7 @@
 .me-base-grid-block {
     border : 0.5rem solid #091c50;
     border-radius : 2rem;
-    background : linear-gradient(#aabbcc, #6f70c9);;
+    background : linear-gradient(#aabbcc, #6f70c9);
     max-width : 100%;
     margin : 0 2rem 0 2rem;
     padding : 1rem;

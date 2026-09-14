@@ -8,3 +8,7 @@ I've decided to keep the name Rice Invitational for the webpage since the domain
 I continue to work on this webpage as a fun educational experience for myself.
 
 Thanks for stopping by!
+
+**Please note this is a heavy work in progress**
+
+http://www.riceinvitational.org
