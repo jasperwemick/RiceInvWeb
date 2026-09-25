@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import "../../style/brawlPage.css"
-import { Link } from "wouter";
+// import { Link } from "wouter";
 import apiFetch from "../../util/fetch";
 import type { FlatGameProfile, Game } from "../../data/types";
-import ProfileRanks from "./components/ProfileRanks";
+// import ProfileRanks from "./components/ProfileRanks";
 
 
 export default function RankingsPage() {
@@ -32,6 +32,7 @@ export default function RankingsPage() {
                 const brawlProfileData = await apiFetch<FlatGameProfile[]>(`api/profiles/game/${game.name}`)
                 setProfiles(brawlProfileData);
                 setGame(gameData);
+                console.log(profiles);
             }
             catch(err) {
                 const message = `An error occurred: ${err}`;
@@ -42,17 +43,17 @@ export default function RankingsPage() {
         getRanking();
     }, [game.name]);
 
-    const onChangeGame = () => {
+    // const onChangeGame = () => {
 
-    }
+    // }
 
-    const listGames = () => {
-        return game.gameModes.map((mode, index) => {
-            return (
-                <ProfileRanks profiles={profiles} mode={mode} key={index}/>
-            );
-        });
-    }
+    // const listGames = () => {
+    //     return game.gameModes.map((mode, index) => {
+    //         return (
+    //             <ProfileRanks profiles={profiles} mode={mode} key={index}/>
+    //         );
+    //     });
+    // }
 
     return (
         <div>

@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useLayoutEffect } from "react";
 import type { ReactNode } from 'react';
 import './Profile/style/profile.css'
 import { useOverflowDimensions } from "../hooks/useOverflowDimensions";
-import type { Profile } from "../data/types";
 
 interface DraggableListProps<T> {
     items : T[];
