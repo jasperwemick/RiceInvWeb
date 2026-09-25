@@ -68,7 +68,7 @@ export default function Navbar() {
     const item = (obj : NavbarItem) => {
         return (
             <li className={obj.class}>
-                <Link to={obj.pathTo} className={`nav-button-link`}>{obj.text}</Link>
+                <Link to={obj.pathTo}>{obj.text}</Link>
             </li>
         )
     }

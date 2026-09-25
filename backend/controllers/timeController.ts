@@ -17,8 +17,8 @@ export const getUserMonthTimeEntries = async (req : Request, res : Response) => 
 
 export const getMonthTimeEntriesWithBorderEntries = async (req : Request, res : Response) => {
     const user = req.params.user
-    const year = Number(req.params.year)
-    const month = Number(req.params.month)
+    const year = Number(req.params.year);
+    const month = Number(req.params.month);
 
     const prevMonth = month === 0 ? 11 : month - 1
     const nextMonth = month === 11 ? 0 : month + 1
