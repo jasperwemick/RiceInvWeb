@@ -20,6 +20,16 @@ import { matchBaseSchema, newMatchSchema, newSetSchema, newTournamentSchema, pro
 import Team, { TeamDoc } from "../models/teamModel";
 import Match from "../models/matchModel";
 
+export const getAllTournaments = async (req : Request, res : Response) => {
+    try {
+        const tournament = await Tournament.find();
+        res.json(tournament);
+    }
+    catch(e) {
+        console.log('Error at GET /tournament', e)
+    }
+}
+
 export const getTournament = async (req : Request, res : Response) => {
     const id = req.params.id;
 

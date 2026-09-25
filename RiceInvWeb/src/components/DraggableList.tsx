@@ -4,14 +4,15 @@ import './Profile/style/profile.css'
 import { useOverflowDimensions } from "../hooks/useOverflowDimensions";
 import type { Profile } from "../data/types";
 
-interface DraggableListProps {
-    items : Profile[];
+interface DraggableListProps<T> {
+    items : T[];
+    className : string;
     children : ReactNode;
     infinite? : boolean;
     animate? : boolean;
 }
 
-export default function DraggableList({items, infinite=true, animate=false, children} : DraggableListProps) {
+export default function DraggableList<T>({items, className, children, infinite=true, animate=false} : DraggableListProps<T>) {
     const sliderRef = useRef<HTMLUListElement | null>(null);
     const animationFrameId = useRef<number>(0);
 
@@ -143,7 +144,7 @@ export default function DraggableList({items, infinite=true, animate=false, chil
         onMouseLeave={handleDragEnd}
         onWheel={handleWheel}
         onScroll={updateScroll} 
-        className="profile-list">
+        className={className}>
             {children}
         </ul>
     );

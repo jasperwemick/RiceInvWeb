@@ -40,7 +40,6 @@ export default function RankingsPage() {
             }
         }
         getRanking();
-        return;
     }, [game.name]);
 
     const onChangeGame = () => {
@@ -57,16 +56,11 @@ export default function RankingsPage() {
 
     return (
         <div>
-            <div onClick={onChangeGame}></div>
-            <div><span>Brawlhalla</span></div>
-            <div><span>Brawlhalla is a Premiere game in the Rice Invitational</span></div>
-            {listGames()}
-            <div className="ones-block">
-                <div className="brawl-button"><Link to='/brawl/ones'>Singles</Link></div>
-            </div>
-            <div className="twos-block">
-                <div className="brawl-button"><Link to='/brawl/twos'>Doubles</Link></div>
-            </div>
+            <div>{'WIP'}</div>
+            {/* <div onClick={onChangeGame}></div>
+            <div><span>{game.fullName}</span></div>
+            <div><span>{game.description}</span></div>
+            {listGames()} */}
         </div>
     )
 }

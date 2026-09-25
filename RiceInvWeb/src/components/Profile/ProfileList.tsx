@@ -36,7 +36,7 @@ export default function ProfileList<P extends object = {}>({
 
     return (
         <div className={profileContainer}>
-            <DraggableList items={profiles} animate={true}>
+            <DraggableList<Profile> items={profiles} animate={true} className={`profile-list`}>
                 {profileList()}
                 {isInfinite ? profileList(): null}
             </DraggableList>

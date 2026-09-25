@@ -1,30 +1,91 @@
+.tournament-page {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 1rem;
+    align-items: center;
+    background-color: darkgrey;
+    width: 100%;
+    min-height: 100vh;
+}
+
+.tournament-page-text {
+    margin: auto;
+    padding: 1rem;
+    border-bottom: solid 0.5rem #9e9e9e;
+    border-bottom-right-radius: 0.5rem;
+    border-bottom-left-radius: 0.5rem;
+}
+
+.tournament-page-text > p {
+    text-align : center;
+    font-size: 24pt;
+    color: #354f86
+}
+
+.tournament-list {
+    display: flex;
+    flex-direction: row;
+    height: 30vh;
+    margin: 2rem 0 2rem 0;
+}
+
 .go-to-create-button {
     position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: darkgrey;
-    min-width: max-content;
-    min-height: 100vh;
+    width: 70%;
+    min-height: 20vh;
+    margin: 6rem auto 6rem auto;
+}
+
+@property --create-gradient-start {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(201, 201, 201);
+}
+
+@property --create-gradient-middle {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(83, 142, 179);
+}
+
+@property --create-gradient-end {
+    syntax: '<color>';
+    inherits: false;
+    initial-value: rgb(38, 44, 134);
 }
 
 .go-to-create-button > a {
     width: 60%;
     min-height: 20vh;
-    background-color: #496cb8;
+    background: linear-gradient(0deg, var(--create-gradient-start) 0%, var(--create-gradient-middle) 50%, var(--create-gradient-end) 100%);
     text-align: center;
     align-items: center;
     justify-content: center;
     align-content: center;
     text-decoration: none;
-    color: aliceblue;
+    color: rgb(255, 255, 255);
     border-radius: 10rem;
-    font-size: 48pt;
+    font-size: 42pt;
+    transition: --create-gradient-start 0.5s ease, --create-gradient-middle 0.5s ease, --create-gradient-end 0.5s ease, box-shadow 0.5s ease;
+    box-shadow: 0 0 2rem 2rem rgba(96, 119, 223, 0.8);
 }
 
 .go-to-create-button > a:hover {
-    background-color: #1b55d1;
-    transition: 0.4s;
+    --create-gradient-start : rgb(38, 44, 134);
+    --create-gradient-middle : rgb(83, 142, 179);
+    --create-gradient-end : rgb(201, 201, 201);
+    box-shadow: 0 0 4rem 4rem rgba(207, 216, 255, 0.8);;
+}
+
+@media (width < 768px) {
+    .go-to-create-button > a {
+        font-size: 24pt;
+        min-height: 10vh;
+    }
 }
 
 .tournament-create {
@@ -57,7 +118,7 @@
     border-radius: 1rem;
 }
 
-/* .tournament-illusion-list > li.exiting {
+.tournament-illusion-list > li.exiting {
     animation-name: exitAnim;
     animation-duration: 1s;
 }
@@ -65,7 +126,7 @@
 .tournament-illusion-list > li.active {
     animation-name: enterAnim;
     animation-duration: 1s;
-} */
+}
 
 @keyframes enterAnim {
     from {
@@ -89,7 +150,7 @@
     }
 }
 
-/* .tournament-illusion-list > li.side-exiting {
+.tournament-illusion-list > li.side-exiting {
     animation-name: exitSideAnim;
     animation-duration: 1s;
 }
@@ -97,7 +158,7 @@
 .tournament-illusion-list > li.side-active {
     animation-name: enterSideAnim;
     animation-duration: 1s;
-} */
+}
 
 @keyframes enterSideAnim {
     from {
