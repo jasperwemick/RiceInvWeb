@@ -217,7 +217,7 @@ export function getMaxDepth(node : BracketNode | null): number {
 export const treeToArray = (node : BracketNode | null, maxDepth : number, bracketType : 'U' | 'UD' | 'UDB' | 'LD' | 'LDB', output : number=1) => {
 
     var treeMap : BracketNode[][] = Array.from({ length : maxDepth + 1 }, () => []);
-
+    console.log('output: ', output);
     if (node && maxDepth > 1) {
         var q = [];
         const removedVals : number[] = []

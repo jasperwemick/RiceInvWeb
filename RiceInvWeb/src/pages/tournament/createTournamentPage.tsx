@@ -12,6 +12,7 @@ import SetGroups from "./components/SetGroups";
 import React from "react";
 import SetBracket from "./components/SetBracket";
 import SubGroupsSets from "./components/SubGroupsSets";
+import SubBracketSets from "./components/SubBracketSets";
 
 interface SideHistoryItem {
     sideStep : string;
@@ -420,7 +421,9 @@ const stageComponentRecord : Record<string, StageComponent> = {
     },
     'Bracket' : {
         Component : SetBracket,
-        sides : {}
+        sides : {
+            'Sets' : SubBracketSets
+        }
     }
 }
 
@@ -433,7 +436,7 @@ export default function CreateTournamentPage() {
 
     const listRef = useRef<HTMLUListElement | null>(null);
 
-    const ANIMSPEED = 200;
+    const ANIMSPEED = 900;
 
     useEffect(() => {
 
@@ -481,7 +484,7 @@ export default function CreateTournamentPage() {
                         key : `Sub${stage.stageType}${subStage.subType}-${i}-${j}`,
                         Component :  stageComponentRecord[stage.stageType].sides[subStage.subType],
                         parentKey : `Set${stage.stageType}-${i}`,
-                        props : { animInProgress, subGroup : subStage, order : j, parentList : tournament.subStages }
+                        props : { animInProgress, subStage : subStage, order : j, parentList : tournament.subStages }
                     })
                 })
             })

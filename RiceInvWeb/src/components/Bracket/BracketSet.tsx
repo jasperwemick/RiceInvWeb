@@ -34,7 +34,7 @@ export default function BracketSet({ bracketSet, ref } : BracketSetProps) {
         return (
             <div className="bracket-set-shell" ref={ref}> 
                 <div className={`bracket-set-box open-bracket-slot`}>{bracketSet.participants.map((x : Profile | Team | Placeholder) => {
-                    return x.name + '\n';
+                    return <p>{`${x.name}`}</p>
                 })}</div>
                 {/* <MapSetInfo teamRecords={teamRecords} setData={localData}/> */}
             </div>
@@ -43,7 +43,7 @@ export default function BracketSet({ bracketSet, ref } : BracketSetProps) {
     else {
         return (
             <div className="bracket-set-shell" ref={ref}>
-                <div className={`bracket-set-box open-bracket-slot`}>asdf</div>
+                <div className={`bracket-set-box open-bracket-slot`}>~</div>
             </div>
         );
     }

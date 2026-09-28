@@ -132,8 +132,7 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                                 }
                             </React.Fragment>
                         )
-
-                    }) : <div className={`bracket-ghost-shell`}/>}
+                    }) : i === 0 && layer === 'Upper' ? <div style={{}}/> : <div className={`bracket-ghost-shell`}/>}
                 </div>
             )
         })}

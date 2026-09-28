@@ -93,8 +93,7 @@
     flex: 1;
     display: flex;
     flex-direction: column;
-    min-width: 100%;
-    /* min-height: 0; */
+    min-height: 100vh;
     align-items: stretch;
     justify-content: center;
     background-color: #354f86;
@@ -112,10 +111,12 @@
     flex-wrap: nowrap;
     justify-items: center;
     min-height: 100%;
+    overflow: scroll;
+    scrollbar-width: none;
 }
 
 .tournament-illusion-list > li {
-    border-radius: 1rem;
+    max-width: 100vw;
 }
 
 .tournament-illusion-list > li.exiting {
@@ -190,8 +191,6 @@
     flex : 1;
     flex-wrap: nowrap;
     align-items: center;
-    min-width: 30%;
-    max-width: 90%;
     min-height: fit-content;
     margin: 2rem 1rem;
     padding: 12rem 4rem;
@@ -350,6 +349,7 @@
     max-width: 100%;
     min-height: fit-content;
     gap: 1rem;
+    padding: 1rem;
     background: linear-gradient(0deg,rgba(75, 89, 172, 0.5) 0%, rgba(125, 165, 189, 1) 50%, rgba(75, 89, 172, 0.5) 100%);
     border: 0.25rem solid #354f86;
 }

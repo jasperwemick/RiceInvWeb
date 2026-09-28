@@ -48,11 +48,14 @@ export default function BracketMap({ stage, subStage, highTree, lowTree, maxDept
         <React.Fragment>
             <div>
                 <BracketBuilder nodeArr={highNodes} refMap={getRef} sets={sets} setSets={setSets} stage={stage} subStage={subStage} players={
-                stage.format.includes('Biased') ? ps.filter((_, i) => i < Math.ceil(ps.length / 2)) : players
-            } layer="Upper" buddyReference={lowNodes.flat()}/></div>
-            <div><BracketBuilder nodeArr={lowNodes} refMap={getRef} sets={sets} setSets={setSets} stage={stage} subStage={subStage} players={
-                stage.format.includes('Biased') ? ps.filter((_, i) => i >= Math.ceil(ps.length / 2)) : []
-            } layer="Lower" buddyReference={highNodes.flat()}/></div>
+                    stage.format.includes('Biased') ? ps.filter((_, i) => i < Math.ceil(ps.length / 2)) : players
+                } layer="Upper" buddyReference={lowNodes.flat()}/>
+            </div>
+            <div>
+                <BracketBuilder nodeArr={lowNodes} refMap={getRef} sets={sets} setSets={setSets} stage={stage} subStage={subStage} players={
+                    stage.format.includes('Biased') ? ps.filter((_, i) => i >= Math.ceil(ps.length / 2)) : []
+                } layer="Lower" buddyReference={highNodes.flat()}/>
+            </div>
         </React.Fragment>
     )
 }
