@@ -44,16 +44,14 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
 
     const submitGroups = () => {
         const nextStage = data.stages.find(x => x.order === stageNum + 1)
-        if (nextStage) {
-            dispatcher({
-                type : 'STEP', 
-                data : {
-                    step : `Set${nextStage.stageType}-${stageNum + 1}`, 
-                },
-                activeSSCount : groups.length,
-                isStage : true
-            });
-        }
+        dispatcher({
+            type : 'STEP', 
+            data : {
+                step : nextStage ? `Set${nextStage.stageType}-${stageNum + 1}` : `Review`, 
+            },
+            activeSSCount : groups.length,
+            isStage : true
+        });
     }
 
     useEffect(() => {

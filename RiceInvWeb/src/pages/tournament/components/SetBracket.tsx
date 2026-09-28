@@ -1,7 +1,6 @@
 import { useEffect, useState, type RefObject } from "react";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
-import type { TournamentParticipant, TournamentSet, TournamentStage } from "../../../data/types";
-import { GenerateBracket } from "../../../components/Bracket/GenerateBracket";
+import type { TournamentParticipant, TournamentStage, TournamentSubStage } from "../../../data/types";
 import { ObjectId } from "bson";
 
 interface SetPlayoffsProps {
@@ -17,20 +16,49 @@ export default function SetBracket({itemRef, dispatcher, stageNum, data, partici
     
     const [numPlayers] = useState(participants.length);
     const [stage, setStage] = useState<TournamentStage | null>(null);
-    // const [brackets, setBrackets] = useState<TournamentSubStage[]>([]);
-    const [sets, setSets] = useState<TournamentSet[]>([]);
+    const [brackets, setBrackets] = useState<TournamentSubStage[]>([]);
 
     const undo = () => {
         dispatcher({
             type : 'UNDO_STEP',
             data : {},
+            activeSSCount : brackets.length, 
             isStage : true
         })
     }
 
-    // const submit = () => {
+    const submitBrackets = () => {
+        const nextStage = data.stages.find(x => x.order === stageNum + 1)
+        dispatcher({
+            type : 'STEP', 
+            data : {
+                step : nextStage ? `Set${nextStage.stageType}-${stageNum + 1}` : `Review`, 
+            },
+            activeSSCount : brackets.length,
+            isStage : true
+        });
+ 
+    }
 
-    // }
+    const confirmBracket = () => {
+        if (!stage) return;
+        
+        setBrackets([...brackets, {
+            id : new ObjectId().toHexString(),
+            order : brackets.length,
+            stage : stageNum,
+            name : '',
+            format : stage.format,
+            subType : 'Sets',
+            members : participants,
+        }]);
+    }
+
+    useEffect(() => {
+        if (brackets.length > (data.subStages.filter(x => x.stage === stageNum).length)) {
+            dispatcher({type : 'SIDESTEP', data : { subStages : brackets }, ss: `SubBracketSets-${stageNum}-${brackets.length - 1}`})
+        }
+    }, [brackets.length])
 
     useEffect(() => {
         if (data.stages) {
@@ -49,23 +77,8 @@ export default function SetBracket({itemRef, dispatcher, stageNum, data, partici
                 <p>Set the Playoff Bracket</p>
             </div>
             <div className={'tournament-configuration-box-body'}>
-                {stage ? 
-                <GenerateBracket 
-                stage={stage} 
-                subStage={{
-                    id : new ObjectId().toHexString(),
-                    order : 0,
-                    stage : stage?.order,
-                    name : '',
-                    format : stage?.format,
-                    members : participants,
-                    subType : 'Sets',
-                    qualificationSlots : 1
-                }}
-                players={participants} 
-                sets={sets}
-                setSets={setSets}/> : 
-                <></>}
+                <button onClick={confirmBracket}>SHOW BRACKETS</button>
+                <button onClick={submitBrackets}>Finish</button>
             </div>
         </li>
     )

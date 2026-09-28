@@ -56,37 +56,37 @@ interface SubGroupsSetsProps {
     dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
     order : number;
-    subGroup : TournamentSubStage;
+    subStage : TournamentSubStage;
     data : TournamentData;
     signal : { action ? : string };
 }
 
-export default function SubGroupsSets({ itemRef, dispatcher, animInProgress, order, subGroup, data, signal } : SubGroupsSetsProps) {
+export default function SubGroupsSets({ itemRef, dispatcher, animInProgress, order, subStage, data, signal } : SubGroupsSetsProps) {
 
-    const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStageId === subGroup.id) : []);
-    const [slots, setSlots] = useState<number>(subGroup.qualificationSlots ? subGroup.qualificationSlots : 0);
+    const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStageId === subStage.id) : []);
+    const [slots, setSlots] = useState<number>(subStage.qualificationSlots ? subStage.qualificationSlots : 0);
 
     useEffect(() => {
         // setSlots(Math.ceil(subGroup.members.length / 2));
-    }, [subGroup.members.length]);
+    }, [subStage.members.length]);
 
     const undo = () => {
         dispatcher({ 
             type : 'UNDO_SIDESTEP',
-            data : { subStages : [subGroup], sets : tSets },
-            ss : `SubGroupsSets-${subGroup.stage}-${order}`,
+            data : { subStages : [subStage], sets : tSets },
+            ss : `SubGroupsSets-${subStage.stage}-${order}`,
             index : order
         });
     }
 
     const submit = () => {
-        const cachedSubStage = data.subStages.find(x => x === subGroup);
+        const cachedSubStage = data.subStages.find(x => x.id === subStage.id);
         if (!cachedSubStage) {
             // Throw some error
             return;
         }
         const stg : TournamentSubStage = { ...cachedSubStage, qualificationSlots : slots};
-        dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : `SubGroupsSets-${subGroup.stage}-${order}` });
+        dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : `SubGroupsSets-${subStage.stage}-${order}` });
     }
 
     useEffect(() => {
@@ -98,23 +98,23 @@ export default function SubGroupsSets({ itemRef, dispatcher, animInProgress, ord
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
             <div className={'tournament-configuration-box-header'}>
-                <p>{subGroup.name}</p>
+                <p>{subStage.name}</p>
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-configuration-subbox'}>
                     {!animInProgress && 
                     <GroupTable 
-                    groupSize={subGroup.members.length} 
-                    members={subGroup.members} 
-                    subId={subGroup.id}
+                    groupSize={subStage.members.length} 
+                    members={subStage.members} 
+                    subId={subStage.id}
                     sets={tSets}
                     setSets={addTSets} 
                     interactive={true}/>}
                 </div>
                 <div className={'tournament-configuration-subbox'}>
                     <ul style={qualBlockStyle}>
-                        {subGroup.members.map((_, i : number) => {
-                            return <QualBlock slots={slots} setSlots={setSlots} index={i} subGroup={subGroup} data={data}/>
+                        {subStage.members.map((_, i : number) => {
+                            return <QualBlock slots={slots} setSlots={setSlots} index={i} subGroup={subStage} data={data}/>
                         })}
                     </ul>
                 </div>

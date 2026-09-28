@@ -10,9 +10,9 @@ export default function CreateStart({ itemRef, dispatcher } : CreateStartProps) 
 
     const [inputText, setInputText] = useState<string>('');
 
-    const undo = () => {
-        dispatcher({ type: 'UNDO_STEP', data : {}});
-    }
+    // const undo = () => {
+    //     dispatcher({ type: 'UNDO_STEP', data : {}});
+    // }
     
     const submitName = () => {
         if (inputText.length < 3) return;
@@ -21,7 +21,6 @@ export default function CreateStart({ itemRef, dispatcher } : CreateStartProps) 
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
-            <button onClick={undo}>Back</button>
             <div className={'tournament-configuration-box-header'} >
                 <p>Enter a name for the tournament</p>
             </div>
