@@ -36,7 +36,7 @@ export default function SubBracketSets({ itemRef, dispatcher, order, subStage, d
             return;
         }
         const stg : TournamentSubStage = { ...cachedSubStage, qualificationSlots : slots};
-        dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : `SubGroupsSets-${subStage.stage}-${order}` });
+        dispatcher({ type : 'SUBMIT_SIDESTEP', data : { subStages : [stg], sets : tSets }, ss : `SubBracketSets-${subStage.stage}-${order}` });
     }
 
     useEffect(() => {

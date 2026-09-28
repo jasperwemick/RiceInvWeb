@@ -13,6 +13,7 @@ import React from "react";
 import SetBracket from "./components/SetBracket";
 import SubGroupsSets from "./components/SubGroupsSets";
 import SubBracketSets from "./components/SubBracketSets";
+import TournamentReview from "./components/TournamentReview";
 
 interface SideHistoryItem {
     sideStep : string;
@@ -489,6 +490,8 @@ export default function CreateTournamentPage() {
                 })
             })
         })
+    ).concat(
+        defineStep({ key : 'Review', Component : TournamentReview, props : { animInProgress } })
     )
 
     useLayoutEffect(() => {

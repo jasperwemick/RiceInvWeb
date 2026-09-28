@@ -10,7 +10,7 @@ const Schema = mongoose.Schema;
 export interface TournamentStageDoc extends Document {
     tournament :  mongoose.Types.ObjectId;
     order : number;
-    stageType : 'Groups' | 'Playins' | 'Playoffs';
+    stageType : 'Groups' | 'Playoffs';
     format : string;
     stageName ? : string;
 }

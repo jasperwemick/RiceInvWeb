@@ -30,10 +30,11 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
 
         const newSets : TournamentSet[] = [];
 
-        nodeArr.reverse().map((level) => {
+        nodeArr.reverse().map((level, i) => {
             level.map((node, j) => {
                 const bracketWidth = level.length
                 const setPlayers : (TournamentParticipant | null)[] = Array.from({ length: 2 }, () => null);
+                let setName : string = '';
 
                 if (stage.format.includes('Single') || layer === 'Upper') {
                     if (realCount === 0 || (!node.left && !node.right)) { // Start of bracket
@@ -72,9 +73,25 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                             points : 0
                         }
                     }
+
+                    switch (level.length) {
+                        case 1 : 
+                            setName = stage.format.includes('Single') ? 'Final' : 
+                            node.parent === null ? 'Grand Final Reset' : node.parent.parent ? 'Upper Final' : 'Grand Final'; 
+                            break;
+                        case 2 : 
+                            setName = (node.parent?.left && node.parent?.right) ? 'Semi' : `Round ${i}`; 
+                            setName = stage.format.includes('Single') ? setName : 'Upper ' + setName;
+                            break;
+                        case 4 :                            
+                            setName = (node.parent?.left && node.parent?.right) ? 'Quarter' : `Round ${i}`; 
+                            setName = stage.format.includes('Single') ? setName : 'Upper ' + setName;
+                            break;
+                        default : setName = `Round of ${level.length}`;
+                    }
                 }
                 else if (stage.format.includes('Bias')) {
-                    
+                    // TODO
                 }
                 else { // Should only be lower bracket
                     console.log(node);
@@ -90,12 +107,26 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                         name : rightPrev,
                         points : 0
                     }
+
+                    switch (level.length) {
+                        case 1 : 
+                            setName = (node.left && node.right) ? 'Lower Final' : 'Lower Decider'; 
+                            break;
+                        case 2 : 
+                            setName = (node.parent?.left && node.parent?.right) ? 'Lower Semi' : `Lower Round ${i}`;
+                            break;
+                        case 4 :                            
+                            setName = (node.parent?.left && node.parent?.right) ? 'Lower Quarter' : `Lower Round ${i}`; 
+                            break;
+                        default : setName = `Round of ${level.length}`;
+                    }
                 }
 
                 const newSet : TournamentSet = {
                     id : new ObjectId().toHexString(),
                     order : node.value,
                     subStageId : subStage.id,
+                    setName,
                     bestOf : 5,
                     participants : setPlayers.filter((x): x is Placeholder => x != null && x.def === 'Placeholder'),
                     participantType : 'Placeholder'
@@ -116,9 +147,13 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
             return (
                 <div key={i}>
                     { level.length ? level.map((node, j) => {
+                        const theSet = sets.find(x => x.order === node.value) ?? null;
                         return (
                             <React.Fragment key={j}>
-                                <BracketSet bracketSet={sets.find(x => x.order === node.value) ?? null} ref={refMap(node.value)}/>
+                                <div>
+                                    <p>{theSet?.setName}</p>
+                                    <BracketSet bracketSet={theSet} ref={refMap(node.value)}/>
+                                </div>
                                 {
                                 node.parent ?
                                 <Xarrow 

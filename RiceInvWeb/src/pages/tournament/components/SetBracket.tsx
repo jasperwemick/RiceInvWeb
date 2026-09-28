@@ -27,9 +27,18 @@ export default function SetBracket({itemRef, dispatcher, stageNum, data, partici
         })
     }
 
-    // const getParticipants = () => {
-    //     return participants.filter(x => isParticipantAvailable(x));
-    // }
+    const submitBrackets = () => {
+        const nextStage = data.stages.find(x => x.order === stageNum + 1)
+        dispatcher({
+            type : 'STEP', 
+            data : {
+                step : nextStage ? `Set${nextStage.stageType}-${stageNum + 1}` : `Review`, 
+            },
+            activeSSCount : brackets.length,
+            isStage : true
+        });
+ 
+    }
 
     const confirmBracket = () => {
         if (!stage) return;
@@ -69,6 +78,7 @@ export default function SetBracket({itemRef, dispatcher, stageNum, data, partici
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <button onClick={confirmBracket}>SHOW BRACKETS</button>
+                <button onClick={submitBrackets}>Finish</button>
             </div>
         </li>
     )

@@ -42,7 +42,7 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
                         padding : '1rem',
                         textAlign : 'center',
                         fontSize : '3pc'
-                    }}>{`It's Me`}</p>
+                    }}>{`Host`}</p>
                 </div>
                 <div className={`me-base-grid-block`}>
                     <p style={{
