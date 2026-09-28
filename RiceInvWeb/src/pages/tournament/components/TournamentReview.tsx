@@ -8,15 +8,15 @@ interface ReviewProps {
     data : TournamentData
 }
 
-export default function TournamentReview({ itemRef, dispatcher, animInProgress, data } : ReviewProps) {
+export default function TournamentReview({ itemRef } : ReviewProps) {
 
     const undo = () => {
 
     }
 
-    const submit = () => {
+    // const submit = () => {
         
-    }
+    // }
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
