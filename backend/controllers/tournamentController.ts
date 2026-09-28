@@ -19,6 +19,9 @@ import mongoose from "mongoose";
 import { matchBaseSchema, newMatchSchema, newSetSchema, newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
 import Team, { TeamDoc } from "../models/teamModel";
 import Match from "../models/matchModel";
+import stageModel from "../models/stageModel";
+import tournamentStageModel from "../models/tournamentStageModel";
+import tournamentSubStageModel from "../models/tournamentSubStageModel";
 
 export const getAllTournaments = async (req : Request, res : Response) => {
     try {
@@ -185,7 +188,7 @@ export const createTournament = async (req : Request, res : Response) => {
         return res.status(400).json({ message: body.error.message });
     }
 
-    const { name, gameMode, players, sets } = body.data;
+    const { name, gameMode, participants, stages } = body.data;
 
     const session = await mongoose.startSession();
 
@@ -193,57 +196,71 @@ export const createTournament = async (req : Request, res : Response) => {
         session.startTransaction();
 
         const tournament = await Tournament.create([{
-            name, gameMode, players
+            name, gameMode, participants
         }], { session })
 
         const tournamentDoc = tournament[0];
 
-        for (const setBody of sets) {
+        for (const stageBody of stages) {
+            const { subStages, ...stageData } = stageBody
+            const stage = await tournamentStageModel.create([{tournament : tournamentDoc._id, ...stageData}], { session });
 
-            const { matches, ...setData } = setBody;
+            const stageDoc = stage[0];
+            
+            for (const subStageBody of stageBody.subStages) {
+                const { sets, ...subStageData } = subStageBody
+                const subStage = await tournamentSubStageModel.create([{ stage : stageDoc._id, ...subStageData }], { session })
 
-            const set = await Set.create([{ tournament: tournamentDoc._id, ...setData }], { session });
-            const setDoc = set[0];
+                const subStageDoc = subStage[0];
 
-            for (const matchBody of setBody.matches) {
-                let matchId : mongoose.Types.ObjectId
-                if (matchBody.format === 'Brawl') {
-                    const { format, playerStats, ...matchData } = matchBody
-                    const match = await BrawlMatch.create([{ set: setDoc._id, ...matchData }], { session });
-                    matchId = match[0].id;
-                }
-                else if (matchBody.format === 'LoL') {
-                    const { format, playerStats, ...matchData } = matchBody
-                    const match = await LoLMatch.create([{ set: setDoc._id, ...matchData }], { session });
-                    matchId = match[0].id;
-                }
-                else if (matchBody.format === 'Valorant') {
-                    const { format, playerStats, ...matchData } = matchBody
-                    const match = await ValorantMatch.create([{ set: setDoc._id, ...matchData }], { session });
-                    matchId = match[0].id;
-                }
-                else {
-                    const { format, playerStats, ...matchData } = matchBody
-                    const match = await RocketMatch.create([{ set: setDoc._id, ...matchData }], { session });
-                    matchId = match[0].id;
-                }
-                
-                for (const pStat of matchBody.playerStats) {
-                    if (pStat.format === 'Brawl') {
-                        const { format, ...statData } = pStat
-                        await BrawlStats.create([{ ...statData, match: matchId }], { session });
-                    }
-                    else if (pStat.format === 'LoL') {
-                        const { format, ...statData } = pStat
-                        await LoLStats.create([{ ...statData,  match: matchId }], { session });
-                    }
-                    else if (pStat.format === 'Valorant') {
-                        const { format, ...statData } = pStat
-                        await ValorantStats.create([{ ...statData, match: matchId }], { session });
-                    }
-                    else if (pStat.format === 'Rocket') {
-                        const { format, ...statData } = pStat
-                        await RocketStats.create([{ ...statData, match: matchId }], { session });
+                for (const setBody of sets) {
+
+                    const { matches, ...setData } = setBody;
+
+                    const set = await Set.create([{ tournament: subStageDoc._id, ...setData }], { session });
+                    const setDoc = set[0];
+
+                    for (const matchBody of setBody.matches) {
+                        let matchId : mongoose.Types.ObjectId
+                        if (matchBody.format === 'Brawl') {
+                            const { format, playerStats, ...matchData } = matchBody
+                            const match = await BrawlMatch.create([{ set: setDoc._id, ...matchData }], { session });
+                            matchId = match[0].id;
+                        }
+                        else if (matchBody.format === 'LoL') {
+                            const { format, playerStats, ...matchData } = matchBody
+                            const match = await LoLMatch.create([{ set: setDoc._id, ...matchData }], { session });
+                            matchId = match[0].id;
+                        }
+                        else if (matchBody.format === 'Valorant') {
+                            const { format, playerStats, ...matchData } = matchBody
+                            const match = await ValorantMatch.create([{ set: setDoc._id, ...matchData }], { session });
+                            matchId = match[0].id;
+                        }
+                        else {
+                            const { format, playerStats, ...matchData } = matchBody
+                            const match = await RocketMatch.create([{ set: setDoc._id, ...matchData }], { session });
+                            matchId = match[0].id;
+                        }
+                        
+                        for (const pStat of matchBody.playerStats) {
+                            if (pStat.format === 'Brawl') {
+                                const { format, ...statData } = pStat
+                                await BrawlStats.create([{ ...statData, match: matchId }], { session });
+                            }
+                            else if (pStat.format === 'LoL') {
+                                const { format, ...statData } = pStat
+                                await LoLStats.create([{ ...statData,  match: matchId }], { session });
+                            }
+                            else if (pStat.format === 'Valorant') {
+                                const { format, ...statData } = pStat
+                                await ValorantStats.create([{ ...statData, match: matchId }], { session });
+                            }
+                            else if (pStat.format === 'Rocket') {
+                                const { format, ...statData } = pStat
+                                await RocketStats.create([{ ...statData, match: matchId }], { session });
+                            }
+                        }
                     }
                 }
             }

@@ -114,11 +114,6 @@ export interface TournamentMatch {
     duration : number;
 }
 
-export interface Stage {
-    stage : string;
-    formats : string[];
-}
-
 export interface TournamentStage {
     id : string;
     order : number;

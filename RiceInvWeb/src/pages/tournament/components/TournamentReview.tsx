@@ -14,15 +14,15 @@ export default function TournamentReview({ itemRef } : ReviewProps) {
 
     }
 
-    // const submit = () => {
+    const submit = () => {
         
-    // }
+    }
 
     return (
         <li className={'tournament-configuration-box'} ref={itemRef}>
             <button onClick={undo}>Back</button>
             <div className={'tournament-configuration-box-header'}>
-                <p>Who is participating?</p>
+                <p>Review</p>
             </div>
             <div className={'tournament-configuration-box-body'}>
                 <div className={'tournament-participants-grid'}>

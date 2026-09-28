@@ -7,10 +7,11 @@ const Schema = mongoose.Schema;
 
 export interface MatchDoc extends Document {
     game : string;
-    matchNumber : Number;
+    order : number;
     matchSet : mongoose.Types.ObjectId;
     winner : Participant;
     winnerType : 'Profile' | 'Team';
+    duration : number;
 }
 
 export const matchSchema = new Schema<MatchDoc>({
@@ -18,7 +19,7 @@ export const matchSchema = new Schema<MatchDoc>({
         type : String,
         required : true
     },
-    matchNumber : {
+    order : {
         type : Number,
         required : true,
         default : 0
@@ -38,6 +39,10 @@ export const matchSchema = new Schema<MatchDoc>({
         required: true,
         enum: ['Profile', 'Team'],
     },
+    duration : {
+        type : Number,
+        default : 0
+    }
 
 }, { discriminatorKey : 'game', collection : 'matches'});
 
