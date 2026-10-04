@@ -78,7 +78,6 @@ export default function SelectableItemsList<T, P extends object = {}>({
         setSelectedIndex(index);
 
         dom.classList.add('selected');
-        console.log('selected : ', item);
         if (selection.multiple === true) selection.setSelected([...selection.selected, item]);
         else selection.setSelected(item);
     }

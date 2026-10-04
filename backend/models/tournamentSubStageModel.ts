@@ -12,7 +12,7 @@ export interface TournamentSubStageDoc extends Document {
     stage : mongoose.Types.ObjectId;
     name : string;
     format : string;
-    members : mongoose.Types.ObjectId[];
+    members : Participant[];
     memberType : 'Profile' | 'Team';
 }
 
@@ -27,7 +27,6 @@ const tournamentSubStageSchema = new Schema<TournamentSubStageDoc>({
     },
     name : {
         type : String,
-        required : true
     },
     format : {
         type : String,

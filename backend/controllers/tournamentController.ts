@@ -16,10 +16,9 @@ import Game from "../models/gameModel";
 
 import { SetDoc } from "../models/setModel";
 import mongoose from "mongoose";
-import { matchBaseSchema, newMatchSchema, newSetSchema, newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
+import { newMatchSchema, newSetSchema, newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
 import Team, { TeamDoc } from "../models/teamModel";
 import Match from "../models/matchModel";
-import stageModel from "../models/stageModel";
 import tournamentStageModel from "../models/tournamentStageModel";
 import tournamentSubStageModel from "../models/tournamentSubStageModel";
 
@@ -185,10 +184,11 @@ export const createTournament = async (req : Request, res : Response) => {
     const body = newTournamentSchema.safeParse(req.body);
 
     if (!body.success) {
+        console.log('Validation Failure: ', body.error.message);
         return res.status(400).json({ message: body.error.message });
     }
 
-    const { name, gameMode, participants, stages } = body.data;
+    const { name, gameMode, participants, participantType, stages } = body.data;
 
     const session = await mongoose.startSession();
 
@@ -196,31 +196,28 @@ export const createTournament = async (req : Request, res : Response) => {
         session.startTransaction();
 
         const tournament = await Tournament.create([{
-            name, gameMode, participants
+            name, gameMode, participants, participantType
         }], { session })
 
         const tournamentDoc = tournament[0];
 
         for (const stageBody of stages) {
             const { subStages, ...stageData } = stageBody
-            const stage = await tournamentStageModel.create([{tournament : tournamentDoc._id, ...stageData}], { session });
-
+            const stage = await tournamentStageModel.create([{ tournament : tournamentDoc._id, ...stageData }], { session });
             const stageDoc = stage[0];
             
-            for (const subStageBody of stageBody.subStages) {
+            for (const subStageBody of subStages) {
                 const { sets, ...subStageData } = subStageBody
                 const subStage = await tournamentSubStageModel.create([{ stage : stageDoc._id, ...subStageData }], { session })
-
                 const subStageDoc = subStage[0];
 
                 for (const setBody of sets) {
 
                     const { matches, ...setData } = setBody;
-
-                    const set = await Set.create([{ tournament: subStageDoc._id, ...setData }], { session });
+                    const set = await Set.create([{ subStage: subStageDoc._id, ...setData }], { session });
                     const setDoc = set[0];
 
-                    for (const matchBody of setBody.matches) {
+                    for (const matchBody of matches) {
                         let matchId : mongoose.Types.ObjectId
                         if (matchBody.format === 'Brawl') {
                             const { format, playerStats, ...matchData } = matchBody

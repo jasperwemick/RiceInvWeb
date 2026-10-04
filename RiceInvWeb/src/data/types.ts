@@ -72,6 +72,7 @@ export interface GameStats {
 
 
 export interface Team {
+    _id : string;
     def : 'Team';
     name : string;
     members : Profile[]

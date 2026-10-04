@@ -33,7 +33,7 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
     return (
         <div className={`me-section`} style={{background : 'transparent', pointerEvents : 'none'}}>
             <div className={`me-left ${stage !== 0 ? 'me-hidden' : ''}`} style={{opacity : progress >= 0 ? localProgress : 0}}>
-                <DrawableImage src={profiles.find(x => x.name === 'Jasper Emick')?.imageUrl}/>
+                <DrawableImage src={profiles.find(x => x._id === "65791c0c79e6998e4df5da2c")?.imageUrl}/>
                 <div className={`me-base-grid-block`}>
                     <p style={{
                         color : '#041629ff',

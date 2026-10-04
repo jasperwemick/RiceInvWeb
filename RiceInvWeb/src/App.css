@@ -9,6 +9,21 @@ html, body {
     box-sizing: border-box;
 }
 
+:root {
+    --blue-light : #a1bae5;
+    --blue-periwinkle : #9198e5;
+    --blue-purple : #827cda;
+    --blue-baby : #6998e9;
+    --blue-ocean : #4071c5;
+    --blue-deep : #1956c0;
+    --blue-dark : #10387c;
+    
+    --text-primary : #f5faff;
+    
+    --gold-primary : #b37416;
+    --gray-primary : #4d4d4d;
+}
+
 .app-layout {
     display: flex;
     flex-direction: column;

@@ -8,7 +8,7 @@ import { TournamentStageDoc } from "./tournamentStageModel";
 const Schema = mongoose.Schema;
 
 export interface SetDoc extends Document {
-    setId : number;
+    order : number;
     bestOf : number;
     subStage : PopulatedDoc<TournamentStageDoc>;
     setName : string;
@@ -21,9 +21,9 @@ export interface SetDoc extends Document {
 }
 
 const setSchema = new Schema<SetDoc>({
-    setId: {
-        type: Number,
-        required: true
+    order : {
+        type : Number,
+        required : true
     },
     bestOf: {
         type: Number,

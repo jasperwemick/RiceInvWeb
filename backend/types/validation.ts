@@ -100,13 +100,14 @@ export const newMatchSchema = z.discriminatedUnion('format', [
 ])
 
 export const newSetSchema = z.object({
-    setId : z.number().min(0),
+    order : z.number().min(0),
     bestOf : z.number().min(1),
-    teams : z.array(objectIdSchema),
+    participants : z.array(objectIdSchema),
+    participantType : z.enum(['Profile', 'Team']),
     parents : z.array(z.string()),
     lowerSetID : z.number(),
     nextSetID : z.number(),
-    matches : z.array(newMatchSchema).min(1)
+    matches : z.array(newMatchSchema).min(0)
 })
 
 export const newSubStageSchema = z.object({
@@ -114,6 +115,7 @@ export const newSubStageSchema = z.object({
     name : z.string(),
     format : z.string(),
     members : z.array(objectIdSchema),
+    memberType : z.enum(['Profile', 'Team']),
     sets : z.array(newSetSchema).min(1)
 })
 
@@ -129,6 +131,7 @@ export const newTournamentSchema = z.object({
     name : z.string().min(1),
     gameMode : objectIdSchema,
     participants : z.array(objectIdSchema).min(2),
+    participantType : z.enum(['Profile', 'Team']),
     stages : z.array(newStageSchema).min(1)
 })
 

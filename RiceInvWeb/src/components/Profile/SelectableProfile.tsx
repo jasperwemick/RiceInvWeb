@@ -39,6 +39,6 @@ export default function SelectableProfile({profile, setSelectedList, selectedLis
     }
 
     return (
-        <ProfileListItem profile={profile} width={50} height={50} clickAction={handleClick} styleOptions={selected ? {backgroundColor: "lightblue"} : undefined}/>
+        <ProfileListItem profile={profile} width={50} height={50} onClick={handleClick} style={selected ? {backgroundColor: "lightblue"} : undefined}/>
     )
 }

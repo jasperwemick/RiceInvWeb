@@ -30,6 +30,7 @@ import RankingsPage from "./pages/rankingsPage/RankingsPage";
 import TournamentPage from "./pages/tournament/tournamentPage";
 import CreateTournamentPage from "./pages/tournament/createTournamentPage";
 import RiceFooter from "./components/RiceFooter";
+import ProfilePage from "./pages/profilePage";
  
 const App = () => {
   return (
@@ -47,6 +48,8 @@ const App = () => {
             <Route path="/schedule" component={SchedulePage}/> {/* Schedule Page */}
             <Route path="/login" component={Login}/> {/* Login Page (Admin only for now) */}
             <Route path="/logout" component={Logout}/> {/* Logout Function */}
+
+            <Route path="/profile/:id" component={ProfilePage}/> {/* Profile Page */}
 
             <Route path="/tournament/create" component={CreateTournamentPage} />
             <Route path="/tournament" component={TournamentPage} />
