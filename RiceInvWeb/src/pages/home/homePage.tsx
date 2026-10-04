@@ -28,7 +28,7 @@ export default function Home() {
                 </div>
             </section>
             <section style={{ background : 'linear-gradient(#9198e5, #6998e9)', height : '20vh'}}></section>
-            <section style={{ background: 'linear-gradient(#6998e9, #4071c5)'}}>
+            <section style={{ background: 'linear-gradient(#6998e9, #4071c5)' }}>
                 <ScrollFrameSequence frames={Array.from({ length : NUMFRAMES + 1 }, () => MeInfo)}/>
             </section>
             <section>

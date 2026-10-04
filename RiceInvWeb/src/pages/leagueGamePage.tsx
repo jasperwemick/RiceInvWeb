@@ -2,17 +2,6 @@ import { useEffect } from "react";
 import "../style/leagueGame.css"
 import { useParams } from "wouter";
 
-// const Player = (props) => (
-//     <li className={`game-list-item ${props.player.subbed ? 'league-subbed': ''}`} >
-//         <Link to={`/${props.player.profileID}`}>{props.player.name}</Link>
-//         <div><span>Champion: {props.player.champion}</span></div>
-//         <div><span>Kills: {props.player.kills}</span></div>
-//         <div><span>Deaths: {props.player.deaths}</span></div>
-//         <div><span>Assists: {props.player.assists}</span></div>
-//         <div><span>Rating: {props.player.rating}</span></div>
-//     </li>
-// );
-
 export default function LeagueGamePage() {
 
     const params = useParams<'/league/games/:num'>();

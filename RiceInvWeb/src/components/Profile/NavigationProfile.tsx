@@ -11,7 +11,7 @@ interface NavigationProfileProps {
 
 export const NavigationProfile = ({profile, currentLocation} : NavigationProfileProps) => {
 
-    const DELAYTIME = 500;
+    const DELAYTIME = 800;
     const REVEALTIME = 1200;
 
     const [_, useNavigate] = useLocation();
@@ -86,7 +86,7 @@ export const NavigationProfile = ({profile, currentLocation} : NavigationProfile
         style={{ 
             willChange : 'boxShadow',
             boxShadow : `0 0 0.5rem 0.5rem rgba(235, 250, 255, ${
-                (1 - Math.abs(subTime / DELAYTIME))
+                ccover ? 0 : (1 - Math.abs(subTime / DELAYTIME))
             })`,
             borderRadius : '1rem'
         }}
