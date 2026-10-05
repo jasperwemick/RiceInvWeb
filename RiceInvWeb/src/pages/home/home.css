@@ -160,10 +160,15 @@
     flex-direction : column;
     gap : 2rem;
     list-style : none;
-    overflow-y : scroll;
-    overscroll-behavior: contain;
-    touch-action: none;
+    overflow-y : auto;
+    overscroll-behavior: auto;
+    scrollbar-width: none;
     user-select: none;
+}
+
+.me-right > ul.scrollable {
+    touch-action: none;
+    overscroll-behavior: contain;
 }
 
 .me-right > div {

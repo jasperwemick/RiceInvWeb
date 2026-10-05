@@ -2,12 +2,15 @@ import { useEffect, useRef, useState } from "react";
 import useProfiles from "../../../components/Profile/hooks/useProfiles";
 import DrawableImage from "./DrawableImage";
 import { Link } from "wouter";
+import useHasOverflow from "../../../hooks/useHasOverflow";
 
 export default function MeInfo({ stage, progress, localProgress } : { stage : number, progress : number, localProgress : number }) {
 
     const { profiles } = useProfiles();
     const passageRef = useRef<HTMLUListElement | null>(null);
     const [isMouseDown, setIsMouseDown] = useState(false);
+
+    const hasOverflow = useHasOverflow(passageRef);
 
     const mouse = useRef({
         startY: 0,
@@ -59,10 +62,11 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
             </div>
             <div className={`me-right ${stage < 1 ? 'me-hidden' : ''}`} style={{opacity : progress >= 1 ? localProgress : 0, pointerEvents : "none", visibility : (stage <= 2 && stage > 0) ? 'visible' : 'hidden'}}>
                 <ul 
-                className={`${stage < 2 ? 'me-hidden' : ''}`} 
+                className={`${hasOverflow ? 'scrollable' : ''} ${stage < 2 ? 'me-hidden' : ''}`} 
                 style={{
                     opacity : (progress >= 2 && progress < 3) ? localProgress : stage === 2 ? 1 : 0,
-                    pointerEvents : stage === 2 ? 'all' : 'none'
+                    pointerEvents : stage === 2 ? 'all' : 'none',
+                    cursor : hasOverflow ? 'grab' : 'default'
                 }}
                 ref={passageRef}
                 onMouseDown={handleDragStart}
