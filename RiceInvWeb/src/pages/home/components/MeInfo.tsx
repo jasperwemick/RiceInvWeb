@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import useProfiles from "../../../components/Profile/hooks/useProfiles";
 import DrawableImage from "./DrawableImage";
 import { Link } from "wouter";
@@ -5,6 +6,44 @@ import { Link } from "wouter";
 export default function MeInfo({ stage, progress, localProgress } : { stage : number, progress : number, localProgress : number }) {
 
     const { profiles } = useProfiles();
+    const passageRef = useRef<HTMLUListElement | null>(null);
+    const [isMouseDown, setIsMouseDown] = useState(false);
+
+    const mouse = useRef({
+        startY: 0,
+        scrollTop: 0
+    });
+
+    const handleDragStart = (e : React.MouseEvent<HTMLUListElement>) => {
+        if (!passageRef.current) return;
+        const slider = passageRef.current;
+        mouse.current = { startY : e.pageY - slider.offsetTop, scrollTop: slider.scrollTop };
+        setIsMouseDown(true);
+        document.body.style.cursor = "grabbing";
+    }
+
+    const handleDragEnd = (e : React.MouseEvent<HTMLUListElement>) => {
+        e.stopPropagation();
+        setIsMouseDown(false);
+        if (!passageRef.current) return;
+        document.body.style.cursor = "default";
+    }
+
+    const handleDrag = (e : React.MouseEvent<HTMLUListElement>) => {
+        if (!isMouseDown || !passageRef.current) return;
+        e.preventDefault();
+
+        const slider = passageRef.current;
+        const y = e.pageY - slider.offsetTop
+
+        const walkY = (y - mouse.current.startY);
+        slider.scrollTop = mouse.current.scrollTop - walkY;
+    }
+
+    useEffect(() => {
+        if (passageRef.current) console.log(passageRef.current?.scrollTop)
+    }, [passageRef.current?.scrollTop])
+
     return (
         <div className={`me-section`} style={{background : 'transparent', pointerEvents : 'none'}}>
             <div className={`me-left ${stage !== 0 ? 'me-hidden' : ''}`} style={{opacity : progress >= 0 ? localProgress : 0}}>
@@ -18,10 +57,18 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
                     </div>
                 </div>
             </div>
-            <div className={`me-right ${stage < 1 ? 'me-hidden' : ''}`} style={{opacity : progress >= 1 ? localProgress : 0}}>
-                <ul className={`${stage < 2 ? 'me-hidden' : ''}`} style={{
-                    ...({opacity : progress >= 2 ? stage === 2 ? localProgress : 1 : 0})
-                    }}>
+            <div className={`me-right ${stage < 1 ? 'me-hidden' : ''}`} style={{opacity : progress >= 1 ? localProgress : 0, pointerEvents : "none", visibility : (stage <= 2 && stage > 0) ? 'visible' : 'hidden'}}>
+                <ul 
+                className={`${stage < 2 ? 'me-hidden' : ''}`} 
+                style={{
+                    opacity : (progress >= 2 && progress < 3) ? localProgress : stage === 2 ? 1 : 0,
+                    pointerEvents : stage === 2 ? 'all' : 'none'
+                }}
+                ref={passageRef}
+                onMouseDown={handleDragStart}
+                onMouseMove={handleDrag}
+                onMouseUp={handleDragEnd}
+                onMouseLeave={handleDragEnd}>
                     <li>
                         <p className={'me-passage-text'} style={{ textAlign : 'center', fontSize : '32pt'}}>
                             {`Hello! Welcome to my website!`}
@@ -52,7 +99,7 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
                     </li>
                 </ul>
                 <div className={`${stage < 3 ? 'me-hidden' : ''}`} style={{
-                    ...({opacity : progress >= 3 ? stage === 3 ? localProgress : 1 : 0})
+                    ...({opacity : progress >= 3 ? stage === 3 ? localProgress : 1 : 0, visibility : stage >= 3 ? 'visible' : 'hidden', pointerEvents : stage === 3 ? 'all' : 'none'})
                     }}>
                     <Link className={'me-page-button'} style={{ gridColumn : '1 / 3'}} to={`/`}><p>{`Rice Invitational`}</p></Link>
                     <Link className={'me-page-button'} style={{ gridColumn : '3 / 5'}} to={`/`}><p>{`Other Projects`}</p></Link>

@@ -91,7 +91,7 @@
     align-content: center;
     padding: 1rem;
     row-gap: 1rem;
-    align-self: center;
+    align-self: flex-start;
 }
 
 .me-img-container {
@@ -124,15 +124,10 @@
     grid-column: 1 / -1;
     border : 0.5rem solid #091c50;
     border-radius : 2rem;
-    background : linear-gradient(#aabbcc, #6f70c9);;
+    background : linear-gradient(#aabbcc, #6f70c9);
     justify-self: center;
     align-self: center;
-}
-
-.me-base-grid-block:first-of-type {
-}
-
-.me-base-grid-block:last-of-type {
+    align-content: center;
 }
 
 .me-face-text {
@@ -141,6 +136,7 @@
     text-align : center;
     font-size : 30pt;
     font-style : italic;
+    user-select: none;
 }
 
 .me-right {
@@ -153,6 +149,7 @@
 }
 
 .me-right > ul {
+    position: relative;
     grid-column : 1 / -1;
     grid-row: 1 / 8;
     border : 0.5rem solid #091c50;
@@ -163,8 +160,10 @@
     flex-direction : column;
     gap : 2rem;
     list-style : none;
-    overflow : scroll;
-    scrollbar-width : none;
+    overflow-y : scroll;
+    overscroll-behavior: contain;
+    touch-action: none;
+    user-select: none;
 }
 
 .me-right > div {
@@ -172,18 +171,21 @@
     grid-template-rows : subgrid;
     grid-column : 1 / -1;
     grid-row: 8 / 10;
+    column-gap: 1rem;
 }
 
 .me-passage-text {
     font-family: sans-serif;
     font-size: 18pt;
     color : #252c33;
+    user-select: none;
 }
 
 .me-header-text {
     font-family : sans-serif;
     font-size: 20pt;
-    color : #ffffff
+    color : #ffffff;
+    user-select: none;
 }
 
 .me-page-button {
@@ -201,6 +203,7 @@
 .me-hidden { 
     visibility: hidden;
     opacity: 0;
+    pointer-events: none;
 }
 
 @media (max-width : 1800px) {
@@ -217,10 +220,10 @@
 
 @media (max-width : 1400px) {
     .me-passage-text {
-        font-size: 14pt;
+        font-size: 16pt;
     }
     .me-header-text {
-        font-size: 16pt;
+        font-size: 18pt;
     }
     .me-page-button {
         font-size: 20pt;
@@ -298,82 +301,13 @@
         display : grid;
         grid-template-rows : subgrid;
         grid-column : 1 / -1;
-        grid-row: 7 / 10;
-    }
-}
-
-@media (max-width : 1000px) {
-    .me-face-text {
-        font-size: 16pt;
-    }
-
-    .me-section > * {
-        grid-template-rows: subgrid;
-        grid-column: 1 / -1; 
-        grid-auto-flow: column;
-    }
-
-    .me-left {
-        grid-row: 1 / 2;
-        column-gap: 1rem;
-    }
-
-    .me-img-container {
-        grid-column: 1 / 3;
-        max-width: 12rem;
-        margin: 0;
-    }
-
-    .me-left-text-group {
-        display: grid;
-        grid-template-columns: subgrid;
-        grid-column: 1 / -1;
-        grid-row: 6 / 9;
-        align-self: normal;
-        justify-self: normal;
-    }
-
-    .me-base-grid-block {
-        grid-column: 1 / -1;
-        justify-self: normal;
-        align-self: normal;
-    }
-
-    .me-base-grid-block:first-of-type {
-        grid-column: 3 / 6;
-    }
-
-    .me-base-grid-block:last-of-type {
-        grid-column: 6 / 9;
-    }
-
-    .me-right {
-        grid-template-rows: subgrid;
-        grid-row: 2 / 10;
-    }
-
-    .me-right > ul {
-        grid-column : 1 / -1;
-        grid-row: 1 / 7;
-    }
-
-    .me-right > div {
-        display : grid;
-        grid-template-rows : subgrid;
-        grid-column : 1 / -1;
-        grid-row: 7 / 10;
+        grid-row: 7 / 9;
     }
 }
 
 @media (max-width : 800px) {
     .me-face-text {
         font-size: 16pt;
-    }
-
-    .me-section > * {
-        grid-template-rows: subgrid;
-        grid-column: 1 / -1; 
-        grid-auto-flow: column;
     }
 
     .me-left {
@@ -385,22 +319,12 @@
         grid-column: 1 / 4;
         grid-row: 1 / -1;
         max-width: 8rem;
-        margin: 0;
     }
 
     .me-left-text-group {
-        display: grid;
         grid-template-rows: subgrid;
         grid-row: 1 / 3;
         grid-column: 1 / 9;
-        align-self: normal;
-        justify-self: normal;
-    }
-
-    .me-base-grid-block {
-        grid-row: 1 / -1;
-        justify-self: normal;
-        align-self: normal;
     }
 
     .me-base-grid-block:first-of-type {
@@ -414,19 +338,10 @@
     }
 
     .me-right {
-        grid-template-rows: subgrid;
         grid-row: 3 / 10;
     }
 
-    .me-right > ul {
-        grid-column : 1 / -1;
-        grid-row: 1 / 7;
-    }
-
-    .me-right > div {
-        display : grid;
-        grid-template-rows : subgrid;
-        grid-column : 1 / -1;
-        grid-row: 7 / 10;
+    .me-page-button {
+        font-size: 12pt;
     }
 }
