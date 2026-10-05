@@ -1,4 +1,4 @@
-import { useEffect, useState, type CSSProperties } from "react";
+import { useEffect, useState } from "react";
 import type { Profile } from "../../data/types";
 import ProfileListItem from "./ProfileListItem";
 import { useLocation } from "wouter";
@@ -9,7 +9,7 @@ interface NavigationProfileProps {
     currentLocation : any;
 }
 
-export const NavigationProfile = ({profile, currentLocation} : NavigationProfileProps) => {
+export const NavigationProfile = ({profile} : NavigationProfileProps) => {
 
     const DELAYTIME = 800;
     const REVEALTIME = 1200;
