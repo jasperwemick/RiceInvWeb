@@ -23,6 +23,8 @@ export default function DraggableList<T>({items, className, children, infinite=t
     const [listLength, setListLength] = useState(0)
     const [profileTicks, setProfileTicks] = useState(0)
 
+    const [animSpeed, setAnimSpeed] = useState(2);
+
 
     const mouseCoords = useRef({
         startX: 0,
@@ -70,11 +72,10 @@ export default function DraggableList<T>({items, className, children, infinite=t
 
     // Animates the list to constantly scroll at a speed of 1 pixel/frame
     useEffect(() => {
-        const speed = 1;
 
         const step = () => {
             if (sliderRef.current) {
-                sliderRef.current.scrollLeft += speed;
+                sliderRef.current.scrollLeft += animSpeed;
             }
             animationFrameId.current = requestAnimationFrame(step);
         };
@@ -88,7 +89,7 @@ export default function DraggableList<T>({items, className, children, infinite=t
                 cancelAnimationFrame(animationFrameId.current);
             }
         };
-    }, [animate]);
+    }, [animate, animSpeed]);
 
     const handleDragStart = (e : React.MouseEvent<HTMLUListElement>) => {
         if (!sliderRef.current) return;
@@ -103,6 +104,7 @@ export default function DraggableList<T>({items, className, children, infinite=t
     const handleDragEnd = (e : React.MouseEvent<HTMLUListElement>) => {
         e.stopPropagation();
         setIsMouseDown(false);
+        if (e.type === 'mouseleave') setAnimSpeed(2);
         if (!sliderRef.current) return;
         document.body.style.cursor = "default";
     }
@@ -125,6 +127,12 @@ export default function DraggableList<T>({items, className, children, infinite=t
         slider.scrollLeft = mouseCoords.current.scrollLeft - walkX;
     }
 
+    const handleAnimPause = (e : React.MouseEvent<HTMLUListElement>) => {
+        e.preventDefault();
+        console.log('hi');
+        setAnimSpeed(0);
+    }
+
     const handleWheel = (e : React.WheelEvent<HTMLUListElement>) => {
         e.preventDefault();
     }
@@ -140,6 +148,7 @@ export default function DraggableList<T>({items, className, children, infinite=t
         onMouseDown={handleDragStart} 
         onMouseUp={handleDragEnd} 
         onMouseMove={handleDrag} 
+        onMouseEnter={handleAnimPause}
         onMouseLeave={handleDragEnd}
         onWheel={handleWheel}
         onScroll={updateScroll} 

@@ -22,13 +22,13 @@ export default function Home() {
                     <div style={{display: "flex", justifyContent: 'center', width: '100%', height: 'fit-content'}}>
                         <ProfileList 
                         Wrapper={NavigationProfile}
-                        WrapperProps={{currentLocation: '/', styleOptions: {background: 'linear-gradient(#afc0df, #a1a7e4)'}}}
+                        WrapperProps={{currentLocation: '/', }}
                         isInfinite={true}/>
                     </div>
                 </div>
             </section>
-            <section style={{ background : 'linear-gradient(#9198e5, #6998e9ff)', height : '20vh'}}></section>
-            <section style={{ background: 'linear-gradient(#6998e9ff, #4071c5)'}}>
+            <section style={{ background : 'linear-gradient(#9198e5, #6998e9)', height : '20vh'}}></section>
+            <section style={{ background: 'linear-gradient(#6998e9, #4071c5)' }}>
                 <ScrollFrameSequence frames={Array.from({ length : NUMFRAMES + 1 }, () => MeInfo)}/>
             </section>
             <section>

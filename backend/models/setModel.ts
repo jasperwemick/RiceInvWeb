@@ -8,10 +8,9 @@ import { TournamentStageDoc } from "./tournamentStageModel";
 const Schema = mongoose.Schema;
 
 export interface SetDoc extends Document {
-    setId : number;
-    tournament : mongoose.Types.ObjectId;
+    order : number;
     bestOf : number;
-    stage : PopulatedDoc<TournamentStageDoc>;
+    subStage : PopulatedDoc<TournamentStageDoc>;
     setName : string;
     participants : Participant[];
     participantType : 'Profile' | 'Team';
@@ -22,27 +21,21 @@ export interface SetDoc extends Document {
 }
 
 const setSchema = new Schema<SetDoc>({
-    setId: {
-        type: Number,
-        required: true
-    },
-    tournament: {
-        type : mongoose.Schema.Types.ObjectId,
-        ref : 'Tournament',
+    order : {
+        type : Number,
         required : true
     },
     bestOf: {
         type: Number,
         required: true,
     },
-    stage : {
+    subStage : {
         type: mongoose.Schema.Types.ObjectId,
-        ref : 'TournamentStage',
+        ref : 'TournamentSubStage',
         required: true
     },
     setName : {
         type : String,
-        required : true
     },
     participants : [{
         type : mongoose.Schema.Types.ObjectId,
@@ -55,7 +48,7 @@ const setSchema = new Schema<SetDoc>({
         enum: ['Profile', 'Team'],
     },
     parents: [{
-        type: Number
+        type: String
     }],
     lowerSetID: {
         type: Number

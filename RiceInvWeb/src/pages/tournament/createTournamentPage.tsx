@@ -5,7 +5,6 @@ import useGetRef from "../../hooks/useGetRef";
 import AddParticipants from "./components/addParticipants";
 import SetTeams from "./components/setTeams";
 import apiFetch from "../../util/fetch";
-import CreateTeams from "./components/createTeams";
 import SetGame from "./components/setTournamentGame";
 import SetStages from "./components/SetStages";
 import SetGroups from "./components/SetGroups";
@@ -62,7 +61,6 @@ interface WizardState {
     expectedSubmissions: number;
     receivedSubmissions: number;
     stepIsStage : boolean;
-    cache : Record<string, any>;
 }
 
 export type WizardAction =
@@ -92,7 +90,6 @@ const initialWizardState : WizardState = {
     expectedSubmissions : 0,
     receivedSubmissions : 0,
     stepIsStage : false,
-    cache : {}
 };
 
 
@@ -461,15 +458,8 @@ export default function CreateTournamentPage() {
         defineStep({ key : 'Start', Component : CreateStart }),
         defineStep({ key : 'SetGame', Component : SetGame, props : { animInProgress } }),
         defineStep({ key : 'AddParticipants', Component : AddParticipants, props : { animInProgress, profiles } }),
-        defineStep({ key : 'SetTeams', Component : SetTeams, sidesteps : [
-            defineSideStep({
-                key : 'CreateTeams',
-                Component : CreateTeams, 
-                parentKey : 'SetTeams',
-                props : { animInProgress, participants : tournament.participants, gameMode : tournament.gameMode }
-            })
-        ]}),
-        defineStep({ key : 'SetStages', Component : SetStages, props : { animInProgress } }),
+        defineStep({ key : 'SetTeams', Component : SetTeams, props : { animInProgress }}),
+        defineStep({ key : 'SetStages', Component : SetStages, props : { animInProgress,  } }),
     ].concat(
         tournament.stages.map<ProcessStep<any>>((stage, i) => {
             return defineStep({ 

@@ -110,7 +110,7 @@ export default function SetStages({ itemRef, dispatcher } : SetStagesProps) {
 
         return tournamentStageData.map((item, i) => {
             return (
-                <div onClick={() => switchStage(i)}>
+                <div key={i} onClick={() => switchStage(i)}>
                     <p>{i + 1}</p>
                     <button>{item.stageType}</button>
                 </div>

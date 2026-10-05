@@ -19,24 +19,31 @@ export default function AddParticipants({ itemRef, dispatcher, animInProgress, p
 
     const submit = () => {
         if (!data.gameMode) return;
+        console.log(participants.length);
+        if (participants.length % data.gameMode.teamSize !== 0) {
+            setErrorMsg(`Participants must evenly distribute for teams of size ${data.gameMode.teamSize}`);
+            return;
+        }
 
-        if (participants.length % data.gameMode.teamSize === 0) {
-            dispatcher({
-                type : 'STEP',
-                data : {
-                    step : 'SetTeams',
-                    participants : participants, 
-                    particpantType : 'Profile' 
-                }
-            })
+        if (participants.length < data.gameMode.teamSize * 2) {
+            setErrorMsg(`Atleast ${data.gameMode.teamSize * 2} required`);
+            return;
         }
-        else {
-            setErrorMsg(`Participants must evenly distribute for teams of size ${data.gameMode.teamSize}`)
-        }
+
+        dispatcher({
+            type : 'STEP',
+            data : {
+                step : data.gameMode.teamSize > 1 ? 'SetTeams' : 'SetStages',
+                participants : participants, 
+                particpantType : 'Profile' 
+            }
+        })
+
     }
 
     const undo = () => {
         dispatcher({ type: 'UNDO_STEP', data : { participants : participants }});
+        setParticipants([]);
     }
 
     useEffect(() => {

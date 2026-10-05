@@ -10,8 +10,8 @@ export default function ListDropdownItem<T>({item, topRef, clickAction=(() => {}
     const [active, setActive] = useState<boolean>(false);
 
     const mapSubItems = () => {
-        return subItems(item).map((subItem) => {
-            return ( <li>{subItem}</li> )
+        return subItems(item).map((subItem, i) => {
+            return ( <li key={i}>{subItem}</li> )
         })
     }
 

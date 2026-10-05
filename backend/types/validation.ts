@@ -66,10 +66,10 @@ export const statSchema = z.discriminatedUnion('format', [
 
 export const matchBaseSchema = z.object({
     _id : objectIdSchema,
-    matchNumber : z.number(),
-    teamAWin : z.boolean(),
+    order : z.number(),
+    winner : objectIdSchema,
     duration : z.number(),
-    playerStats : z.array(statSchema)
+    playerStats : z.array(statSchema).min(1)
 })
 
 export const matchBrawlSchema = matchBaseSchema.extend({
@@ -79,7 +79,6 @@ export const matchBrawlSchema = matchBaseSchema.extend({
 
 export const matchLoLSchema = matchBaseSchema.extend({
     format : z.literal('LoL'),
-    time : z.number()
 })
 
 export const matchValorantSchema = matchBaseSchema.extend({
@@ -101,21 +100,39 @@ export const newMatchSchema = z.discriminatedUnion('format', [
 ])
 
 export const newSetSchema = z.object({
-    setId : z.number().min(0),
+    order : z.number().min(0),
     bestOf : z.number().min(1),
-    bracket : z.boolean(),
-    teams : z.array(objectIdSchema),
+    participants : z.array(objectIdSchema),
+    participantType : z.enum(['Profile', 'Team']),
     parents : z.array(z.string()),
     lowerSetID : z.number(),
     nextSetID : z.number(),
-    matches : z.array(newMatchSchema).min(1)
+    matches : z.array(newMatchSchema).min(0)
+})
+
+export const newSubStageSchema = z.object({
+    order : z.number().min(0),
+    name : z.string(),
+    format : z.string(),
+    members : z.array(objectIdSchema),
+    memberType : z.enum(['Profile', 'Team']),
+    sets : z.array(newSetSchema).min(1)
+})
+
+export const newStageSchema = z.object({
+    order : z.number().min(0),
+    stageType : z.enum(['Groups', 'Bracket']),
+    format : z.string(),
+    stageName : z.string(),
+    subStages : z.array(newSubStageSchema).min(1)
 })
 
 export const newTournamentSchema = z.object({
     name : z.string().min(1),
     gameMode : objectIdSchema,
-    players : z.array(objectIdSchema).min(2),
-    sets : z.array(newSetSchema).min(1)
+    participants : z.array(objectIdSchema).min(2),
+    participantType : z.enum(['Profile', 'Team']),
+    stages : z.array(newStageSchema).min(1)
 })
 
 export type newTournamentBody = z.infer<typeof newTournamentSchema>

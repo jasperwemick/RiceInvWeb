@@ -3,18 +3,18 @@ import { Link, useParams } from "wouter";
 import apiFetch from "../util/fetch";
 import type { Profile } from "../data/types";
 
-export default function Description() {
+export default function ProfilePage() {
  
     const [profile, setProfile] = useState<Profile | null>(null)
 
     const params = useParams<"/:id">();
     
     useEffect(() => {
-        async function getProfile() {
+        const getProfile = async () => {
             const id = params.id;
 
             try {
-                const profile = await apiFetch<Profile>(`/api/profiles/default/${id}`);
+                const profile = await apiFetch<Profile>(`/api/profiles/${id}`);
                 setProfile(profile);
             }
             catch(err) {
@@ -30,16 +30,9 @@ export default function Description() {
 
     return (
         <div>
-            <h2>
-                {profile?.name}
-            </h2>
+            <p>{profile?.name}</p>
             <img src={profile?.imageUrl} alt="Player Profile"></img>
-            <h4>
-                {profile?.description}
-            </h4>
-            <div><Link to={`/league/${profile?._id}`}>League</Link></div>
-            <div><Link to={`/edit/${profile?._id}`}>Edit</Link></div>
-            <div><Link to={`/brawl/${profile?._id}`}>Brawlhalla</Link></div>
+            <p>{profile?.description}</p>
         </div>
     )
 }

@@ -12,20 +12,20 @@ router.put('/set/:tag', upsertManyBracketSets);
 
 router.delete('/set/:tag/:num', deleteOneBracketSet);
 
-router.get('/tournament', getAllTournaments)
+router.get('/', getAllTournaments)
 
-router.get('/tournament/:tid', getTournament);
+router.get('//:tid', getTournament);
 
-router.get('/tournament/game/:gid', getTournamentsByGameId);
+router.get('/game/:gid', getTournamentsByGameId);
 
-router.get('/tournament/game/:name', getTournamentsByGameName);
+router.get('/game/:name', getTournamentsByGameName);
 
-router.get('/tournament/:tid/set', getAllTournamentSets);
+router.get('/:tid/set', getAllTournamentSets);
 
-router.get('/tournament/player/:pid', getAllPlayerTournaments);
+router.get('/player/:pid', getAllPlayerTournaments);
 
-router.get('/tournament/:tid/player/:pid/set', getPlayerTournamentSets);
+router.get('/:tid/player/:pid/set', getPlayerTournamentSets);
 
-router.post('/tournament', createTournament);
+router.post('/', createTournament);
 
 export default router

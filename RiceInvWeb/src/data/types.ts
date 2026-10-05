@@ -72,6 +72,7 @@ export interface GameStats {
 
 
 export interface Team {
+    _id : string;
     def : 'Team';
     name : string;
     members : Profile[]
@@ -112,11 +113,6 @@ export interface TournamentMatch {
     order : number;
     winner : TournamentParticipant;
     duration : number;
-}
-
-export interface Stage {
-    stage : string;
-    formats : string[];
 }
 
 export interface TournamentStage {
