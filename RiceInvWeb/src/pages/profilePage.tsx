@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Link, useParams } from "wouter";
+import { useParams } from "wouter";
 import apiFetch from "../util/fetch";
 import type { Profile } from "../data/types";
 

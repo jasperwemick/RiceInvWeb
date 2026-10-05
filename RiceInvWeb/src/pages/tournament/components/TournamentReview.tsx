@@ -10,7 +10,7 @@ interface ReviewProps {
     data : TournamentData
 }
 
-export default function TournamentReview({ itemRef, dispatcher, data } : ReviewProps) {
+export default function TournamentReview({ itemRef, data } : ReviewProps) {
 
     const [_, navigate] = useLocation();
 
