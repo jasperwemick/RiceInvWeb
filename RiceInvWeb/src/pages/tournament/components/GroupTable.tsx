@@ -60,7 +60,7 @@ export default function GroupTable({ groupSize, members, subId, sets, setSets, i
                 if (row > col && sets && sets.length === 0 && subId) {
                     const setMembers = castMixedMembers([members[row % groupSize], members[col % groupSize]]);
                     setList.push({
-                        id : new ObjectId().toHexString(),
+                        _id : new ObjectId().toHexString(),
                         subStageId : subId,
                         order : setList.length,
                         bestOf : 5,

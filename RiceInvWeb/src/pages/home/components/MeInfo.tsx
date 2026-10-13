@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import useProfiles from "../../../components/Profile/hooks/useProfiles";
 import DrawableImage from "./DrawableImage";
 import { Link } from "wouter";
@@ -43,10 +43,6 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
         slider.scrollTop = mouse.current.scrollTop - walkY;
     }
 
-    useEffect(() => {
-        if (passageRef.current) console.log(passageRef.current?.scrollTop)
-    }, [passageRef.current?.scrollTop])
-
     return (
         <div className={`me-section`} style={{background : 'transparent', pointerEvents : 'none'}}>
             <div className={`me-left ${stage !== 0 ? 'me-hidden' : ''}`} style={{opacity : progress >= 0 ? localProgress : 0}}>
@@ -90,13 +86,13 @@ export default function MeInfo({ stage, progress, localProgress } : { stage : nu
                         <p className={'me-passage-text'} style={{ textAlign : 'left'}}>
                             {`The Rice Invitational was originally a gaming tournament I made up with about twenty or so of my friends that we regularly participated
                             in for about two years. It wasn't really all that organized; rather, it was just something to do for fun and bring us all together. 
-                            At one point this site was used for scheduling matches and showcasing playres... but that didn't really last!`}
+                            At one point this site was used for scheduling matches and showcasing results, but that stopped alongside with the Rice Invitational.`}
                         </p>
                     </li>
                     <li>
                         <p className={'me-header-text'}>{`What's Happening Now?`}</p>
                         <p className={'me-passage-text'} style={{ textAlign : 'left'}}>
-                            {`I'm currently working on reintroducing all of the data I recorded from the Invitational back onto this site in interesting ways. I've had to
+                            {`I'm currently working on reintroducing all of the data I recorded back onto this site in ways I find interesting. I've had to
                             redesign both the frontend and backend of this site entirely so it will take some time, but come check for updates every now and then if interested!
                             If you want more information regarding any of this stuff consider clicking one of the buttons below (Once they actually lead somewhere). Thanks!`}
                         </p>

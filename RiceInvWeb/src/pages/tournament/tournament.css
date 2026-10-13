@@ -20,14 +20,48 @@
 .tournament-page-text > p {
     text-align : center;
     font-size: 24pt;
-    color: #354f86
+    color: #354f86;
+    user-select: none;
 }
 
 .tournament-list {
     display: flex;
     flex-direction: row;
     height: 30vh;
+    width: 80%;
     margin: 2rem 0 2rem 0;
+    gap: 2rem;
+    list-style: none;
+    justify-content: center;
+}
+
+.tournament-item {
+    padding: 1rem;
+    height: 30vh;
+    max-width: 30rem;
+    min-width: 16rem;
+    flex: 1;
+    align-items: center;
+    align-content: center;
+    background: linear-gradient(var(--blue-purple), var(--blue-periwinkle));
+    border-radius: 2rem;
+    box-shadow: 5px 5px 5px 0px rgba(0, 0, 0, 0.2);
+}
+
+.tournament-item > a {
+    display: flex;
+    width: 100%;
+    height: 100%;
+    text-decoration: none;
+    align-items: center;
+}
+
+.tournament-item > a > p {
+    width: 100%;
+    text-align: center;
+    font-size: 3pc;
+    color: var(--text-primary);
+    user-select: none;
 }
 
 .go-to-create-button {
@@ -67,6 +101,7 @@
     justify-content: center;
     align-content: center;
     text-decoration: none;
+    padding: 2rem;
     color: rgb(255, 255, 255);
     border-radius: 10rem;
     font-size: 42pt;

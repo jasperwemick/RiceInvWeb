@@ -19,8 +19,8 @@ import mongoose from "mongoose";
 import { newMatchSchema, newSetSchema, newTournamentSchema, profileSchema, profilesSchema } from "../types/validation";
 import Team, { TeamDoc } from "../models/teamModel";
 import Match from "../models/matchModel";
-import tournamentStageModel from "../models/tournamentStageModel";
-import tournamentSubStageModel from "../models/tournamentSubStageModel";
+import Stage, { TournamentStageDoc } from "../models/tournamentStageModel";
+import SubStage, { TournamentSubStageDoc } from "../models/tournamentSubStageModel";
 
 export const getAllTournaments = async (req : Request, res : Response) => {
     try {
@@ -88,33 +88,25 @@ export const getAllTournamentSets = async (req : Request, res : Response) => {
     }
 }
 
-export const getTournamentSet = async (req : Request, res : Response) => {
+export const getTournamentDrillSets = async (req : Request, res : Response) => {
     const tid = req.params.tid;
-    const sid = req.params.sid;
-    const num = req.params.num;
     try {
-        const sets = await Set.find<SetDoc>({ tournament : tid, stage : sid, setId : num }).populate('participants').populate('matches').exec();
-        res.json(sets);
-    }
-    catch(e) {
-        console.log('Error at GET /tournament/:tid/stage/:sid/set/:num', e)
-        if (e instanceof Error) {
-            res.json({
-                data : [],
-                message : e.message
-            })
-        }
-    }
-}
+        const tournament = await Tournament.findById<TournamentDoc>(tid).lean();
+        if (!tournament) return res.status(404).json({ error: 'Tournament not found' });
 
-export const getAllPlayerTournaments = async (req : Request, res : Response) => {
-    const pid = req.params.pid;
-    try {
-        const tournaments = await Tournament.find<TournamentDoc[]>({ players : pid })
-        res.json(tournaments);
+        const stages = await Stage.find<TournamentStageDoc>({ tournament: tournament._id }).lean();
+        const subStages = await SubStage.find<TournamentSubStageDoc[]>({ stage: { $in: stages.map(s => s._id) } }).lean();
+        const sets = await Set.find<SetDoc[]>({ subStage: { $in: subStages.map(s => s._id) } }).lean();
+
+        res.json({
+            tournament : tournament,
+            stages : stages,
+            subStages : subStages,
+            sets : sets
+        })
     }
     catch(e) {
-        console.log('Error at GET /tournament/profile/:pid', e)
+        console.log('Error at GET /tournament/:tid/stage/substage/set', e)
         if (e instanceof Error) {
             res.json({
                 data : [],
@@ -148,7 +140,7 @@ export const getTournamentPlayerGameProfiles = async (req : Request, res : Respo
     const tid = req.params.tid;
 
     try {
-        const tournament = await Tournament.findById<TournamentDoc>(tid).populate('players').exec();
+        const tournament = await Tournament.findById<TournamentDoc>(tid).populate('participants').exec();
         if (!tournament) {
             throw {
                 message : 'Tournament with id' + tid + 'does not exist'
@@ -203,12 +195,12 @@ export const createTournament = async (req : Request, res : Response) => {
 
         for (const stageBody of stages) {
             const { subStages, ...stageData } = stageBody
-            const stage = await tournamentStageModel.create([{ tournament : tournamentDoc._id, ...stageData }], { session });
+            const stage = await Stage.create([{ tournament : tournamentDoc._id, ...stageData }], { session });
             const stageDoc = stage[0];
             
             for (const subStageBody of subStages) {
                 const { sets, ...subStageData } = subStageBody
-                const subStage = await tournamentSubStageModel.create([{ stage : stageDoc._id, ...subStageData }], { session })
+                const subStage = await SubStage.create([{ stage : stageDoc._id, ...subStageData }], { session })
                 const subStageDoc = subStage[0];
 
                 for (const setBody of sets) {

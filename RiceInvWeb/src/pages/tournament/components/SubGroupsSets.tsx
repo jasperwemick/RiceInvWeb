@@ -63,7 +63,7 @@ interface SubGroupsSetsProps {
 
 export default function SubGroupsSets({ itemRef, dispatcher, animInProgress, order, subStage, data, signal } : SubGroupsSetsProps) {
 
-    const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStageId === subStage.id) : []);
+    const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStageId === subStage._id) : []);
     const [slots, setSlots] = useState<number>(subStage.qualificationSlots ? subStage.qualificationSlots : 0);
 
     useEffect(() => {
@@ -80,7 +80,7 @@ export default function SubGroupsSets({ itemRef, dispatcher, animInProgress, ord
     }
 
     const submit = () => {
-        const cachedSubStage = data.subStages.find(x => x.id === subStage.id);
+        const cachedSubStage = data.subStages.find(x => x._id === subStage._id);
         if (!cachedSubStage) {
             // Throw some error
             return;
@@ -106,7 +106,7 @@ export default function SubGroupsSets({ itemRef, dispatcher, animInProgress, ord
                     <GroupTable 
                     groupSize={subStage.members.length} 
                     members={subStage.members} 
-                    subId={subStage.id}
+                    subId={subStage._id}
                     sets={tSets}
                     setSets={addTSets} 
                     interactive={true}/>}

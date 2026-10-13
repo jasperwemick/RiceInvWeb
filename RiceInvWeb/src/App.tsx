@@ -31,6 +31,7 @@ import TournamentPage from "./pages/tournament/tournamentPage";
 import CreateTournamentPage from "./pages/tournament/createTournamentPage";
 import RiceFooter from "./components/RiceFooter";
 import ProfilePage from "./pages/profilePage";
+import TournamentDetails from "./pages/tournament/TournamentDetails";
  
 const App = () => {
   return (
@@ -51,8 +52,9 @@ const App = () => {
 
             <Route path="/profile/:id" component={ProfilePage}/> {/* Profile Page */}
 
-            <Route path="/tournament/create" component={CreateTournamentPage} />
-            <Route path="/tournament" component={TournamentPage} />
+            <Route path="/tournament/:id" component={TournamentDetails} /> {/* Tournament Details */}
+            <Route path="/tournament/create" component={CreateTournamentPage} /> { /* Create Tournament Page */ }
+            <Route path="/tournament" component={TournamentPage} /> { /* Tournament Page */ }
             
             <Route path="/league/games/:num" component={LeagueGamePage} /> {/* Game stats with listed individual player stats for a League of Legends game */}
             <Route path="/league/:id" component={LeagueProfilePage} /> {/* League of Legends focused profile page for player */}

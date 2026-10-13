@@ -168,7 +168,7 @@ function mapParticipantPlaceholder(state : WizardState, data : TournamentData) {
 
     return data.subStages.filter(x => x.stage === state.currentStage).flatMap((sStg, i) => {
         const sStgMatches = data.matches ? data.matches.filter((match) => {
-            return data.sets?.find(set => set.id === match.setId)
+            return data.sets?.find(set => set._id === match.setId)
         }) : [];
         
         return sStg.members.map((member) : Placeholder => {

@@ -73,7 +73,7 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
         if (!stage) return;
         
         setGroups([...groups, {
-            id : new ObjectId().toHexString(),
+            _id : new ObjectId().toHexString(),
             order : groups.length,
             stage : stageNum,
             name : groupName,

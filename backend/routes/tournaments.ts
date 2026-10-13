@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import { createOneBracketSet, upsertOneBracketSet, deleteOneBracketSet, upsertManyBracketSets } from '../controllers/setController';
-import { createTournament, getAllPlayerTournaments, getAllTournaments, getAllTournamentSets, getPlayerTournamentSets, getTournament, getTournamentsByGameId, getTournamentsByGameName } from "../controllers/tournamentController";
+import { createTournament, getAllTournaments, getAllTournamentSets, getPlayerTournamentSets, getTournament, getTournamentDrillSets, getTournamentsByGameId, getTournamentsByGameName } from "../controllers/tournamentController";
 
 const router = Router();
 
@@ -22,9 +22,9 @@ router.get('/game/:name', getTournamentsByGameName);
 
 router.get('/:tid/set', getAllTournamentSets);
 
-router.get('/player/:pid', getAllPlayerTournaments);
-
 router.get('/:tid/player/:pid/set', getPlayerTournamentSets);
+
+router.get('/:tid/stage/substage/set', getTournamentDrillSets)
 
 router.post('/', createTournament);
 

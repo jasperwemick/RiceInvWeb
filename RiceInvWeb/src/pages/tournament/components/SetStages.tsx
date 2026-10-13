@@ -87,7 +87,7 @@ export default function SetStages({ itemRef, dispatcher } : SetStagesProps) {
         
         setTournamentStageData(Array.from({ length : stageCount }, (_, i) => {
             return {
-                id : new ObjectId().toHexString(),
+                _id : new ObjectId().toHexString(),
                 order : i,
                 stageType : 'Groups',
                 format : ''
@@ -99,7 +99,7 @@ export default function SetStages({ itemRef, dispatcher } : SetStagesProps) {
         const switchStage = (idx : number) => {
             setTournamentStageData(tournamentStageData.map((stage, j) => {
                 return j !== idx ? stage : {
-                    id : stage.id,
+                    _id : stage._id,
                     order : j,
                     stageType : stage.stageType === 'Groups' ? 'Bracket' : 'Groups',
                     format : '',

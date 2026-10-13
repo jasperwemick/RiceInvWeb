@@ -47,7 +47,7 @@ export default function TournamentReview({ itemRef, data } : ReviewProps) {
                                 members : subStage.members.filter(x => x.def !== "Placeholder").flatMap(x => x._id),
                                 memberType : data.participants[0].def,
                                 sets : data.sets
-                                .filter((set : TournamentSet) => set.subStageId === subStage.id)
+                                .filter((set : TournamentSet) => set.subStageId === subStage._id)
                                 .map((set) => {
                                     return {
                                         order : set.order,

@@ -44,7 +44,7 @@ export default function SetBracket({itemRef, dispatcher, stageNum, data, partici
         if (!stage) return;
         
         setBrackets([...brackets, {
-            id : new ObjectId().toHexString(),
+            _id : new ObjectId().toHexString(),
             order : brackets.length,
             stage : stageNum,
             name : '',

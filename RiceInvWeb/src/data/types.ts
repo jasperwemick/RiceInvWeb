@@ -89,13 +89,14 @@ export interface Placeholder {
 export type TournamentParticipant = Profile | Team | Placeholder;
 
 export interface Tournament {
+    _id : string;
     name : string;
     gameMode : string;
     participants : TournamentParticipant[];
 }
 
 export interface TournamentSet {
-    id : string;
+    _id : string;
     order : number;
     subStageId : string;
     bestOf : number;
@@ -108,7 +109,7 @@ export interface TournamentSet {
 }
 
 export interface TournamentMatch {
-    id : string;
+    _id : string;
     setId : string;
     order : number;
     winner : TournamentParticipant;
@@ -116,7 +117,7 @@ export interface TournamentMatch {
 }
 
 export interface TournamentStage {
-    id : string;
+    _id : string;
     order : number;
     tournament ? : string | Tournament;
     stageType : 'Groups' | 'Bracket';
@@ -125,7 +126,7 @@ export interface TournamentStage {
 }
 
 export interface TournamentSubStage {
-    id : string;
+    _id : string;
     order : number;
     stage : number;
     subType : 'Sets';
