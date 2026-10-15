@@ -38,7 +38,7 @@ export default function TournamentReview({ itemRef, data } : ReviewProps) {
                         format : stage.format,
                         stageName : stage.stageName || '',
                         subStages : data.subStages
-                        .filter((subStage : TournamentSubStage) => subStage.stage === stage.order)
+                        .filter((subStage : TournamentSubStage) => subStage.stage === stage._id)
                         .map((subStage) => {
                             return {
                                 order : subStage.order,
@@ -47,7 +47,7 @@ export default function TournamentReview({ itemRef, data } : ReviewProps) {
                                 members : subStage.members.filter(x => x.def !== "Placeholder").flatMap(x => x._id),
                                 memberType : data.participants[0].def,
                                 sets : data.sets
-                                .filter((set : TournamentSet) => set.subStageId === subStage._id)
+                                .filter((set : TournamentSet) => set.subStage === subStage._id)
                                 .map((set) => {
                                     return {
                                         order : set.order,

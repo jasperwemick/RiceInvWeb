@@ -9,7 +9,7 @@ interface BracketBuilderProps {
     nodeArr : BracketNode[][];
     refMap : (idx : number) => React.RefObject<HTMLDivElement>;
     sets : TournamentSet[];
-    setSets : React.Dispatch<React.SetStateAction<TournamentSet[]>>;
+    setSets ? : React.Dispatch<React.SetStateAction<TournamentSet[]>>;
     stage : TournamentStage;
     subStage : TournamentSubStage;
     players : TournamentParticipant[];
@@ -29,6 +29,8 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
         let capacity = 0;
 
         const newSets : TournamentSet[] = [];
+
+        if (!setSets) return;
 
         nodeArr.reverse().map((level, i) => {
             level.map((node, j) => {
@@ -123,9 +125,9 @@ export default function BracketBuilder({ nodeArr, refMap, sets, setSets, stage, 
                 }
 
                 const newSet : TournamentSet = {
-                    id : new ObjectId().toHexString(),
+                    _id : new ObjectId().toHexString(),
                     order : node.value,
-                    subStageId : subStage.id,
+                    subStage : subStage._id,
                     setName,
                     bestOf : 5,
                     participants : setPlayers.filter((x): x is Placeholder => x != null && x.def === 'Placeholder'),

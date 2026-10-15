@@ -10,7 +10,7 @@ interface GenerateBracketProps {
     subStage : TournamentSubStage;
     players : TournamentParticipant[];
     sets : TournamentSet[];
-    setSets : React.Dispatch<React.SetStateAction<TournamentSet[]>>
+    setSets ? : React.Dispatch<React.SetStateAction<TournamentSet[]>>
 }
 
 export const GenerateBracket = ({stage, subStage, players, sets, setSets} : GenerateBracketProps) => {

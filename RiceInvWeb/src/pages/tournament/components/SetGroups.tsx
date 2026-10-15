@@ -10,31 +10,31 @@ interface SetGroupsProps {
     itemRef : RefObject<HTMLLIElement>;
     dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
-    stageNum : number;
+    stage : TournamentStage;
     participants : TournamentParticipant[];
     data : TournamentData;
 }
 
 
-export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNum, participants, data } : SetGroupsProps) {
+export default function SetGroups({ itemRef, dispatcher, animInProgress, stage, participants, data } : SetGroupsProps) {
     
     const [groupSize, setGroupSize] = useState(4);
     const [groupMembers, setGroupMembers] = useState<TournamentParticipant[]>([]);
     const [groupName, setGroupName] = useState<string>('');
     const [groups, setGroups] = useState<TournamentSubStage[]>([]);
 
-    const [stage, setStage] = useState<TournamentStage | null>(null);
+    // const [stage, setStage] = useState<TournamentStage | null>(null);
 
     const inputRef = useRef<HTMLInputElement | null>(null);
 
     const undo = () => {
         console.log(groups);
-        console.log(stageNum);
+        const prevStage = data.stages.find(x => x.order === stage.order - 1)
         dispatcher({
             type : 'UNDO_STEP', 
             data : { }, 
             activeSSCount : groups.length, 
-            isStage : true
+            isStage : prevStage
         })
     }
 
@@ -43,26 +43,26 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
     }
 
     const submitGroups = () => {
-        const nextStage = data.stages.find(x => x.order === stageNum + 1)
+        const nextStage = data.stages.find(x => x.order === stage.order + 1)
         dispatcher({
             type : 'STEP', 
             data : {
-                step : nextStage ? `Set${nextStage.stageType}-${stageNum + 1}` : `Review`, 
+                step : nextStage ? `Set${nextStage.stageType}-${stage.order + 1}` : `Review`, 
             },
             activeSSCount : groups.length,
-            isStage : true
+            isStage : nextStage
         });
     }
 
-    useEffect(() => {
-        if (data.stages) {
-            setStage(data.stages.find(x => x.order === stageNum) ?? null)
-        }
-    }, [data]);
+    // useEffect(() => {
+    //     if (data.stages) {
+    //         setStage(data.stages.find(x => x.order === stage.order) ?? null)
+    //     }
+    // }, [data]);
 
     const isParticipantAvailable = (participant : TournamentParticipant) => {
         const assignedMembers : string[] = groups.flatMap(x => x.members.flatMap(y => y.name));
-        return !assignedMembers.includes(participant.name)
+        return !assignedMembers.includes(participant.name);
     }
 
     const getParticipants = () => {
@@ -75,7 +75,7 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
         setGroups([...groups, {
             _id : new ObjectId().toHexString(),
             order : groups.length,
-            stage : stageNum,
+            stage : stage._id,
             name : groupName,
             format : stage.format,
             subType : 'Sets',
@@ -86,17 +86,17 @@ export default function SetGroups({ itemRef, dispatcher, animInProgress, stageNu
     }
 
     useEffect(() => {
-        if (groups.length > (data.subStages ? data.subStages.filter(x => x.stage === stageNum).length : 0) && inputRef.current) {
+        if (groups.length > (data.subStages ? data.subStages.filter(x => x.stage === stage._id).length : 0) && inputRef.current) {
             const num = getParticipants().length;
-            setGroupSize(num < groupSize ? num : groupSize)
+            setGroupSize(num < groupSize ? num : groupSize);
             inputRef.current.value = String(num);
-            dispatcher({type : 'SIDESTEP', data : { subStages : groups }, ss: `SubGroupsSets-${stageNum}-${groups.length - 1}`})
+            dispatcher({type : 'SIDESTEP', data : { subStages : groups }, ss: `SubGroupsSets-${stage.order}-${groups.length - 1}`})
         }
     }, [groups.length])
 
     useEffect(() => {
         if (data?.subStages && data.subStages.length !== groups.length) {
-            setGroups(data.subStages.filter(x => x.stage === stageNum));
+            setGroups(data.subStages.filter(x => x.stage === stage._id));
         }
     }, [data?.subStages?.length])
 

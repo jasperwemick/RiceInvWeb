@@ -52,7 +52,7 @@ interface WizardState {
     sideStepIndex: number;
     ssSignal: { action?: string } | null;
     tournament: TournamentData;
-    currentStage: number;
+    currentStage: TournamentStage | null;
     placeholders : Placeholder[];
     history: string[];
     ssHistory : SideHistoryItem[],
@@ -60,12 +60,11 @@ interface WizardState {
     pendingTransition: Partial<TournamentData> | null;
     expectedSubmissions: number;
     receivedSubmissions: number;
-    stepIsStage : boolean;
 }
 
 export type WizardAction =
-    | { type: 'STEP'; data: Partial<TournamentData>; activeSSCount ? : number; isStage ? : boolean}
-    | { type: 'UNDO_STEP'; data : Partial<TournamentData>; activeSSCount ? : number; isStage ? : boolean }
+    | { type: 'STEP'; data: Partial<TournamentData>; activeSSCount ? : number; isStage ? : TournamentStage }
+    | { type: 'UNDO_STEP'; data : Partial<TournamentData>; activeSSCount ? : number; isStage ? : TournamentStage }
     | { type: 'SIDESTEP'; data: Partial<TournamentData>; ss : string }
     | { type: 'SUBMIT_SIDESTEP'; data : Partial<TournamentData>; ss : string }
     | { type: 'UNDO_SIDESTEP'; data : Partial<TournamentData>; ss : string; index : number }
@@ -81,7 +80,7 @@ const initialWizardState : WizardState = {
     sideStepIndex: 0,
     ssSignal: null,
     tournament: initialTournamentData,
-    currentStage: -1,
+    currentStage: null,
     placeholders : [],
     history: [],
     ssHistory : [],
@@ -89,7 +88,6 @@ const initialWizardState : WizardState = {
     pendingTransition : null,
     expectedSubmissions : 0,
     receivedSubmissions : 0,
-    stepIsStage : false,
 };
 
 
@@ -166,7 +164,7 @@ function mapParticipantPlaceholder(state : WizardState, data : TournamentData) {
 
     if (!data.subStages) return [];
 
-    return data.subStages.filter(x => x.stage === state.currentStage).flatMap((sStg, i) => {
+    return data.subStages.filter(x => x.stage === state.currentStage?._id).flatMap((sStg, i) => {
         const sStgMatches = data.matches ? data.matches.filter((match) => {
             return data.sets?.find(set => set._id === match.setId)
         }) : [];
@@ -199,8 +197,8 @@ function commitNextStep(state: WizardState, data: Partial<TournamentData>): Wiza
         sideSteps : [],
         sideStepIndex: 0,
         history: [...state.history, state.step],
-        currentStage: state.stepIsStage ? state.currentStage + 1 : state.currentStage,
-        placeholders: (state.stepIsStage && mergedData.subStages) ? mapParticipantPlaceholder(state, mergedData) : [],
+        currentStage: state.currentStage,
+        placeholders: (state.currentStage && mergedData.subStages) ? mapParticipantPlaceholder(state, mergedData) : [],
         animInProgress: true,
         pendingTransition: null,
         expectedSubmissions: 0,
@@ -228,8 +226,8 @@ function commitPrevStep(state: WizardState, data: Partial<TournamentData>) : Wiz
             return acc + ss.num; 
         }, 0),
         history: prevHistory,
-        currentStage: state.stepIsStage ? state.currentStage - 1 : -1,
-        placeholders: (state.stepIsStage && filteredData.subStages) ? mapParticipantPlaceholder(state, filteredData) : [],
+        currentStage: state.currentStage,
+        placeholders: (state.currentStage && filteredData.subStages) ? mapParticipantPlaceholder(state, filteredData) : [],
         animInProgress: true,
         pendingTransition: null,
         expectedSubmissions: 0,
@@ -244,7 +242,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
             if (!action.activeSSCount || action.activeSSCount === 0) {
                 return commitNextStep({
                     ...state,
-                    stepIsStage : action.isStage ?? false
+                    currentStage : action.isStage ?? null
                 }, action.data);
             }
             // hold the transition, signal sidesteps to submit, wait for them
@@ -262,7 +260,7 @@ function wizardReducer(state: WizardState, action: WizardAction): WizardState {
             if (!action.activeSSCount || action.activeSSCount === 0) {
                 return commitPrevStep({
                     ...state,
-                    stepIsStage : action.isStage ?? false
+                    currentStage : action.isStage ?? null
                 }, action.data);
             }
 
@@ -467,10 +465,10 @@ export default function CreateTournamentPage() {
                 Component : stageComponentRecord[stage.stageType].Component, 
                 props : { 
                     animInProgress,
-                    stageNum : i,
-                    participants : currentStage > 0 ? placeholders : tournament.participants
+                    stage : stage,
+                    participants : currentStage ? placeholders : tournament.participants
                 },
-                sidesteps : tournament.subStages.filter(x => x.stage === i).map((subStage, j) => {
+                sidesteps : tournament.subStages.filter(x => x.stage === stage._id).map((subStage, j) => {
                     return  defineSideStep({
                         key : `Sub${stage.stageType}${subStage.subType}-${i}-${j}`,
                         Component :  stageComponentRecord[stage.stageType].sides[subStage.subType],
@@ -482,7 +480,7 @@ export default function CreateTournamentPage() {
         })
     ).concat(
         defineStep({ key : 'Review', Component : TournamentReview, props : { animInProgress } })
-    )
+    );
 
     useLayoutEffect(() => {
         if (state.pendingStep === null || stepIndex < 0) return; 

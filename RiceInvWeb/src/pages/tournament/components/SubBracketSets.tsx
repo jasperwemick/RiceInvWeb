@@ -15,7 +15,7 @@ interface BracketSideStepProps {
 
 export default function SubBracketSets({ itemRef, dispatcher, order, subStage, data, signal } : BracketSideStepProps) {
 
-    const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStageId === subStage._id) : []);
+    const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStage === subStage._id) : []);
     const [slots] = useState<number>(subStage.qualificationSlots ? subStage.qualificationSlots : 0);
     const [stage, setStage] = useState<TournamentStage | null>(null);
 
@@ -40,7 +40,7 @@ export default function SubBracketSets({ itemRef, dispatcher, order, subStage, d
     }
 
     useEffect(() => {
-        setStage(data.stages.find(x => x.order === subStage.stage) ?? null);
+        setStage(data.stages.find(x => x._id === subStage.stage) ?? null);
     }, [data.stages.length]);
 
     useEffect(() => {

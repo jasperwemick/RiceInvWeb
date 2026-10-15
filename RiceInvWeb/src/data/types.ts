@@ -98,7 +98,7 @@ export interface Tournament {
 export interface TournamentSet {
     _id : string;
     order : number;
-    subStageId : string;
+    subStage : string;
     bestOf : number;
     setName ? : string;
     participants : TournamentParticipant[];
@@ -119,7 +119,7 @@ export interface TournamentMatch {
 export interface TournamentStage {
     _id : string;
     order : number;
-    tournament ? : string | Tournament;
+    tournament ? : string;
     stageType : 'Groups' | 'Bracket';
     format : string;
     stageName ? : string;
@@ -128,7 +128,7 @@ export interface TournamentStage {
 export interface TournamentSubStage {
     _id : string;
     order : number;
-    stage : number;
+    stage : string;
     subType : 'Sets';
     name : string;
     format : string;

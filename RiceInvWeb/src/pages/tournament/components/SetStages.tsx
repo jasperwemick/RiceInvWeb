@@ -66,19 +66,19 @@ export default function SetStages({ itemRef, dispatcher } : SetStagesProps) {
     const undo = () => {
         dispatcher({
             type : 'UNDO_STEP',
-            data : { stages : tournamentStageData },
-            isStage : false
+            data : { stages : tournamentStageData }
         })
     }
 
     const submit = () => {
+        const firstStage = tournamentStageData.find(x => x.order === 0);
         dispatcher({ 
             type : 'STEP', 
             data : { 
                 step : `Set${tournamentStageData.find(x => x.order === 0)?.stageType}-0`, 
                 stages : tournamentStageData,
             },
-            isStage : true
+            isStage : firstStage
         });
     }
 

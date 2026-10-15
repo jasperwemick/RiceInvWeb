@@ -63,12 +63,12 @@ interface SubGroupsSetsProps {
 
 export default function SubGroupsSets({ itemRef, dispatcher, animInProgress, order, subStage, data, signal } : SubGroupsSetsProps) {
 
-    const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStageId === subStage._id) : []);
+    const [tSets, addTSets] = useState<TournamentSet[]>(data.sets ? data.sets.filter(x => x.subStage === subStage._id) : []);
     const [slots, setSlots] = useState<number>(subStage.qualificationSlots ? subStage.qualificationSlots : 0);
 
-    useEffect(() => {
-        // setSlots(Math.ceil(subGroup.members.length / 2));
-    }, [subStage.members.length]);
+    // useEffect(() => {
+    //     // setSlots(Math.ceil(subGroup.members.length / 2));
+    // }, [subStage.members.length]);
 
     const undo = () => {
         dispatcher({ 

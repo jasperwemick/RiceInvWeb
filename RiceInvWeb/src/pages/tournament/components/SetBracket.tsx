@@ -7,35 +7,36 @@ interface SetPlayoffsProps {
     itemRef : RefObject<HTMLLIElement>
     dispatcher : React.ActionDispatch<[action: WizardAction]>;
     animInProgress : boolean;
-    stageNum : number;
+    stage : TournamentStage;
     data : TournamentData;
     participants : TournamentParticipant[];
 }
 
-export default function SetBracket({itemRef, dispatcher, stageNum, data, participants} : SetPlayoffsProps) {
+export default function SetBracket({itemRef, dispatcher, stage, data, participants} : SetPlayoffsProps) {
     
     const [numPlayers] = useState(participants.length);
-    const [stage, setStage] = useState<TournamentStage | null>(null);
+    // const [stage, setStage] = useState<TournamentStage | null>(null);
     const [brackets, setBrackets] = useState<TournamentSubStage[]>([]);
 
     const undo = () => {
+        const prevStage = data.stages.find(x => x.order === stage.order + 1);
         dispatcher({
             type : 'UNDO_STEP',
             data : {},
             activeSSCount : brackets.length, 
-            isStage : true
+            isStage : prevStage
         })
     }
 
     const submitBrackets = () => {
-        const nextStage = data.stages.find(x => x.order === stageNum + 1)
+        const nextStage = data.stages.find(x => x.order === stage.order + 1);
         dispatcher({
             type : 'STEP', 
             data : {
-                step : nextStage ? `Set${nextStage.stageType}-${stageNum + 1}` : `Review`, 
+                step : nextStage ? `Set${nextStage.stageType}-${stage.order + 1}` : `Review`, 
             },
             activeSSCount : brackets.length,
-            isStage : true
+            isStage : nextStage
         });
  
     }
@@ -46,7 +47,7 @@ export default function SetBracket({itemRef, dispatcher, stageNum, data, partici
         setBrackets([...brackets, {
             _id : new ObjectId().toHexString(),
             order : brackets.length,
-            stage : stageNum,
+            stage : stage._id,
             name : '',
             format : stage.format,
             subType : 'Sets',
@@ -55,16 +56,16 @@ export default function SetBracket({itemRef, dispatcher, stageNum, data, partici
     }
 
     useEffect(() => {
-        if (brackets.length > (data.subStages.filter(x => x.stage === stageNum).length)) {
-            dispatcher({type : 'SIDESTEP', data : { subStages : brackets }, ss: `SubBracketSets-${stageNum}-${brackets.length - 1}`})
+        if (brackets.length > (data.subStages.filter(x => x.stage === stage._id).length)) {
+            dispatcher({type : 'SIDESTEP', data : { subStages : brackets }, ss: `SubBracketSets-${stage.order}-${brackets.length - 1}`})
         }
     }, [brackets.length])
 
-    useEffect(() => {
-        if (data.stages) {
-            setStage(data.stages.find(x => x.order === stageNum) ?? null)
-        }
-    }, [data]);
+    // useEffect(() => {
+    //     if (data.stages) {
+    //         setStage(data.stages.find(x => x.order === stageNum) ?? null)
+    //     }
+    // }, [data]);
 
     useEffect(() => {
         console.log(participants);

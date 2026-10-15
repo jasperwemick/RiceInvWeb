@@ -54,28 +54,25 @@ export default function GroupTable({ groupSize, members, subId, sets, setSets, i
                 return members[index % groupSize].name;
             }
 
-            if (interactive && index !== Math.floor(index / matrixSize) * (matrixSize + 1)) { // set
+            if (interactive && index !== Math.floor(index / matrixSize) * (matrixSize + 1)) { // Set
                 const row = Math.floor(index / matrixSize);
                 const col = index % matrixSize;
                 if (row > col && sets && sets.length === 0 && subId) {
                     const setMembers = castMixedMembers([members[row % groupSize], members[col % groupSize]]);
                     setList.push({
                         _id : new ObjectId().toHexString(),
-                        subStageId : subId,
+                        subStage : subId,
                         order : setList.length,
                         bestOf : 5,
                         participants : setMembers.data,
                         participantType : setMembers.dataType,
                     });
                 }
-
                 return `${0} - ${0}`;
             }
             return '';
         }));
         if (interactive && setList.length && setSets) {
-            console.log('adding new sets');
-            console.log(setList);
             setSets(setList);
         }
     }, [groupSize])
@@ -84,9 +81,9 @@ export default function GroupTable({ groupSize, members, subId, sets, setSets, i
         const matrixSize = groupSize + 1
         const borderDef = `0.25rem solid #10263bff`
         return groupCells.map((cell, index) => {
-            const bottom = index >= (Math.pow(matrixSize, 2) - matrixSize)
+            const bottom = index >= (Math.pow(matrixSize, 2) - matrixSize);
             const right = index % matrixSize === matrixSize - 1;
-            const greyArea = index === Math.floor(index / matrixSize) * (matrixSize + 1)
+            const greyArea = index === Math.floor(index / matrixSize) * (matrixSize + 1);
             return (
                 <GroupCell style={{
                     borderTop: borderDef,

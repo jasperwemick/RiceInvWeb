@@ -11,7 +11,7 @@ interface BracketMapProps {
     lowTree : BracketNode | null;
     maxDepth : number;
     sets : TournamentSet[];
-    setSets : React.Dispatch<React.SetStateAction<TournamentSet[]>>
+    setSets ? : React.Dispatch<React.SetStateAction<TournamentSet[]>>
     players : TournamentParticipant[];
 }
 
