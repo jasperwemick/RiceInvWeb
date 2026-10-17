@@ -1,6 +1,6 @@
 import { useEffect, useState, type CSSProperties, type RefObject } from "react";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
-import GroupTable from "./GroupTable";
+import GroupTable from "../../../components/Group/GroupTable";
 import type { TournamentSubStage, TournamentSet } from "../../../data/types";
 
 

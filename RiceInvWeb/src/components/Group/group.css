@@ -1,0 +1,19 @@
+.group-cell {
+    border-radius: 0;
+    min-width : max-content;
+    min-height : 2rem;
+    font-size : clamp(0.5pc, 0.75pc, 1pc);
+    text-align : center;
+    align-content : center;
+}
+
+.set-dialog {
+    position : fixed;
+    left : 35%;
+    top : 30%;
+    width : 30%;
+    height : 40%;
+    background : linear-gradient(0deg,rgba(158, 222, 222, 1) 0%, rgba(58, 79, 153, 1) 100%);
+    border : 0;
+    box-shadow : 0rem 0rem 1rem 1rem rgba(0, 0, 0, 0.4);
+}

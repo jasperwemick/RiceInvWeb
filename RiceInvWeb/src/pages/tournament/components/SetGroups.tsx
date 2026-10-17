@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, type RefObject } from "react";
 import type { TournamentData, WizardAction } from "../createTournamentPage";
 import type { TournamentParticipant, TournamentStage, TournamentSubStage } from "../../../data/types";
 import SelectableItemsList from "../../../components/SelectableList/selectableItemsList";
-import GroupTable from "./GroupTable";
+import GroupTable from "../../../components/Group/GroupTable";
 import { ObjectId } from "bson";
 
 
